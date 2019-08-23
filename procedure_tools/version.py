@@ -1,2 +1,2 @@
-__version_info__ = (0, 1, 7)
+__version_info__ = (0, 1, 8)
 __version__ = '.'.join((str(entry) for entry in __version_info__))

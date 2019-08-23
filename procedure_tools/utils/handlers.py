@@ -35,6 +35,8 @@ def tender_create_success_print_handler(response):
     print("Tender created:")
     print(" - id \t\t\t\t{}".format(data['id']))
     print(" - token \t\t\t{}".format(access['token']))
+    if 'transfer' in access:
+        print(" - transfer \t\t\t{}".format(access['transfer']))
     print(" - status \t\t\t{}".format(data['status']))
     print(" - tenderID \t\t\t{}".format(data['tenderID']))
     print(" - procurementMethodType \t{}".format(data['procurementMethodType']))
