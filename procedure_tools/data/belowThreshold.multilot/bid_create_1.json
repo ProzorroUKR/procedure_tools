@@ -1,0 +1,30 @@
+{
+  "data": {
+    "value": {
+      "amount": 499
+    },
+    "tenderers": [
+      {
+        "contactPoint": {
+          "telephone": "+380 (322) 91-69-30",
+          "name": "Андрій Олексюк",
+          "email": "aagt@gmail.com"
+        },
+        "identifier": {
+          "scheme": "UA-EDR",
+          "id": "00137226",
+          "uri": "http://www.sc.gov.ua/"
+        },
+        "name": "ДКП «Книга»",
+        "scale": "micro",
+        "address": {
+          "countryName": "Україна",
+          "postalCode": "79013",
+          "region": "м. Львів",
+          "streetAddress": "вул. Островського, 34",
+          "locality": "м. Львів"
+        }
+      }
+    ]
+  }
+}
