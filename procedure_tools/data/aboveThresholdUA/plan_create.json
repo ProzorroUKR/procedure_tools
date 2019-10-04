@@ -1,0 +1,78 @@
+{
+  "data": {
+    "status": "draft",
+    "buyers": [
+      {
+        "identifier": {
+          "scheme": "UA-EDR",
+          "id": "111983",
+          "legalName": "ДП Державне Управління Справами"
+        },
+        "name": "ДУС"
+      }
+    ],
+    "classification": {
+      "scheme": "ДК021",
+      "description": "Test",
+      "id": "37810000-9"
+    },
+    "items": [
+      {
+        "description": "Test description 1",
+        "classification": {
+          "scheme": "ДК021",
+          "description": "Test classification description 1",
+          "id": "37810000-9"
+        },
+        "deliveryDate": {
+          "endDate": "2019-10-16T01:00:00+03:00"
+        },
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        },
+        "quantity": 1000
+      }
+    ],
+    "budget": {
+      "amountNet": 12222,
+      "description": "Test budget description",
+      "period": {
+        "startDate": "2019-01-01T00:00:00",
+        "endDate": "2019-12-31T00:00:00"
+      },
+      "project": {
+        "name": "Test proj name",
+        "id": "123"
+      },
+      "currency": "UAH",
+      "amount": 10000,
+      "id": "12303111000-2",
+      "breakdown": [
+        {
+          "description": "Breakdown other description.",
+          "value": {
+            "currency": "UAH",
+            "amount": 1500
+          },
+          "title": "other"
+        }
+      ]
+    },
+    "procuringEntity": {
+      "identifier": {
+        "scheme": "UA-EDR",
+        "id": "21725150",
+        "legalName": "ДП Державне Управління Справами"
+      },
+      "name": "ДУС"
+    },
+    "tender": {
+      "procurementMethod": "open",
+      "procurementMethodType": "aboveThresholdUA",
+      "tenderPeriod": {
+        "startDate": "2019-10-08T01:00:00+03:00"
+      }
+    }
+  }
+}

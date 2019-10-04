@@ -1,0 +1,151 @@
+{
+  "data": {
+    "tenderPeriod": {
+      "endDate": "XXXX-XX-XXTXX:XX+XX:XX"
+    },
+    "title": "футляри до державних нагород",
+    "minimalStep": {
+      "currency": "UAH",
+      "amount": 35
+    },
+    "enquiryPeriod": {
+      "endDate": "XXXX-XX-XXTXX:XX+XX:XX"
+    },
+    "procurementMethodType": "belowThreshold",
+    "mainProcurementCategory": "services",
+    "milestones": [
+      {
+          "title": "signingTheContract",
+          "code": "prepayment",
+          "type": "financing",
+          "duration": {"days": 2, "type": "banking"},
+          "sequenceNumber": 0,
+          "percentage": 100
+      }
+    ],
+    "value": {
+      "currency": "UAH",
+      "amount": 500
+    },
+    "procuringEntity": {
+      "contactPoint": {
+        "name": "Державне управління справами",
+        "telephone": "0440000000"
+      },
+      "identifier": {
+        "scheme": "UA-EDR",
+        "id": "00037256",
+        "uri": "http://www.dus.gov.ua/"
+      },
+      "name": "Державне управління справами",
+      "kind": "general",
+      "address": {
+        "countryName": "Україна",
+        "postalCode": "01220",
+        "region": "м. Київ",
+        "streetAddress": "вул. Банкова, 11, корпус 1",
+        "locality": "м. Київ"
+      }
+    },
+    "items": [
+      {
+        "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
+        "description": "Послуги шкільних їдалень",
+        "classification": {
+          "scheme": "ДК021",
+          "id": "37810000-9",
+          "description": "Test"
+        },
+        "description_en": "Services in school canteens",
+        "additionalClassifications": [
+          {
+            "scheme": "ДКПП",
+            "id": "17.21.1",
+            "description": "Послуги шкільних їдалень"
+          }
+        ],
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "вул. Банкова 1",
+          "locality": "м. Київ"
+        },
+        "deliveryDate": {
+          "startDate": "2017-07-11T16:02:36.221241+03:00",
+          "endDate": "2017-08-10T16:02:36.221295+03:00"
+        },
+        "unit": {
+          "code": "44617100-9",
+          "name": "item"
+        },
+        "quantity": 1
+      },
+      {
+        "relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f",
+        "description": "Послуги шкільних їдалень",
+        "classification": {
+          "scheme": "ДК021",
+          "id": "37810000-9",
+          "description": "Test"
+        },
+        "description_en": "Services in school canteens",
+        "additionalClassifications": [
+          {
+            "scheme": "ДКПП",
+            "id": "17.21.1",
+            "description": "Послуги шкільних їдалень"
+          }
+        ],
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "вул. Банкова 1",
+          "locality": "м. Київ"
+        },
+        "deliveryDate": {
+          "startDate": "2017-07-11T16:02:36.221327+03:00",
+          "endDate": "2017-08-10T16:02:36.221351+03:00"
+        },
+        "unit": {
+          "code": "44617100-9",
+          "name": "item"
+        },
+        "quantity": 1
+      }
+    ],
+    "lots": [
+      {
+        "minimalStep": {
+          "currency": "UAH",
+          "amount": 35,
+          "valueAddedTaxIncluded": true
+        },
+        "title": "Лот №1",
+        "description": "Опис Лот №1",
+        "value": {
+          "currency": "UAH",
+          "amount": 500,
+          "valueAddedTaxIncluded": true
+        },
+        "id": "dd22c9c085f64e019f943999b5b41fe5"
+      },
+      {
+        "minimalStep": {
+          "currency": "UAH",
+          "amount": 35,
+          "valueAddedTaxIncluded": true
+        },
+        "title": "Лот №1",
+        "description": "Опис Лот №1",
+        "value": {
+          "currency": "UAH",
+          "amount": 500,
+          "valueAddedTaxIncluded": true
+        },
+        "id": "9d4fc4783ebb4a99b10cc9a2f7d7552f"
+      }
+    ]
+  }
+}

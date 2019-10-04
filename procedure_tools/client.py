@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 from copy import deepcopy
+
 try:
     from urllib.parse import urljoin
 except ImportError:
@@ -10,11 +11,11 @@ import requests
 
 from procedure_tools.utils.handlers import response_handler
 
-API_PATH_PREFIX_DEFAULT = '/api/0/'
+API_PATH_PREFIX_DEFAULT = "/api/0/"
 
 
 def get_api_path(path, path_prefix=API_PATH_PREFIX_DEFAULT, acc_token=None):
-    return urljoin(path_prefix, urljoin(path, '?acc_token={}'.format(acc_token) if acc_token else None))
+    return urljoin(path_prefix, urljoin(path, "?acc_token={}".format(acc_token) if acc_token else None))
 
 
 def get_api_url(host, api_path):
@@ -22,10 +23,8 @@ def get_api_url(host, api_path):
 
 
 class BaseApiClient(object):
-    SPORE_PATH = 'spore'
-    HEADERS_DEFAULT = {
-        'Content-Type': 'application/json'
-    }
+    SPORE_PATH = "spore"
+    HEADERS_DEFAULT = {"Content-Type": "application/json"}
 
     def __init__(self, host, auth_token=None, path_prefix=API_PATH_PREFIX_DEFAULT, **request_kwargs):
         self.host = host
@@ -36,23 +35,27 @@ class BaseApiClient(object):
 
     @staticmethod
     def _pop_handlers(kwargs, success_handler=None, error_handler=None):
-        return dict((k, v) for k, v in dict(
-            success_handler=kwargs.pop('success_handler', success_handler),
-            error_handler=kwargs.pop('error_handler', error_handler)
-        ).items() if v is not None)
+        return dict(
+            (k, v)
+            for k, v in dict(
+                success_handler=kwargs.pop("success_handler", success_handler),
+                error_handler=kwargs.pop("error_handler", error_handler),
+            ).items()
+            if v is not None
+        )
 
     def _set_authorization_header(self, request_kwargs, auth_token):
         headers = self.HEADERS_DEFAULT
-        headers.update(request_kwargs.pop('headers', {}))
+        headers.update(request_kwargs.pop("headers", {}))
         if auth_token:
-            headers.update({'Authorization': 'Bearer ' + auth_token})
+            headers.update({"Authorization": "Bearer " + auth_token})
         request_kwargs.update(dict(headers=headers))
 
     def _set_server_id_cookie(self, request_kwargs):
         url = self._get_api_url(get_api_path(self.SPORE_PATH, self.path_prefix))
-        server_id = requests.get(url).cookies.get('SERVER_ID')
-        cookies = request_kwargs.pop('cookies', {})
-        cookies.update({'SERVER_ID': server_id})
+        server_id = requests.get(url).cookies.get("SERVER_ID")
+        cookies = request_kwargs.pop("cookies", {})
+        cookies.update({"SERVER_ID": server_id})
         request_kwargs.update(dict(cookies=cookies))
 
     def _get_api_path(self, path, acc_token=None):
@@ -90,20 +93,20 @@ class BaseApiClient(object):
 
 
 class TendersApiClient(BaseApiClient):
-    TENDERS_COLLECTION_PATH = 'tenders'
-    TENDERS_PATH = 'tenders/{}'
-    BIDS_COLLECTION_PATH = 'tenders/{}/bids'
-    AWARDS_COLLECTION_PATH = 'tenders/{}/awards'
-    AWARDS_PATH = 'tenders/{}/awards/{}'
-    CONTRACTS_COLLECTION_PATH = 'tenders/{}/contracts'
-    CONTRACTS_PATH = 'tenders/{}/contracts/{}'
-    QUALIFICATIONS_COLLECTION_PATH = 'tenders/{}/qualifications'
-    QUALIFICATIONS_PATH = 'tenders/{}/qualifications/{}'
-    AGREEMENTS_COLLECTION_PATH = 'tenders/{}/agreements'
-    AGREEMENTS_PATH = 'tenders/{}/agreements/{}'
-    AGREEMENT_CONTRACT_COLLECTION_PATH = 'tenders/{}/agreements/{}/contracts'
-    AGREEMENT_CONTRACT_PATH = 'tenders/{}/agreements/{}/contracts/{}'
-    CREDENTIALS_PATH = 'tenders/{}/credentials'
+    TENDERS_COLLECTION_PATH = "tenders"
+    TENDERS_PATH = "tenders/{}"
+    BIDS_COLLECTION_PATH = "tenders/{}/bids"
+    AWARDS_COLLECTION_PATH = "tenders/{}/awards"
+    AWARDS_PATH = "tenders/{}/awards/{}"
+    CONTRACTS_COLLECTION_PATH = "tenders/{}/contracts"
+    CONTRACTS_PATH = "tenders/{}/contracts/{}"
+    QUALIFICATIONS_COLLECTION_PATH = "tenders/{}/qualifications"
+    QUALIFICATIONS_PATH = "tenders/{}/qualifications/{}"
+    AGREEMENTS_COLLECTION_PATH = "tenders/{}/agreements"
+    AGREEMENTS_PATH = "tenders/{}/agreements/{}"
+    AGREEMENT_CONTRACT_COLLECTION_PATH = "tenders/{}/agreements/{}/contracts"
+    AGREEMENT_CONTRACT_PATH = "tenders/{}/agreements/{}/contracts/{}"
+    CREDENTIALS_PATH = "tenders/{}/credentials"
 
     def get_tender(self, tender_id, **kwargs):
         tenders_path = self.TENDERS_PATH.format(tender_id)
@@ -202,7 +205,7 @@ class TendersApiClient(BaseApiClient):
 
 
 class AgreementsApiClient(BaseApiClient):
-    AGREEMENTS_PATH = 'agreements/{}'
+    AGREEMENTS_PATH = "agreements/{}"
 
     def get_agreement(self, agreement_id, **kwargs):
         agreements_path = self.AGREEMENTS_PATH.format(agreement_id)
@@ -211,8 +214,8 @@ class AgreementsApiClient(BaseApiClient):
 
 
 class ContractsApiClient(BaseApiClient):
-    CONTRACTS_PATH = 'contracts/{}'
-    CREDENTIALS_PATH = 'contracts/{}/credentials'
+    CONTRACTS_PATH = "contracts/{}"
+    CREDENTIALS_PATH = "contracts/{}/credentials"
 
     def get_contract(self, contract_id, **kwargs):
         contracts_path = self.CONTRACTS_PATH.format(contract_id)
@@ -223,3 +226,29 @@ class ContractsApiClient(BaseApiClient):
         credentials_path = self.CREDENTIALS_PATH.format(contract_id)
         path = self._get_api_path(credentials_path, acc_token=acc_token)
         return self.patch(path, json, **kwargs)
+
+
+class PlansApiClient(BaseApiClient):
+    PLANS_COLLECTION_PATH = "plans"
+    PLANS_PATH = "plans/{}"
+    TENDERS_COLLECTION_PATH = "plans/{}/tenders"
+
+    def get_plan(self, plan_id, **kwargs):
+        contracts_path = self.PLANS_PATH.format(plan_id)
+        path = self._get_api_path(contracts_path)
+        return self.get(path, **kwargs)
+
+    def post_plan(self, json, **kwargs):
+        tenders_path = self.PLANS_COLLECTION_PATH
+        path = self._get_api_path(tenders_path)
+        return self.post(path, json, **kwargs)
+
+    def patch_plan(self, plan_id, acc_token, json, **kwargs):
+        tenders_path = self.PLANS_COLLECTION_PATH.format(plan_id)
+        path = self._get_api_path(tenders_path, acc_token=acc_token)
+        return self.patch(path, json, **kwargs)
+
+    def post_tender(self, plan_id, json, **kwargs):
+        tenders_path = self.TENDERS_COLLECTION_PATH.format(plan_id)
+        path = self._get_api_path(tenders_path)
+        return self.post(path, json, **kwargs)

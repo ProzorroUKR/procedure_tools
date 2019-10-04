@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-DATA_DIR_DEFAULT = 'aboveThresholdUA'
-DATA_SUB_DIR_DEFAULT = 'data'
+DATA_DIR_DEFAULT = "aboveThresholdUA"
+DATA_SUB_DIR_DEFAULT = "data"
 
 
 def get_data_file_path(filename, path):

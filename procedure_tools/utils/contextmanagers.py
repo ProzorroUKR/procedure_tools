@@ -8,11 +8,7 @@ from procedure_tools.utils.handlers import EX_OK
 
 @contextmanager
 def open_file(
-    path, mode='r', encoding='UTF-8',
-    raise_filename=None,
-    raise_exception=None,
-    raise_exception_args=None,
-    **kwargs
+    path, mode="r", encoding="UTF-8", raise_filename=None, raise_exception=None, raise_exception_args=None, **kwargs
 ):
     _, file_name = os.path.split(path)
     print("Processing data file: {}\n".format(file_name))
@@ -30,9 +26,11 @@ def open_file(
 
 
 @contextmanager
-def open_file_or_exit(path, mode='r', encoding='UTF-8', exit_filename=None, **kwargs):
+def open_file_or_exit(path, mode="r", encoding="UTF-8", exit_filename=None, **kwargs):
     with open_file(
-        path, mode, encoding,
+        path,
+        mode,
+        encoding,
         raise_filename=exit_filename,
         raise_exception=SystemExit,
         raise_exception_args=(EX_OK,),
@@ -46,4 +44,5 @@ def ignore(*exceptions):
     try:
         yield
     except exceptions:
-        pass
+        print("Skipping...")
+        print("")
