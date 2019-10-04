@@ -46,7 +46,7 @@ def tender_create_success_print_handler(response):
 def plan_create_success_print_handler(response):
     data = response.json()["data"]
     access = response.json()["access"]
-    print("Tender created:")
+    print("Plan created:")
     print(" - id \t\t\t\t{}".format(data["id"]))
     print(" - token \t\t\t{}".format(access["token"]))
     if "transfer" in access:
