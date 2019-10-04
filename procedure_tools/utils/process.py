@@ -9,13 +9,13 @@ from time import sleep
 from procedure_tools.utils.contextmanagers import ignore, open_file_or_exit
 from procedure_tools.utils.data import (
     TENDER_SECONDS_BUFFER, get_ids, get_items_ids, get_bids_ids, set_agreement_period, set_acceleration_data,
-    set_agreement_id, set_tender_period_data)
+    set_agreement_id, set_tender_period_data, set_mode_data)
 from procedure_tools.utils.file import get_data_file_path, get_data_path, get_data_all_files
 from procedure_tools.utils.handlers import (
     item_patch_success_print_handler, tender_patch_status_success_print_handler, item_create_success_print_handler,
     bid_create_success_print_handler, tender_create_success_print_handler, response_handler,
     tender_check_status_success_print_handler, contract_credentials_success_print_handler,
-    default_success_print_handler)
+    default_success_print_handler, plan_create_success_print_handler)
 
 
 EDR_FILENAME = 'edr_identification.yaml'
@@ -245,14 +245,31 @@ def create_bids(client, args, tender_id, filename_prefix=''):
             client.post_bid(tender_id, bid_create_data, success_handler=bid_create_success_print_handler)
 
 
-def create_tender(client, args, agreement_id=None, filename_prefix=''):
+def create_plan(client, args, filename_prefix=''):
+    print("Creating plan...\n")
+    path = get_data_file_path('{}plan_create.json'.format(filename_prefix), get_data_path(args.data))
+    with ignore(IOError), open_file_or_exit(path, exit_filename=args.stop) as f:
+        plan_create_data = json.loads(f.read())
+        set_mode_data(plan_create_data)
+        response = client.post_plan(plan_create_data, success_handler=plan_create_success_print_handler)
+        return response
+
+
+def create_tender(client, args, plan_id=None, agreement_id=None, filename_prefix=''):
     print("Creating tender...\n")
     path = get_data_file_path('{}tender_create.json'.format(filename_prefix), get_data_path(args.data))
     with ignore(IOError), open_file_or_exit(path, exit_filename=args.stop) as f:
         tender_create_data = json.loads(f.read())
+        set_mode_data(tender_create_data)
         set_acceleration_data(tender_create_data, acceleration=args.acceleration)
-        set_agreement_id(tender_create_data, agreement_id)
-        response = client.post_tender(tender_create_data, success_handler=tender_create_success_print_handler)
+        if agreement_id:
+            set_agreement_id(tender_create_data, agreement_id)
+        if plan_id:
+            response = client.post_tender(
+                plan_id, tender_create_data, success_handler=tender_create_success_print_handler)
+        else:
+            response = client.post_tender(
+                tender_create_data, success_handler=tender_create_success_print_handler)
         return response
 
 

@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-import os
-
 import argparse
 import sys
 
@@ -11,11 +9,12 @@ from procedure_tools.utils.process import (
     patch_contracts, get_contracts, patch_tender_pre, patch_qualifications, get_qualifications, create_awards,
     create_bids, create_tender, update_tender_period, wait, wait_status, patch_stage2_credentials,
     patch_tender_tendering, patch_tender_pending, wait_edr_pre_qual, wait_edr_qual, get_agreement,
-    get_contract, patch_contract_credentials)
-from procedure_tools.client import TendersApiClient, API_PATH_PREFIX_DEFAULT, AgreementsApiClient, ContractsApiClient
+    get_contract, patch_contract_credentials, create_plan)
+from procedure_tools.client import TendersApiClient, API_PATH_PREFIX_DEFAULT, AgreementsApiClient, ContractsApiClient, \
+    PlansApiClient
 from procedure_tools.utils.file import get_default_data_dirs, DATA_DIR_DEFAULT
 from procedure_tools.utils.data import (
-    get_tender_id, get_tender_token, get_procurement_method_type, get_tender_next_check, ACCELERATION_DEFAULT,
+    get_id, get_token, get_procurement_method_type, get_next_check, ACCELERATION_DEFAULT,
     get_complaint_period_end_date, get_ids)
 from procedure_tools.utils.handlers import EX_OK
 
@@ -29,13 +28,23 @@ WAIT_EVENTS = (
 
 
 def create_procedure(args):
-    client = TendersApiClient(args.host, args.token, args.path)
+    plans_client = PlansApiClient(args.host, args.token, args.path)
+    tenders_client = TendersApiClient(args.host, args.token, args.path)
 
-    response = create_tender(client, args)
-    tender_id = get_tender_id(response)
-    tender_token = get_tender_token(response)
+    response = create_plan(plans_client, args)
 
-    process_procedure(client, args, tender_id, tender_token)
+    if response:
+        plan_id = get_id(response)
+        plan_token = get_token(response)
+
+        response = create_tender(plans_client, args, plan_id=plan_id)
+    else:
+        response = create_tender(tenders_client, args)
+
+    tender_id = get_id(response)
+    tender_token = get_token(response)
+
+    process_procedure(tenders_client, args, tender_id, tender_token)
 
     print("Completed.\n")
 
@@ -57,7 +66,7 @@ def process_procedure(client, args, tender_id, tender_token, filename_prefix='')
     if method_type in (
             'belowThreshold',
     ):
-        wait(get_tender_next_check(response), date_info_str='next chronograph check')
+        wait(get_next_check(response), date_info_str='next chronograph check')
 
     if method_type in (
             'belowThreshold',
@@ -109,7 +118,7 @@ def process_procedure(client, args, tender_id, tender_token, filename_prefix='')
             'esco',
     ):
         response = get_tender(client, args, tender_id)
-        wait(get_tender_next_check(response), date_info_str='next chronograph check')
+        wait(get_next_check(response), date_info_str='next chronograph check')
 
     if WAIT_EDR_PRE_QUAL in args.wait.split(','):
         wait_edr_pre_qual(client, args, tender_id)
@@ -268,7 +277,7 @@ def process_procedure(client, args, tender_id, tender_token, filename_prefix='')
         response = get_tender(client, args, tender_id)
         tender_id = response.json()['data']['stage2TenderID']
         response = patch_stage2_credentials(client, args, tender_id, tender_token)
-        tender_token = get_tender_token(response)
+        tender_token = get_token(response)
 
         process_procedure(client, args, tender_id, tender_token, filename_prefix='stage2_')
 
@@ -282,8 +291,8 @@ def process_procedure(client, args, tender_id, tender_token, filename_prefix='')
         get_agreement(agreement_client, args, agreement_id)
 
         response = create_tender(client, args, agreement_id=agreement_id, filename_prefix='selection_')
-        tender_id = get_tender_id(response)
-        tender_token = get_tender_token(response)
+        tender_id = get_id(response)
+        tender_token = get_token(response)
 
         process_procedure(client, args, tender_id, tender_token, filename_prefix='selection_')
 

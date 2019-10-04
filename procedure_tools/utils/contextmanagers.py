@@ -46,4 +46,5 @@ def ignore(*exceptions):
     try:
         yield
     except exceptions:
-        pass
+        print('Skipping...')
+        print('')

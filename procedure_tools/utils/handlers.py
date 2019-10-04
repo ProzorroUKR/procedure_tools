@@ -43,6 +43,17 @@ def tender_create_success_print_handler(response):
     print("")
 
 
+def plan_create_success_print_handler(response):
+    data = response.json()['data']
+    access = response.json()['access']
+    print("Tender created:")
+    print(" - id \t\t\t\t{}".format(data['id']))
+    print(" - token \t\t\t{}".format(access['token']))
+    if 'transfer' in access:
+        print(" - transfer \t\t\t{}".format(access['transfer']))
+    print("")
+
+
 def contract_credentials_success_print_handler(response):
     data = response.json()['data']
     access = response.json()['access']

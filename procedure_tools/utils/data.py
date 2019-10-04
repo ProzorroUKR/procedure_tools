@@ -16,12 +16,15 @@ def get_period_delta(
     return timedelta(seconds=period_seconds / acceleration + seconds_buffer)
 
 
+def set_mode_data(data):
+    if 'data' in data:
+        data['data']['mode'] = "test"
+
 def set_acceleration_data(
         data,
         acceleration=ACCELERATION_DEFAULT,
         period_timedelta=TENDER_PERIOD_TIMEDELTA_DEFAULT):
     if 'data' in data:
-        data['data']['mode'] = "test"
         data['data']['procurementMethodDetails'] = "quick, accelerator={}".format(acceleration)
         if data['data'].get('procurementMethod') != 'limited':
             data['data']['submissionMethodDetails'] = "quick(mode:no-auction)"
@@ -39,7 +42,7 @@ def set_acceleration_data(
 
 
 def set_agreement_id(data, agreement_id):
-    if 'data' in data and agreement_id:
+    if 'data' in data:
         data['data']['agreements'] = [{
             'id': agreement_id
         }]
@@ -64,15 +67,15 @@ def set_agreement_period(data):
     return data
 
 
-def get_tender_id(response):
+def get_id(response):
     return response.json()['data']['id']
 
 
-def get_tender_token(response):
+def get_token(response):
     return response.json()['access']['token']
 
 
-def get_tender_next_check(response):
+def get_next_check(response):
     return response.json()['data']['next_check']
 
 

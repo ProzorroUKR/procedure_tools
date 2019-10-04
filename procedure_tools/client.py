@@ -223,3 +223,29 @@ class ContractsApiClient(BaseApiClient):
         credentials_path = self.CREDENTIALS_PATH.format(contract_id)
         path = self._get_api_path(credentials_path, acc_token=acc_token)
         return self.patch(path, json, **kwargs)
+
+
+class PlansApiClient(BaseApiClient):
+    PLANS_COLLECTION_PATH = 'plans'
+    PLANS_PATH = 'plans/{}'
+    TENDERS_COLLECTION_PATH = 'plans/{}/tenders'
+
+    def get_plan(self, plan_id, **kwargs):
+        contracts_path = self.PLANS_PATH.format(plan_id)
+        path = self._get_api_path(contracts_path)
+        return self.get(path, **kwargs)
+
+    def post_plan(self, json, **kwargs):
+        tenders_path = self.PLANS_COLLECTION_PATH
+        path = self._get_api_path(tenders_path)
+        return self.post(path, json, **kwargs)
+
+    def patch_plan(self, plan_id, acc_token, json, **kwargs):
+        tenders_path = self.PLANS_COLLECTION_PATH.format(plan_id)
+        path = self._get_api_path(tenders_path, acc_token=acc_token)
+        return self.patch(path, json, **kwargs)
+
+    def post_tender(self, plan_id, json, **kwargs):
+        tenders_path = self.TENDERS_COLLECTION_PATH.format(plan_id)
+        path = self._get_api_path(tenders_path)
+        return self.post(path, json, **kwargs)
