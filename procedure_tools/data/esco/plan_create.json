@@ -85,7 +85,7 @@
     },
     "tender": {
       "procurementMethod": "open",
-      "procurementMethodType": "aboveThresholdEU",
+      "procurementMethodType": "esco",
       "tenderPeriod": {
         "startDate": "2019-10-08T01:00:00+03:00"
       }

@@ -32,22 +32,6 @@
           "name": "кг"
         },
         "quantity": 1000
-      },
-      {
-        "description": "Test description 2",
-        "classification": {
-          "scheme": "ДК021",
-          "description": "Test classification description 2",
-          "id": "37810000-9"
-        },
-        "deliveryDate": {
-          "endDate": "2019-10-17T01:00:00+03:00"
-        },
-        "unit": {
-          "code": "KGM",
-          "name": "кг"
-        },
-        "quantity": 2000
       }
     ],
     "budget": {
@@ -85,7 +69,7 @@
     },
     "tender": {
       "procurementMethod": "open",
-      "procurementMethodType": "aboveThresholdEU",
+      "procurementMethodType": "aboveThresholdUA",
       "tenderPeriod": {
         "startDate": "2019-10-08T01:00:00+03:00"
       }

@@ -41,10 +41,11 @@ def create_procedure(args):
     else:
         response = create_tender(tenders_client, args)
 
-    tender_id = get_id(response)
-    tender_token = get_token(response)
+    if response:
+        tender_id = get_id(response)
+        tender_token = get_token(response)
 
-    process_procedure(tenders_client, args, tender_id, tender_token)
+        process_procedure(tenders_client, args, tender_id, tender_token)
 
     print("Completed.\n")
 

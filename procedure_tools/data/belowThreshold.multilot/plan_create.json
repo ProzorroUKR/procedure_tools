@@ -78,14 +78,14 @@
     "procuringEntity": {
       "identifier": {
         "scheme": "UA-EDR",
-        "id": "21725150",
+        "id": "00037256",
         "legalName": "ДП Державне Управління Справами"
       },
       "name": "ДУС"
     },
     "tender": {
       "procurementMethod": "open",
-      "procurementMethodType": "aboveThresholdEU",
+      "procurementMethodType": "belowThreshold",
       "tenderPeriod": {
         "startDate": "2019-10-08T01:00:00+03:00"
       }

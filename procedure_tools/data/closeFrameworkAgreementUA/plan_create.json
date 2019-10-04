@@ -14,7 +14,7 @@
     "classification": {
       "scheme": "ДК021",
       "description": "Test",
-      "id": "37810000-9"
+      "id": "44617100-9"
     },
     "items": [
       {
@@ -22,7 +22,7 @@
         "classification": {
           "scheme": "ДК021",
           "description": "Test classification description 1",
-          "id": "37810000-9"
+          "id": "44617100-9"
         },
         "deliveryDate": {
           "endDate": "2019-10-16T01:00:00+03:00"
@@ -38,7 +38,7 @@
         "classification": {
           "scheme": "ДК021",
           "description": "Test classification description 2",
-          "id": "37810000-9"
+          "id": "44617100-9"
         },
         "deliveryDate": {
           "endDate": "2019-10-17T01:00:00+03:00"
@@ -78,14 +78,14 @@
     "procuringEntity": {
       "identifier": {
         "scheme": "UA-EDR",
-        "id": "21725150",
+        "id": "00037256",
         "legalName": "ДП Державне Управління Справами"
       },
       "name": "ДУС"
     },
     "tender": {
       "procurementMethod": "open",
-      "procurementMethodType": "aboveThresholdEU",
+      "procurementMethodType": "closeFrameworkAgreementUA",
       "tenderPeriod": {
         "startDate": "2019-10-08T01:00:00+03:00"
       }
