@@ -78,7 +78,7 @@ def test_negotiation_quick():
 def test_below_threshold():
     argv = ["--data", "belowThreshold"]
     if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
+        argv += ["--stop", "tender_patch.json"]
     run_test(argv)
 
 
@@ -86,7 +86,7 @@ def test_below_threshold():
 def test_below_threshold_multilot():
     argv = ["--data", "belowThreshold.multilot"]
     if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
+        argv += ["--stop", "tender_patch.json"]
     run_test(argv)
 
 

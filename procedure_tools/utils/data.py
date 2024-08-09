@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 ACCELERATION_DEFAULT = 460800
-TENDER_SECONDS_BUFFER = 20
+TENDER_SECONDS_BUFFER = 5
 
 SUBMISSION_QUICK = "quick"
 SUBMISSION_QUICK_NO_AUCTION = "quick(mode:no-auction)"

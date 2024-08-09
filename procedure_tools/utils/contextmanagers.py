@@ -18,8 +18,8 @@ from procedure_tools.utils.style import fore_error
 def open_file(
     path, mode="r", encoding="UTF-8", exit_filename=None, silent_error=False, **kwargs
 ):
+    _, file_name = os.path.split(path)
     actual_path = get_actual_file_path(path)
-    _, file_name = os.path.split(actual_path)
     logging.info("Processing data file: {}\n".format(file_name))
     try:
         try:
