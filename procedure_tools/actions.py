@@ -724,7 +724,7 @@ def create_plan(
     logging.info("Creating plan...\n")
     data_file = f"{prefix}plan_create.json"
     path = get_data_file_path(get_data_path(args.data), data_file)
-    with read_file(path, context=context, exit_filename=args.stop, silent_error=True) as content:
+    with read_file(path, context=context, exit_filename=args.stop, silent_io_error=True) as content:
         plan_create_data = json.loads(content)
         response = client.post(
             "plans",
@@ -746,7 +746,7 @@ def patch_plan(
     logging.info("Patching plan...\n")
     data_file = f"{prefix}plan_patch.json"
     path = get_data_file_path(get_data_path(args.data), data_file)
-    with read_file(path, context=context, exit_filename=args.stop, silent_error=True) as content:
+    with read_file(path, context=context, exit_filename=args.stop, silent_io_error=True) as content:
         plan_patch_data = json.loads(content)
         response = client.patch(
             f"plans/{plan_id}",
@@ -767,7 +767,7 @@ def create_framework(
     logging.info("Creating framework...\n")
     data_file = f"{prefix}framework_create.json"
     path = get_data_file_path(get_data_path(args.data), data_file)
-    with read_file(path, context=context, exit_filename=args.stop, silent_error=True) as content:
+    with read_file(path, context=context, exit_filename=args.stop, silent_io_error=True) as content:
         framework_create_data = json.loads(content)
         response = client.post(
             "frameworks",
@@ -1259,7 +1259,7 @@ def post_criteria(
     logging.info("Create tender criteria...\n")
     data_file = f"{prefix}criteria_create.json"
     path = get_data_file_path(get_data_path(args.data), data_file)
-    with read_file(path, context=context, exit_filename=args.stop) as content:
+    with read_file(path, context=context, exit_filename=args.stop, silent_io_error=True) as content:
         criteria_data = json.loads(content)
         return client.post(
             f"tenders/{tender_id}/criteria",
@@ -1540,7 +1540,7 @@ def patch_complaints(
                     complaints_action_data_files.append(data_file)
             for data_file in complaints_action_data_files:
                 path = get_data_file_path(data_path, data_file)
-                with read_file(path, context=context, exit_filename=args.stop, silent_error=True) as content:
+                with read_file(path, context=context, exit_filename=args.stop, silent_io_error=True) as content:
                     complaint_patch_data = json.loads(content)
                     role = data_file.split(".")[-2].split("_")[-1]
                     role_auth_token = get_auth_token(role)

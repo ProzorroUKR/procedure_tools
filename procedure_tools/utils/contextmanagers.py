@@ -15,7 +15,7 @@ from procedure_tools.utils.style import fore_error
 
 
 @contextmanager
-def open_file(path, mode="r", encoding="UTF-8", exit_filename=None, silent_error=False, **kwargs):
+def open_file(path, mode="r", encoding="UTF-8", exit_filename=None, silent_io_error=False, **kwargs):
     _, file_name = os.path.split(path)
     actual_path = get_actual_file_path(path)
     logging.info(f"Processing data file: {file_name}\n")
@@ -26,7 +26,7 @@ def open_file(path, mode="r", encoding="UTF-8", exit_filename=None, silent_error
             yield file
             file.close()
         except IOError as e:
-            if not silent_error:
+            if not silent_io_error:
                 msg = fore_error(str(e))
                 msg += "\n"
                 logging.info(msg)
@@ -41,14 +41,14 @@ def open_file(path, mode="r", encoding="UTF-8", exit_filename=None, silent_error
 
 
 @contextmanager
-def read_file(path, context=None, exit_filename=None, silent_error=False, **kwargs):
+def read_file(path, context=None, exit_filename=None, silent_io_error=False, **kwargs):
     context = context or {}
     with open_file(
         path,
         mode="r",
         encoding="UTF-8",
         exit_filename=exit_filename,
-        silent_error=silent_error,
+        silent_io_error=silent_io_error,
         **kwargs,
     ) as file:
         if not file:
