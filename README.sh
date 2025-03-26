@@ -129,7 +129,7 @@ EOM
 
 echo "Executing command example."
 
-procedure ${API_HOST} ${API_TOKEN} ${DS_HOST} ${DS_USERNAME} ${DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA --stop=bid_create_3.json >> $FILE
+procedure ${API_HOST} ${API_TOKEN} ${DS_HOST} ${DS_USERNAME} ${DS_PASSWORD} --acceleration=100000 --path=/api/0/ --data=closeFrameworkAgreementUA --stop=bid_create_3.json >> $FILE
 
 echo "Command example successfully generated."
 
