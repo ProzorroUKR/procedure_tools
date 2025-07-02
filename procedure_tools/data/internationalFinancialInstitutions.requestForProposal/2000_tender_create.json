@@ -26,7 +26,6 @@
         "id": "{{ agreement.id }}"
       }
     ],
-    "contractTemplateName": "00000000-0.0002.01",
     "enquiryPeriod": {
       "endDate": "{{ from_now_iso(days=30) }}"
     },

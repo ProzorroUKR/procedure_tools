@@ -23,6 +23,14 @@
   "data": {
     "buyers": [
       {
+        "signerInfo": {
+          "name": "Test Testovich",
+          "telephone": "+380950000000",
+          "email": "example@email.com",
+          "iban": "111111111111111",
+          "authorizedBy": "Статут компанії",
+          "position": "Генеральний директор"
+        },
         "id": "dd426ce4c76f48849b3d8e8699b0b3ce",
         "identifier": {
           "id": "111983",
@@ -32,6 +40,14 @@
         "name": "ДТП"
       },
       {
+        "signerInfo": {
+          "name": "Test Testovich",
+          "telephone": "+380950000000",
+          "email": "example@email.com",
+          "iban": "111111111111111",
+          "authorizedBy": "Статут компанії",
+          "position": "Генеральний директор"
+        },
         "id": "881d1efa739e4cceb24e45075996bbfb",
         "identifier": {
           "id": "111984",
@@ -41,6 +57,14 @@
         "name": "ІТП"
       },
       {
+        "signerInfo": {
+          "name": "Test Testovich",
+          "telephone": "+380950000000",
+          "email": "example@email.com",
+          "iban": "111111111111111",
+          "authorizedBy": "Статут компанії",
+          "position": "Генеральний директор"
+        },
         "id": "bf08d7d965c24296a195445200785bae",
         "identifier": {
           "id": "111985",
@@ -50,7 +74,7 @@
         "name": "ЗІТП"
       }
     ],
-    "contractTemplateName": "00000000-0.0002.01",
+    "contractTemplateName": "00000000.0002.01",
     "enquiryPeriod": {
       "endDate": "{{ from_now_iso(days=30) }}"
     },
