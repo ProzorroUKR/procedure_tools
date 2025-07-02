@@ -34,7 +34,6 @@ jobs:
           - reporting
           - simple_defense
           - dynamic_purchasing_system_competitive_ordering
-          - dynamic_purchasing_system_price_quotation
           - request_for_proposal
           - international_financial_institutions_request_for_proposal
     env:

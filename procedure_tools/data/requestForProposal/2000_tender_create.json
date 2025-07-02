@@ -21,7 +21,6 @@
     "valueCurrencyEquality": true
   },
   "data": {
-    "contractTemplateName": "00000000-0.0002.01",
     "enquiryPeriod": {
       "endDate": "{{ from_now_iso(days=30) }}"
     },
@@ -208,6 +207,14 @@
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "requestForProposal",
     "procuringEntity": {
+      "signerInfo": {
+        "name": "Test Testovich",
+        "telephone": "+380950000000",
+        "email": "example@email.com",
+        "iban": "111111111111111",
+        "authorizedBy": "Статут компанії",
+        "position": "Генеральний директор"
+      },
       "address": {
         "countryName": "Україна",
         "locality": "м. Київ",
