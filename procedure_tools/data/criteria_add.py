@@ -3,7 +3,7 @@ import os
 import uuid
 from pathlib import Path
 
-import standards
+from procedure_tools.data.field_sort import dump_kwargs
 
 
 def add_criteria(data, criteria_file):
@@ -67,7 +67,7 @@ def process_directory(directory, criteria_file):
                             data, new_ids = add_criteria(data, criteria_file)
                             added_requirement_ids.extend(new_ids)
                             with open(criteria_path, "w", encoding="utf-8") as f:
-                                json.dump(data, f, indent=2, ensure_ascii=False)
+                                json.dump(data, f, **dump_kwargs)
 
 
 if __name__ == "__main__":
