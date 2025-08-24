@@ -44,7 +44,7 @@
       "name": "Державне управління справами"
     },
     "qualificationPeriod": {
-      "endDate": "{{ from_now_iso(days=100) }}"
+      "endDate": "{{ from_now_iso(days=366) }}"
     },
     "title": "Узагальнена назва закупівлі"
   }
