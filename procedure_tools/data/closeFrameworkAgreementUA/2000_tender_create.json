@@ -144,11 +144,6 @@
         "type": "financing"
       }
     ],
-    "minimalStep": {
-      "amount": 0,
-      "currency": "UAH",
-      "valueAddedTaxIncluded": true
-    },
     "mode": "test",
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "closeFrameworkAgreementUA",

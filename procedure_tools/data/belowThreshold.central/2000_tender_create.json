@@ -23,55 +23,55 @@
   "data": {
     "buyers": [
       {
-        "signerInfo": {
-          "name": "Test Testovich",
-          "telephone": "+380950000000",
-          "email": "example@email.com",
-          "iban": "111111111111111",
-          "authorizedBy": "Статут компанії",
-          "position": "Генеральний директор"
-        },
         "id": "dd426ce4c76f48849b3d8e8699b0b3ce",
         "identifier": {
           "id": "111983",
           "legalName": "Державне тестове підприемство",
           "scheme": "UA-EDR"
         },
-        "name": "ДТП"
-      },
-      {
+        "name": "ДТП",
         "signerInfo": {
-          "name": "Test Testovich",
-          "telephone": "+380950000000",
+          "authorizedBy": "Статут компанії",
           "email": "example@email.com",
           "iban": "111111111111111",
-          "authorizedBy": "Статут компанії",
-          "position": "Генеральний директор"
-        },
+          "name": "Test Testovich",
+          "position": "Генеральний директор",
+          "telephone": "+380950000000"
+        }
+      },
+      {
         "id": "881d1efa739e4cceb24e45075996bbfb",
         "identifier": {
           "id": "111984",
           "legalName": "Інше тестове підприемство",
           "scheme": "UA-EDR"
         },
-        "name": "ІТП"
-      },
-      {
+        "name": "ІТП",
         "signerInfo": {
-          "name": "Test Testovich",
-          "telephone": "+380950000000",
+          "authorizedBy": "Статут компанії",
           "email": "example@email.com",
           "iban": "111111111111111",
-          "authorizedBy": "Статут компанії",
-          "position": "Генеральний директор"
-        },
+          "name": "Test Testovich",
+          "position": "Генеральний директор",
+          "telephone": "+380950000000"
+        }
+      },
+      {
         "id": "bf08d7d965c24296a195445200785bae",
         "identifier": {
           "id": "111985",
           "legalName": "Зовсім інше тестове підприемство",
           "scheme": "UA-EDR"
         },
-        "name": "ЗІТП"
+        "name": "ЗІТП",
+        "signerInfo": {
+          "authorizedBy": "Статут компанії",
+          "email": "example@email.com",
+          "iban": "111111111111111",
+          "name": "Test Testovich",
+          "position": "Генеральний директор",
+          "telephone": "+380950000000"
+        }
       }
     ],
     "contractTemplateName": "00000000.0002.01",
@@ -385,11 +385,6 @@
         "type": "financing"
       }
     ],
-    "minimalStep": {
-      "amount": 0,
-      "currency": "UAH",
-      "valueAddedTaxIncluded": true
-    },
     "mode": "test",
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "belowThreshold",

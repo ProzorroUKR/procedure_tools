@@ -8,6 +8,7 @@ install_requires = [
     "colorama",
     "jinja2",
     "faker",
+    "jsonpath-ng",
 ]
 tests_require = [
     "pytest",

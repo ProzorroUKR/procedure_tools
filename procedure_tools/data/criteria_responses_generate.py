@@ -1,8 +1,9 @@
 import argparse
 import json
 import os
-from copy import deepcopy
 from pathlib import Path
+
+from procedure_tools.data.field_sort import dump_kwargs
 
 dump_kwargs = {
     "sort_keys": True,

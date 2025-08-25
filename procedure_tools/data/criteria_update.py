@@ -8,11 +8,7 @@ from uuid import uuid4
 
 import standards
 
-dump_kwargs = {
-    "sort_keys": True,
-    "indent": 2,
-    "ensure_ascii": False,
-}
+from procedure_tools.data.field_sort import dump_kwargs
 
 moved_responses = [
     ### Example:
