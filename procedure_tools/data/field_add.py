@@ -33,14 +33,14 @@ def add_field_by_jsonpath(filename, jsonpath, value):
         else:
             print("Invalid jsonpath format")
             return False
-        
+
         parent_expr = parse(parent_path)
         parent_matches = parent_expr.find(data)
-        
+
         if not parent_matches:
             print(f"No locations found for parent path: {parent_path}")
             return False
-        
+
         # Add field to each parent match
         for match in parent_matches:
             # For jsonpath like $.config.field, match.context.value is the root object
@@ -50,7 +50,7 @@ def add_field_by_jsonpath(filename, jsonpath, value):
             else:
                 # Extract the actual parent object from the match
                 parent = match.value
-            
+
             if isinstance(parent, dict):
                 if field_name in parent:
                     print(f"Field '{field_name}' already exists in {filename}, skipping...")
