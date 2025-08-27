@@ -2,7 +2,7 @@
   "config": {
     "awardComplainDuration": 5,
     "cancellationComplainDuration": 0,
-    "clarificationUntilDuration": 3,
+    "clarificationUntilDuration": 0,
     "enquiryPeriodRegulation": 0,
     "hasAuction": true,
     "hasAwardComplaints": false,

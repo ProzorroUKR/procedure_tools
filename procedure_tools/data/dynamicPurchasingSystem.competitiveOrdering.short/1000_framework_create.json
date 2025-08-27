@@ -1,0 +1,149 @@
+{
+  "config": {
+    "clarificationUntilDuration": 3,
+    "hasItems": true,
+    "qualificationComplainDuration": 0,
+    "restrictedDerivatives": false
+  },
+  "data": {
+    "additionalClassifications": [
+      {
+        "description": "Техніка конторська/офісна, інша",
+        "id": "28.23.23",
+        "scheme": "ДКПП"
+      }
+    ],
+    "classification": {
+      "description": "Промислова техніка",
+      "id": "42000000-6",
+      "scheme": "ДК021"
+    },
+    "description": "Назва предмета закупівлі",
+    "frameworkDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
+    "frameworkType": "dynamicPurchasingSystem",
+    "items": [
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова 1"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221295+03:00",
+          "startDate": "2017-07-11T16:02:36.221241+03:00"
+        },
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова 1"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221351+03:00",
+          "startDate": "2017-07-11T16:02:36.221327+03:00"
+        },
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова 1"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221351+03:00",
+          "startDate": "2017-07-11T16:02:36.221327+03:00"
+        },
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      }
+    ],
+    "procuringEntity": {
+      "address": {
+        "countryName": "Україна",
+        "locality": "м. Київ",
+        "postalCode": "42000",
+        "region": "м. Київ",
+        "streetAddress": "вул. Тестова 22"
+      },
+      "contactPoint": {
+        "email": "test@test.com",
+        "name": "Тестовенко Тест Тестович",
+        "telephone": "+380424424242",
+        "url": "https://example.com"
+      },
+      "identifier": {
+        "id": "21725150",
+        "legalName": "Тестовий заклад",
+        "scheme": "UA-EDR"
+      },
+      "kind": "special",
+      "name": "Тестовий заклад #1 м.Київ"
+    },
+    "qualificationPeriod": {
+      "endDate": "{{ from_now_iso(days=366) }}"
+    },
+    "title": "Узагальнена назва закупівлі"
+  }
+}
