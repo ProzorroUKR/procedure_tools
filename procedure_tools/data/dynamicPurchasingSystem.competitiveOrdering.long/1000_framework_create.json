@@ -1,6 +1,7 @@
 {
   "config": {
     "clarificationUntilDuration": 3,
+    "hasItems": false,
     "qualificationComplainDuration": 0,
     "restrictedDerivatives": false
   },
