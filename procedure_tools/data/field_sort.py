@@ -14,7 +14,7 @@ def sort_data_json():
     for root, dirs, files in os.walk(os.path.join(get_project_dir(), "data")):
         for file in files:
             try:
-                with open(os.path.join(root, file), "r") as f:
+                with open(os.path.join(root, file), "r", encoding="utf-8") as f:
                     lines = json.loads(f.read())
                 with open(os.path.join(root, file), "w", encoding="utf-8") as f:
                     f.write(json.dumps(lines, **dump_kwargs))
