@@ -28,7 +28,12 @@
         "quantity": 1,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+			"value": {
+				"amount": 10,
+				"currency": "UAH",
+				"valueAddedTaxIncluded": false
+			}
         }
       },
       {
@@ -38,7 +43,12 @@
         "quantity": 1,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+			"value": {
+				"amount": 10,
+				"currency": "UAH",
+				"valueAddedTaxIncluded": false
+			}
         }
       }
     ],
@@ -78,6 +88,14 @@
     "subcontractingDetails": "Тестове підприємство, Україна, м. Київ, вул. Тестова, 33",
     "tenderers": [
       {
+        "signerInfo": {
+          "name": "Test Testovich",
+          "telephone": "+380950000000",
+          "email": "example@email.com",
+          "iban": "111111111111111",
+          "authorizedBy": "Статут компанії",
+          "position": "Генеральний директор"
+        },
         "address": {
           "countryName": "Україна",
           "locality": "м. Київ",
@@ -96,15 +114,7 @@
           "uri": "http://factory.example.com"
         },
         "name": "Тестове підприємство",
-        "scale": "micro",
-        "signerInfo": {
-          "authorizedBy": "Статут компанії",
-          "email": "example@email.com",
-          "iban": "111111111111111",
-          "name": "Test Testovich",
-          "position": "Генеральний директор",
-          "telephone": "+380950000000"
-        }
+        "scale": "micro"
       }
     ]
   }

@@ -845,6 +845,104 @@
       ],
       "source": "winner",
       "title": "Наявність не виконаних зобов'язань за раніше укладеним договором"
+    },
+    {
+		"description": "Строк, протягом якого тендерні пропозиції вважаються дійсними, але не менше 90 днів із дати кінцевого строку подання тендерних пропозицій",
+		"source": "tenderer",
+		"relatesTo": "tender",
+		"classification": {
+			"scheme": "ESPD211",
+			"id": "CRITERION.OTHER.BID.VALIDITY_PERIOD"
+		},
+		"title": "Строк дії тендерної пропозиції",
+		"legislation": [
+			{
+				"version": "2024-10-23",
+				"identifier": {
+					"id": "922-VIII",
+					"legalName": "Закон України \"Про публічні закупівлі\"",
+					"uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
+				},
+				"type": "NATIONAL_LEGISLATION",
+				"article": "22.2.11"
+			}
+		],
+		"requirementGroups": [
+			{
+				"id": "85a59a1b5d3741e19e4b37b82b1e0f7c",
+				"description": "Підтверджується, що",
+				"requirements": [
+					{
+						"id": "8b17169700814395ac6b7fc19453aea7",
+						"title": "Строк дії тендерної пропозиції із дати кінцевого строку подання тендерних пропозицій",
+						"dataType": "integer",
+						"status": "active",
+						"unit": {
+							"code": "DAY",
+							"name": "день"
+						},
+						"minValue": 90,
+						"datePublished": "2025-10-01T07:55:51.452224+03:00"
+					}
+				]
+			}
+		]
+	},
+	{
+            "description": "У тендерній пропозиції зазначається інформація (повне найменування та місцезнаходження) щодо кожного суб’єкта господарювання, якого учасник планує залучати до виконання робіт чи послуг як субпідрядника/співвиконавця в обсязі не менше 20 відсотків від вартості договору про закупівлю",
+            "source": "winner",
+            "relatesTo": "tender",
+            "classification": {
+                "scheme": "ESPD211",
+                "id": "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.MANAGEMENT.SUBCONTRACTING_PROPORTION"
+            },
+            "title": "Інформування про субпідрядників/співвиконавців",
+            "legislation": [
+                {
+                    "version": "2024-10-23",
+                    "identifier": {
+                        "id": "922-VIII",
+                        "legalName": "Закон України \"Про публічні закупівлі\"",
+                        "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
+                    },
+                    "type": "NATIONAL_LEGISLATION",
+                    "article": "22.2.18"
+                }
+            ],
+            "requirementGroups": [
+                {
+                    "id": "bc4c69064e3242458934cc9d8b6dce78",
+                    "description": "При відсутності залучених спроможностей субпідрядника/співвиконавця підтверджується, що",
+                    "requirements": [
+                        {
+                            "id": "999f235e0427419fb937319d0b5833d6",
+                            "title": "Учасник закупівлі спроможний виконати обсяг передбачений закупівлею робіт або послуг",
+                            "dataType": "boolean",
+                            "status": "active",
+                            "expectedValue": true,
+                            "datePublished": "2025-09-30T17:52:40.114748+03:00"
+                        }
+                    ]
+                },
+                {
+                    "id": "db3a682fbaf246c794ffec565dfce1fe",
+                    "description": "При наявності залучених спроможностей субпідрядника/співвиконавця підтверджується, що",
+                    "requirements": [
+                        {
+                            "id": "4efe50cfda844d219442c71f0d545bbb",
+                            "title": "Обсяг залучення спроможностей інших суб’єктів господарювання як субпідрядників/співвиконавців складає % від вартості договору про закупівлю",
+                            "dataType": "integer",
+                            "status": "active",
+                            "unit": {
+                                "code": "P1",
+                                "name": "відсоток"
+                            },
+                            "minValue": 1,
+                            "datePublished": "2025-09-30T17:52:40.114748+03:00"
+                        }
+                    ]
+                }
+           ]
     }
   ]
 }

@@ -3,12 +3,10 @@
     "awardComplainDuration": 10,
     "cancellationComplainDuration": 10,
     "clarificationUntilDuration": 3,
-    "enquiryPeriodRegulation": 10,
     "hasAuction": true,
     "hasAwardComplaints": true,
     "hasAwardingOrder": true,
     "hasCancellationComplaints": true,
-    "hasEnquiries": false,
     "hasPreSelectionAgreement": false,
     "hasPrequalification": true,
     "hasQualificationComplaints": true,
@@ -16,13 +14,15 @@
     "hasValueEstimation": false,
     "hasValueRestriction": true,
     "minBidsNumber": 2,
-    "minEnquiriesDuration": 0,
-    "minTenderingDuration": 30,
     "qualificationComplainDuration": 5,
     "qualificationDuration": 20,
     "restricted": false,
     "tenderComplainRegulation": 4,
-    "valueCurrencyEquality": true
+    "valueCurrencyEquality": true,
+    "minTenderingDuration": 30,
+    "hasEnquiries": false,
+    "minEnquiriesDuration": 0,
+    "enquiryPeriodRegulation": 10
   },
   "data": {
     "NBUdiscountRate": 0.22986,
@@ -50,7 +50,8 @@
         },
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "relatedLot": "dd22c9c085f64e019f943999b5b41fe5"
+        "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
+        "quantity": 1
       },
       {
         "additionalClassifications": [
@@ -74,7 +75,8 @@
         },
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f"
+        "relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f",
+        "quantity": 1
       },
       {
         "additionalClassifications": [
@@ -207,7 +209,6 @@
         "type": "financing"
       }
     ],
-    "minimalStepPercentage": 0.006,
     "mode": "test",
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "esco",
@@ -243,7 +244,6 @@
       "startDate": "{{ from_now_iso() }}"
     },
     "title": "Тестовий опис предмету закупівлі у заголовку тендеру (created with procedure_tools)",
-    "title_en": "Procurement item test description in procedure title (created with procedure_tools)",
-    "yearlyPaymentsPercentageRange": 0.8
+    "title_en": "Procurement item test description in procedure title (created with procedure_tools)"
   }
 }

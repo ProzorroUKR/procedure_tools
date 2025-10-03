@@ -3,12 +3,10 @@
     "awardComplainDuration": 0,
     "cancellationComplainDuration": 0,
     "clarificationUntilDuration": 0,
-    "enquiryPeriodRegulation": 0,
     "hasAuction": true,
     "hasAwardComplaints": false,
     "hasAwardingOrder": true,
     "hasCancellationComplaints": false,
-    "hasEnquiries": true,
     "hasPreSelectionAgreement": true,
     "hasPrequalification": false,
     "hasQualificationComplaints": false,
@@ -16,13 +14,15 @@
     "hasValueEstimation": true,
     "hasValueRestriction": true,
     "minBidsNumber": 1,
-    "minEnquiriesDuration": 1,
-    "minTenderingDuration": 3,
     "qualificationComplainDuration": 0,
     "qualificationDuration": 0,
     "restricted": false,
     "tenderComplainRegulation": 0,
-    "valueCurrencyEquality": true
+    "valueCurrencyEquality": true,
+	"enquiryPeriodRegulation": 0,
+	"minTenderingDuration": 3,
+	"hasEnquiries": true,
+	"minEnquiriesDuration": 1
   },
   "data": {
     "agreements": [

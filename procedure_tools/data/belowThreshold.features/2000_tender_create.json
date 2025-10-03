@@ -3,12 +3,10 @@
     "awardComplainDuration": 2,
     "cancellationComplainDuration": 0,
     "clarificationUntilDuration": 1,
-    "enquiryPeriodRegulation": 0,
     "hasAuction": true,
     "hasAwardComplaints": false,
     "hasAwardingOrder": true,
     "hasCancellationComplaints": false,
-    "hasEnquiries": true,
     "hasPreSelectionAgreement": false,
     "hasPrequalification": false,
     "hasQualificationComplaints": false,
@@ -16,13 +14,15 @@
     "hasValueEstimation": true,
     "hasValueRestriction": true,
     "minBidsNumber": 1,
-    "minEnquiriesDuration": 3,
-    "minTenderingDuration": 2,
     "qualificationComplainDuration": 0,
     "qualificationDuration": 0,
     "restricted": false,
     "tenderComplainRegulation": 0,
-    "valueCurrencyEquality": true
+    "valueCurrencyEquality": true,
+    "minTenderingDuration": 2,
+    "hasEnquiries": true,
+    "minEnquiriesDuration": 3,
+    "enquiryPeriodRegulation": 0
   },
   "data": {
     "contractTemplateName": "00000000.0002.01",
@@ -230,7 +230,7 @@
         }
       },
       {
-        "description": "Опис Лот №1",
+        "description": "Опис Лот №2",
         "guarantee": {
           "amount": 100,
           "currency": "UAH"

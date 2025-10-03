@@ -193,6 +193,27 @@
         "id": "6d91695aedb54c2c9f46df4b9ad739c8"
       },
       "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "499c7520bdf049629c5ae9ff56b781a9"
+      },
+      "value": 1.9
+    },
+    {
+      "requirement": {
+        "id": "9726d6224bab45658a30fd6a70c297c6"
+      },
+      "value": true
     }
   ]
 }

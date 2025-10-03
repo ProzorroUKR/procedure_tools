@@ -621,6 +621,69 @@
     },
     {
       "classification": {
+        "id": "CRITERION.OTHER.BID.GUARANTEE",
+        "scheme": "ESPD211"
+      },
+      "description": "Забезпечення тендерної пропозиції/пропозиції не повертається у разі: 1) відкликання тендерної пропозиції/пропозиції учасником після закінчення строку її подання, але до того, як сплив строк, протягом якого тендерні пропозиції вважаються дійсними; 2) непідписання договору про закупівлю учасником, який став переможцем тендеру/спрощеної закупівлі; 3) ненадання переможцем процедури закупівлі (крім переговорної процедури закупівлі) у строк, визначений частиною шостою статті 17 цього Закону, документів, що підтверджують відсутність підстав, установлених статтею 17 цього Закону; 4) ненадання переможцем процедури закупівлі (крім переговорної процедури закупівлі)/спрощеної закупівлі забезпечення виконання договору про закупівлю після отримання повідомлення про намір укласти договір про закупівлю, якщо надання такого забезпечення передбачено тендерною документацією/оголошенням про проведення спрощеної закупівлі",
+      "legislation": [
+        {
+          "article": "22.2.15",
+          "identifier": {
+            "id": "922-VIII",
+            "legalName": "Закон України \"Про публічні закупівлі\"",
+            "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
+          },
+          "type": "NATIONAL_LEGISLATION",
+          "version": "2024-10-23"
+        },
+        {
+          "article": "25",
+          "identifier": {
+            "id": "922-VIII",
+            "legalName": "Закон України \"Про публічні закупівлі\"",
+            "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1444"
+          },
+          "type": "NATIONAL_LEGISLATION",
+          "version": "2024-10-23"
+        }
+      ],
+      "relatedItem": "5f58e4e21baf4696bb1cfd67c4f86f73",
+      "relatesTo": "lot",
+      "requirementGroups": [
+        {
+          "description": "Підтверджується, що",
+          "requirements": [
+            {
+              "dataType": "number",
+              "eligibleEvidences": [
+                {
+                  "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+                  "type": "document"
+                }
+              ],
+              "id": "329de622783a4576b3bf1af0ce21acd2",
+              "maxValue": 3.0,
+              "minValue": 0.5,
+              "title": "Розмір забезпечення тендерної пропозиції/пропозиції у грошовому виразі у % від очікуваної вартості закупівлі",
+              "unit": {
+                "code": "P1",
+                "name": "відсоток"
+              }
+            },
+            {
+              "dataType": "boolean",
+              "expectedValue": true,
+              "id": "b3ab8dcd9a5d4e71afd00b7b4e6d373d",
+              "title": "Вид та умови надання забезпечення тендерних пропозицій"
+            }
+          ]
+        }
+      ],
+      "source": "tenderer",
+      "title": "Забезпечення тендерних пропозицій"
+    },
+    {
+      "classification": {
         "id": "CRITERION.OTHER.CONTRACT.GUARANTEE",
         "scheme": "ESPD211"
       },
@@ -1183,72 +1246,74 @@
       "title": "Наявність не виконаних зобов'язань за раніше укладеним договором"
     },
     {
-      "classification": {
-        "id": "CRITERION.OTHER.BID.VALIDITY_PERIOD",
-        "scheme": "ESPD211"
-      },
+      "title": "Строк дії тендерної пропозиції",
       "description": "Строк, протягом якого тендерні пропозиції вважаються дійсними, але не менше 90 днів із дати кінцевого строку подання тендерних пропозицій",
+      "source": "tenderer",
+      "classification": {
+        "scheme": "ESPD211",
+        "id": "CRITERION.OTHER.BID.VALIDITY_PERIOD"
+      },
+      "relatesTo": "tender",
       "legislation": [
         {
-          "article": "22.2.11",
+          "version": "2024-10-23",
           "identifier": {
             "id": "922-VIII",
             "legalName": "Закон України \"Про публічні закупівлі\"",
             "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
           },
           "type": "NATIONAL_LEGISLATION",
-          "version": "2024-10-23"
+          "article": "22.2.11"
         }
       ],
-      "relatesTo": "tender",
       "requirementGroups": [
         {
           "description": "Підтверджується, що",
           "requirements": [
             {
-              "dataType": "integer",
-              "id": "c85e0b6b4dfd4007a7b51a42b61ee9f9",
-              "minValue": 90,
               "title": "Строк дії тендерної пропозиції із дати кінцевого строку подання тендерних пропозицій",
+              "dataType": "integer",
+              "minValue": 90,
               "unit": {
                 "code": "DAY",
                 "name": "день"
-              }
+              },
+              "id": "c85e0b6b4dfd4007a7b51a42b61ee9f9"
             }
           ]
         }
-      ],
-      "source": "tenderer",
-      "title": "Строк дії тендерної пропозиції"
+      ]
     },
     {
-      "classification": {
-        "id": "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.MANAGEMENT.SUBCONTRACTING_PROPORTION",
-        "scheme": "ESPD211"
-      },
+      "title": "Інформування про субпідрядників/співвиконавців",
       "description": "У тендерній пропозиції зазначається інформація (повне найменування та місцезнаходження) щодо кожного суб’єкта господарювання, якого учасник планує залучати до виконання робіт чи послуг як субпідрядника/співвиконавця в обсязі не менше 20 відсотків від вартості договору про закупівлю",
+      "source": "winner",
+      "classification": {
+        "scheme": "ESPD211",
+        "id": "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.MANAGEMENT.SUBCONTRACTING_PROPORTION"
+      },
+      "relatesTo": "tender",
       "legislation": [
         {
-          "article": "22.2.18",
+          "version": "2024-10-23",
           "identifier": {
             "id": "922-VIII",
             "legalName": "Закон України \"Про публічні закупівлі\"",
             "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
           },
           "type": "NATIONAL_LEGISLATION",
-          "version": "2024-10-23"
+          "article": "22.2.18"
         }
       ],
-      "relatesTo": "tender",
       "requirementGroups": [
         {
           "description": "При відсутності залучених спроможностей субпідрядника/співвиконавця підтверджується, що",
           "requirements": [
             {
+              "title": "Учасник закупівлі спроможний виконати обсяг передбачений закупівлею робіт або послуг",
               "dataType": "boolean",
               "expectedValue": true,
-              "id": "556ccd8b550b44a28ec0c90b9263f709",
-              "title": "Учасник закупівлі спроможний виконати обсяг передбачений закупівлею робіт або послуг"
+              "id": "556ccd8b550b44a28ec0c90b9263f709"
             }
           ]
         },
@@ -1256,26 +1321,24 @@
           "description": "При наявності залучених спроможностей субпідрядника/співвиконавця підтверджується, що",
           "requirements": [
             {
+              "title": "Обсяг залучення спроможностей інших суб’єктів господарювання як субпідрядників/співвиконавців складає % від вартості договору про закупівлю",
               "dataType": "integer",
+              "minValue": 1,
+              "unit": {
+                "name": "відсоток",
+                "code": "P1"
+              },
               "eligibleEvidences": [
                 {
                   "title": "",
                   "type": "document"
                 }
               ],
-              "id": "d9c5dd8318904e21a81cd37d62b123aa",
-              "minValue": 1,
-              "title": "Обсяг залучення спроможностей інших суб’єктів господарювання як субпідрядників/співвиконавців складає % від вартості договору про закупівлю",
-              "unit": {
-                "code": "P1",
-                "name": "відсоток"
-              }
+              "id": "d9c5dd8318904e21a81cd37d62b123aa"
             }
           ]
         }
-      ],
-      "source": "winner",
-      "title": "Інформування про субпідрядників/співвиконавців"
+      ]
     }
   ]
 }

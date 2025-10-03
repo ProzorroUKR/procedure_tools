@@ -205,6 +205,48 @@
         "id": "9fe5358b9d5c4d41b3915be3b8737321"
       },
       "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "3410808454d54b17b3d7c45124bed54b"
+      },
+      "value": 2.9
+    },
+    {
+      "requirement": {
+        "id": "cc3448e096914370b436a7018f31c543"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "f55b9f325f43447492a9053ab8b84727"
+      },
+      "value": 1
+    },
+    {
+      "requirement": {
+        "id": "f8f76876d1914029b7950438813ef018"
+      },
+      "value": true
     }
   ]
 }

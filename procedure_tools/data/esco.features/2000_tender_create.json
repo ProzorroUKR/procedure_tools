@@ -3,12 +3,10 @@
     "awardComplainDuration": 10,
     "cancellationComplainDuration": 10,
     "clarificationUntilDuration": 3,
-    "enquiryPeriodRegulation": 10,
     "hasAuction": true,
     "hasAwardComplaints": true,
     "hasAwardingOrder": true,
     "hasCancellationComplaints": true,
-    "hasEnquiries": false,
     "hasPreSelectionAgreement": false,
     "hasPrequalification": true,
     "hasQualificationComplaints": true,
@@ -16,13 +14,15 @@
     "hasValueEstimation": false,
     "hasValueRestriction": true,
     "minBidsNumber": 2,
-    "minEnquiriesDuration": 0,
-    "minTenderingDuration": 30,
     "qualificationComplainDuration": 5,
     "qualificationDuration": 20,
     "restricted": false,
     "tenderComplainRegulation": 4,
-    "valueCurrencyEquality": true
+    "valueCurrencyEquality": true,
+    "minTenderingDuration": 30,
+    "hasEnquiries": false,
+    "minEnquiriesDuration": 0,
+    "enquiryPeriodRegulation": 10
   },
   "data": {
     "NBUdiscountRate": 0.22986,
@@ -92,6 +92,7 @@
           "region": "м. Київ",
           "streetAddress": "вул. Тестова 1"
         },
+		"quantity": 1,
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "edd0032574bf4402877ad5f362df225a",
@@ -117,6 +118,7 @@
           "region": "м. Київ",
           "streetAddress": "вул. Тестова 1"
         },
+		"quantity": 1,
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "6c8d4d0f33a548fa872c350df69579a8",
@@ -146,9 +148,9 @@
           "endDate": "2017-08-10T16:02:36.221351+03:00",
           "startDate": "2017-07-11T16:02:36.221327+03:00"
         },
+		"quantity": 1,
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "quantity": 1,
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",
         "unit": {
           "code": "KGM",
@@ -179,9 +181,9 @@
           "endDate": "2017-08-10T16:02:36.221351+03:00",
           "startDate": "2017-07-11T16:02:36.221327+03:00"
         },
+		"quantity": 1,
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "quantity": 1,
         "relatedLot": "60441ce87301487c9bf194fbd3a4f7c7",
         "unit": {
           "code": "KGM",
@@ -253,7 +255,6 @@
         "type": "financing"
       }
     ],
-    "minimalStepPercentage": 0.006,
     "mode": "test",
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "esco",
@@ -289,7 +290,6 @@
       "startDate": "{{ from_now_iso() }}"
     },
     "title": "Тестовий опис предмету закупівлі у заголовку тендеру (created with procedure_tools)",
-    "title_en": "Procurement item test description in procedure title (created with procedure_tools)",
-    "yearlyPaymentsPercentageRange": 0.8
+    "title_en": "Procurement item test description in procedure title (created with procedure_tools)"
   }
 }
