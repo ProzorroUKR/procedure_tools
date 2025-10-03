@@ -29,11 +29,11 @@
         "unit": {
           "code": "KGM",
           "name": "кг",
-			"value": {
-				"amount": 10,
-				"currency": "UAH",
-				"valueAddedTaxIncluded": false
-			}
+          "value": {
+            "amount": 10,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
@@ -44,11 +44,11 @@
         "unit": {
           "code": "KGM",
           "name": "кг",
-			"value": {
-				"amount": 10,
-				"currency": "UAH",
-				"valueAddedTaxIncluded": false
-			}
+          "value": {
+            "amount": 10,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       }
     ],

@@ -3,10 +3,12 @@
     "awardComplainDuration": 5,
     "cancellationComplainDuration": 10,
     "clarificationUntilDuration": 3,
+    "enquiryPeriodRegulation": 3,
     "hasAuction": true,
     "hasAwardComplaints": true,
     "hasAwardingOrder": true,
     "hasCancellationComplaints": true,
+    "hasEnquiries": false,
     "hasPreSelectionAgreement": false,
     "hasPrequalification": false,
     "hasQualificationComplaints": false,
@@ -14,15 +16,13 @@
     "hasValueEstimation": true,
     "hasValueRestriction": false,
     "minBidsNumber": 1,
+    "minEnquiriesDuration": 0,
+    "minTenderingDuration": 7,
     "qualificationComplainDuration": 0,
     "qualificationDuration": 0,
     "restricted": false,
     "tenderComplainRegulation": 3,
-    "valueCurrencyEquality": true,
-    "minTenderingDuration": 7,
-    "hasEnquiries": false,
-    "minEnquiriesDuration": 0,
-    "enquiryPeriodRegulation": 3
+    "valueCurrencyEquality": true
   },
   "data": {
     "awardCriteria": "lifeCycleCost",
@@ -205,14 +205,6 @@
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "aboveThreshold",
     "procuringEntity": {
-      "signerInfo": {
-        "name": "Test Testovich",
-        "telephone": "+380950000000",
-        "email": "example@email.com",
-        "iban": "111111111111111",
-        "authorizedBy": "Статут компанії",
-        "position": "Генеральний директор"
-      },
       "address": {
         "countryName": "Україна",
         "locality": "м. Київ",
@@ -231,7 +223,15 @@
         "scheme": "UA-EDR"
       },
       "kind": "special",
-      "name": "Тестовий заклад #1 м.Київ"
+      "name": "Тестовий заклад #1 м.Київ",
+      "signerInfo": {
+        "authorizedBy": "Статут компанії",
+        "email": "example@email.com",
+        "iban": "111111111111111",
+        "name": "Test Testovich",
+        "position": "Генеральний директор",
+        "telephone": "+380950000000"
+      }
     },
     "status": "draft",
     "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",

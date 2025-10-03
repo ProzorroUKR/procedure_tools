@@ -619,7 +619,7 @@
       "source": "tenderer",
       "title": "Забезпечення тендерних пропозицій"
     },
-        {
+    {
       "classification": {
         "id": "CRITERION.OTHER.BID.GUARANTEE",
         "scheme": "ESPD211"
