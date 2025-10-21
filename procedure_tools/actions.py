@@ -373,7 +373,7 @@ def patch_contracts(
         contract_token = contracts_tokens[contract_index]
         data_file = f"{prefix}contract_patch_{contract_index}.json"
         path = get_data_file_path(get_data_path(args.data), data_file)
-        with read_file(path, context=context, exit_filename=args.stop) as content:
+        with read_file(path, context=context, exit_filename=args.stop, silent_io_error=True) as content:
             contract_patch_data = json.loads(content)
             client.patch(
                 f"contracts/{contract_id}",
@@ -382,6 +382,95 @@ def patch_contracts(
                 auth_token=args.token,
                 success_handler=item_patch_success_handler,
             )
+
+
+def change_contracts(
+    client: CDBClient,
+    args,
+    context,
+    contracts_ids,
+    contracts_tokens,
+    action_index=0,
+    prefix="",
+):
+    """
+    Patch contracts by action index.
+
+    Note: Contract change filename has the following format:
+        contract_change_{action_index}_{contract_index}_{contract_change_action_index}.json
+        contract_change_0_0_0.json
+    """
+    logging.info("Patching contracts...\n")
+
+    contract_change_data_files = []
+    action_name = "contract_change"
+    filename_base = f"{prefix}{action_name}_{action_index}"
+    for data_file in get_data_all_files(get_data_path(args.data)):
+        if data_file.startswith(filename_base):
+            contract_change_data_files.append(data_file)
+    responses = []
+    for data_file in contract_change_data_files:
+        action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(data_file, action_name, 3)
+
+        contract_index = int(action_parts[1])
+
+        if extension_parts[-1] == "json":
+            if action_extra == "contract_patch":
+                contract_id = contracts_ids[contract_index]
+                contract_token = contracts_tokens[contract_index]
+                path = get_data_file_path(get_data_path(args.data), data_file)
+                with read_file(path, context=context, exit_filename=args.stop) as content:
+                    contract_patch_data = json.loads(content)
+                    response = client.patch(
+                        f"contracts/{contract_id}",
+                        json=contract_patch_data,
+                        acc_token=contract_token,
+                        auth_token=args.token,
+                        success_handler=item_patch_success_handler,
+                    )
+                responses.append(response)
+                context["contracts"][contract_index] = response.json()["data"]
+            elif action_extra == "change_post":
+                contract_id = contracts_ids[contract_index]
+                contract_token = contracts_tokens[contract_index]
+                path = get_data_file_path(get_data_path(args.data), data_file)
+                with read_file(path, context=context, exit_filename=args.stop) as content:
+                    contract_change_post_data = json.loads(content)
+                    response = client.post(
+                        f"contracts/{contract_id}/changes",
+                        json=contract_change_post_data,
+                        acc_token=contract_token,
+                        auth_token=args.token,
+                        success_handler=item_create_success_handler,
+                    )
+                responses.append(response)
+                context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+            elif action_extra.startswith("change_patch"):
+                change_index = int(action_extra.split("_")[-1])
+                change_id = context["contracts"][contract_index]["changes"][change_index]["id"]
+                contract_id = contracts_ids[contract_index]
+                contract_token = contracts_tokens[contract_index]
+                path = get_data_file_path(get_data_path(args.data), data_file)
+                with read_file(path, context=context, exit_filename=args.stop) as content:
+                    contract_change_patch_data = json.loads(content)
+                    response = client.patch(
+                        f"contracts/{contract_id}/changes/{change_id}",
+                        json=contract_change_patch_data,
+                        acc_token=contract_token,
+                        auth_token=args.token,
+                        success_handler=item_patch_success_handler,
+                    )
+                responses.append(response)
+                context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+    return responses
+
+
+def get_contracts(client: CDBClient, args, context, contracts_ids):
+    contracts = []
+    for contracts_id in contracts_ids:
+        response = get_contract(client, args, context, contracts_id)
+        contracts.append(response.json()["data"])
+    return contracts
 
 
 def patch_tender_qual(

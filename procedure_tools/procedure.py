@@ -4,6 +4,7 @@ import random
 from faker import Faker
 
 from procedure_tools.actions import (
+    change_contracts,
     create_awards,
     create_bids,
     create_complaints,
@@ -16,6 +17,7 @@ from procedure_tools.actions import (
     get_agreements,
     get_awards,
     get_contract,
+    get_contracts,
     get_framework,
     get_qualifications,
     get_tender,
@@ -813,9 +815,9 @@ def process_procedure(
         "competitiveDialogueEU",
         "competitiveDialogueUA",
     ):
+        context["contracts"] = get_contracts(client, args, context, contracts_ids)
+
         for contracts_id in contracts_ids:
-            response = get_contract(client, args, context, contracts_id)
-            context["contracts"].append(response.json()["data"])
             response = patch_contract_credentials(
                 client,
                 args,
@@ -862,6 +864,9 @@ def process_procedure(
         "competitiveDialogueEU",
         "competitiveDialogueUA",
     ):
+
+        # Deprecated, use change_contracts instead
+
         patch_contracts(
             client,
             args,
@@ -870,6 +875,27 @@ def process_procedure(
             contracts_tokens,
             prefix=prefix,
         )
+
+        # End of deprecated code
+
+        contract_change_action_index = 0
+        while True:
+            responses = change_contracts(
+                client,
+                args,
+                context,
+                contracts_ids,
+                contracts_tokens,
+                action_index=contract_change_action_index,
+                prefix=prefix,
+            )
+            if not responses:
+                # There were no files for this action index,
+                # that means we have reached the end of actions
+                break
+            contract_change_action_index += 1
+
+        context["contracts"] = get_contracts(client, args, context, contracts_ids)
 
     if method_type in ("closeFrameworkAgreementUA",):
         response = get_tender(client, args, context, tender_id)
