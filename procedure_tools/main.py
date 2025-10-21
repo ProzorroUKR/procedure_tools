@@ -84,6 +84,11 @@ def main():
         metavar="tender_create.json",
     )
     parser.add_argument(
+        "--pause",
+        help="data file name(s) to pause after (comma-separated)",
+        metavar="tender_create.json",
+    )
+    parser.add_argument(
         "-w",
         "--wait",
         help=f"wait for event, one or many of (divided by comma):\n{_format_choices(WAIT_EVENTS)}",

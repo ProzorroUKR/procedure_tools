@@ -100,6 +100,11 @@ def init_procedure(args, session=None):
     if args.stop:
         args.stop = get_numberless_filename(args.stop)
 
+    if args.pause:
+        # Handle comma-separated filenames
+        pause_filenames = [get_numberless_filename(filename.strip()) for filename in args.pause.split(',')]
+        args.pause = pause_filenames
+
     data_path = get_data_path(args.data)
     if data_path is None:
         logging.error("Data path not found.\n")
