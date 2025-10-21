@@ -1,0 +1,57 @@
+{
+  "data": {
+    "contractNumber": 1,
+    "dateSigned": "{{ from_now_iso() }}",
+    "items": [
+      {
+        "additionalClassifications": [
+          {
+            "description": "{{ contracts[0]['items'][0].additionalClassifications[0].description }}",
+            "id": "{{ contracts[0]['items'][0].additionalClassifications[0].id }}",
+            "scheme": "{{ contracts[0]['items'][0].additionalClassifications[0].scheme }}"
+          }
+        ],
+        "classification": {
+          "description": "{{ contracts[0]['items'][0].classification.description }}",
+          "id": "{{ contracts[0]['items'][0].classification.id }}",
+          "scheme": "{{ contracts[0]['items'][0].classification.scheme }}"
+        },
+        "deliveryAddress": {
+          "countryName": "{{ contracts[0]['items'][0].deliveryAddress.countryName }}",
+          "locality": "{{ contracts[0]['items'][0].deliveryAddress.locality }}",
+          "postalCode": "{{ contracts[0]['items'][0].deliveryAddress.postalCode }}",
+          "region": "{{ contracts[0]['items'][0].deliveryAddress.region }}",
+          "streetAddress": "{{ contracts[0]['items'][0].deliveryAddress.streetAddress }}"
+        },
+        "deliveryDate": {
+          "endDate": "{{ contracts[0]['items'][0].deliveryDate.endDate }}",
+          "startDate": "{{ contracts[0]['items'][0].deliveryDate.startDate }}"
+        },
+        "description": "{{ contracts[0]['items'][0].description }}",
+        "description_en": "{{ contracts[0]['items'][0].description_en }}",
+        "id": "{{ contracts[0]['items'][0].id }}",
+        "quantity": 1,
+        "relatedBuyer": "{{ contracts[0]['items'][0].relatedBuyer }}",
+        "relatedLot": "{{ contracts[0]['items'][0].relatedLot }}",
+        "unit": {
+          "code": "{{ contracts[0]['items'][0].unit.code }}",
+          "name": "{{ contracts[0]['items'][0].unit.name }}",
+          "value": {
+            "amount": 1.0,
+            "valueAddedTaxIncluded": false
+          }
+        }
+      }
+    ],
+    "period": {
+      "endDate": "{{ from_now_iso(days=365) }}",
+      "startDate": "{{ from_now_iso() }}"
+    },
+    "status": "active",
+    "value": {
+      "amount": 1.1,
+      "amountNet": 1.1,
+      "valueAddedTaxIncluded": false
+    }
+  }
+}
