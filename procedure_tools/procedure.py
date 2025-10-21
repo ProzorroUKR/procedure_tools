@@ -320,6 +320,7 @@ def process_procedure(
         "competitiveDialogueUA.stage2",
         "esco",
         "priceQuotation",
+        "simple.defense",
     ):
         criteria_response = post_criteria(
             client,

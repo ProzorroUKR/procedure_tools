@@ -70,7 +70,8 @@ jobs:
           - negotiation_quick
           - reporting
           - simple_defense
-          - dynamic_purchasing_system_competitive_ordering
+          - dynamic_purchasing_system_competitive_ordering_short
+          - dynamic_purchasing_system_competitive_ordering_long
           - request_for_proposal
           - international_financial_institutions_request_for_proposal
     env:

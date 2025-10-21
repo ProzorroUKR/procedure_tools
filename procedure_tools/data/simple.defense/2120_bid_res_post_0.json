@@ -2,85 +2,61 @@
   "data": [
     {
       "requirement": {
-        "id": "7613b0fe0a8f4181b42237dc70aa16e2"
+        "id": "cad66040f699441ca5fe35105c46f19a"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "b51d4a2dd7694ac8830c0b0e0247feb6"
+        "id": "13c316b6d16e4289aed0864d7e8bb517"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "d9783e86914140ab97b18e6b53b463d1"
+        "id": "b1f7796b0d0a4590ab70f35b305bcfca"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "017b2524002d4b91b88e6674e78691f3"
+        "id": "25000e3752a4400780f7d20935d2b97c"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "92704cd148f34ed8a50b90b696c0f35f"
+        "id": "4e75171cf27b455a8d80eff64781df57"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "8e2f8c8af84447e8a66c468318ebae75"
+        "id": "08a4d48465d949009ed00fc35f98c311"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "f474365930964832a8ebce9d91ec2a36"
+        "id": "c83c2477d8a04d4ca3c1c73f4b10cafe"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "b97885d624f5462086275f2148b234cf"
+        "id": "b9dce5bea97c4f7eab8317921369bbfe"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "b775c2cc1fd045529f86059eed874c56"
+        "id": "20662ad6cf85456fb3612252d13be83f"
       },
       "values": [
         "Українська"
       ]
     },
     {
-      "requirement": {
-        "id": "e1207cf6420f4bb9bdcbcbf05aeb3169"
-      },
-      "value": 0.0
-    },
-    {
-      "requirement": {
-        "id": "084ea9efc938404986cab466c5014c91"
-      },
-      "value": 0.0
-    },
-    {
-      "requirement": {
-        "id": "02cf438a6cfc46238a3e00b694e73473"
-      },
-      "value": 0.0
-    },
-    {
-      "requirement": {
-        "id": "5a25818857ae45a39afbd3ecefa108bd"
-      },
-      "value": 0.0
-    },
-    {
       "evidences": [
         {
           "relatedDocument": {
@@ -91,25 +67,25 @@
         }
       ],
       "requirement": {
-        "id": "ff4d55a8b1dc40f3804c0b74c3448eca"
+        "id": "81d2d2b2b8964c27bce9449c91cf5a3b"
       },
       "value": 3.0
     },
     {
       "requirement": {
-        "id": "c0dc5d001b96412090a3327bcae37018"
+        "id": "c62e16c605b543fe9662e6c376be0274"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "7c888ec3ae98415186f391f995d4f15a"
+        "id": "2e4a8a625aab435a886ea195866587a3"
       },
       "value": 5.0
     },
     {
       "requirement": {
-        "id": "3e512e12040f4a9e831818cb07e0d6d5"
+        "id": "bed67759e7e848aa8ee6c531a4f7c058"
       },
       "value": 0
     },
@@ -124,25 +100,25 @@
         }
       ],
       "requirement": {
-        "id": "00f7e41c06c4472e9e3e96e2eef1d8ad"
+        "id": "c7eb1ea09f0444a392f1617806fec6b6"
       },
       "value": 3.0
     },
     {
       "requirement": {
-        "id": "8577720d038a4579ae4c43ae771244fa"
+        "id": "14c9daeaad784c15abfe133cd848f3dd"
       },
       "value": true
     },
     {
       "requirement": {
-        "id": "011a816bc9064c1fa67e5029bcbbe5f6"
+        "id": "2dc48b77d32045e8a02a504a2d67c265"
       },
       "value": 5.0
     },
     {
       "requirement": {
-        "id": "ccd8aa1cdbad4508a126ea60e5936a08"
+        "id": "ee19b129c34745d087d399b8630ee978"
       },
       "value": 0
     },
@@ -157,7 +133,7 @@
         }
       ],
       "requirement": {
-        "id": "8b3827713ceb48099c248d6ad0ebab1c"
+        "id": "992386ef3c404914826bb1741ec28714"
       },
       "value": true
     },
@@ -172,7 +148,7 @@
         }
       ],
       "requirement": {
-        "id": "bb71f6a0857844df865c9ba6fa52ffa4"
+        "id": "dc761215bffa446d9d1fd325ae3e98c4"
       },
       "value": true
     },
@@ -187,7 +163,7 @@
         }
       ],
       "requirement": {
-        "id": "acaef781bc1b4123855961179c5a72cf"
+        "id": "66b0093f9d914a2c8978a018ffe4ac49"
       },
       "value": true
     },
@@ -202,7 +178,7 @@
         }
       ],
       "requirement": {
-        "id": "2eb43c85bdf0405dbf9b9be99a3066eb"
+        "id": "929d0995cd714ff1955daf7e710a24a8"
       },
       "value": true
     },
@@ -217,60 +193,6 @@
         "id": "6d91695aedb54c2c9f46df4b9ad739c8"
       },
       "value": true
-    },
-    {
-      "requirement": {
-        "id": "60f30e92e7a349499e6ca65099c67d59"
-      },
-      "value": 90
-    },
-    {
-      "requirement": {
-        "id": "db22efa604fe45c8baa561872c8e49b6"
-      },
-      "value": true
-    },
-    {
-      "requirement": {
-        "id": "b0f927eecd364785a947d6f20a77de91"
-      },
-      "value": true
-    },
-    {
-      "evidences": [
-        {
-          "relatedDocument": {
-            "title": "name.doc"
-          },
-          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
-          "type": "document"
-        }
-      ],
-      "requirement": {
-        "id": "a8f6bddfe03e42ab999d583c79399c2a"
-      },
-      "value": 1.0
-    },
-    {
-      "requirement": {
-        "id": "24c2f4add08e4fc1ace3c9f377b3c5ca"
-      },
-      "value": true
-    },
-    {
-      "evidences": [
-        {
-          "relatedDocument": {
-            "title": "name.doc"
-          },
-          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
-          "type": "document"
-        }
-      ],
-      "requirement": {
-        "id": "4048b884e9724525858879b0d9994b34"
-      },
-      "value": 2.0
     }
   ]
 }

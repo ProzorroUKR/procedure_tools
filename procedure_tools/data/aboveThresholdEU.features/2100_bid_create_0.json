@@ -28,7 +28,12 @@
         "quantity": 1,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 10,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
@@ -38,7 +43,12 @@
         "quantity": 1,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 10,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
@@ -48,7 +58,12 @@
         "quantity": 1,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 10,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       }
     ],
@@ -92,6 +107,7 @@
     ],
     "selfQualified": true,
     "status": "draft",
+    "subcontractingDetails": "Тестове підприємство, Україна, м. Київ, вул. Тестова, 33",
     "tenderers": [
       {
         "address": {

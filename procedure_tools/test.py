@@ -230,8 +230,16 @@ def test_simple_defense():
 
 
 @skipifenv
-def test_dynamic_purchasing_system_competitive_ordering():
-    argv = ["--data", "dynamicPurchasingSystem.competitiveOrdering"]
+def test_dynamic_purchasing_system_competitive_ordering_short():
+    argv = ["--data", "dynamicPurchasingSystem.competitiveOrdering.short"]
+    if os.environ.get("FAST_RUN"):
+        argv += ["--stop", "bid_patch_1.json"]
+    run_test(argv)
+
+
+@skipifenv
+def test_dynamic_purchasing_system_competitive_ordering_long():
+    argv = ["--data", "dynamicPurchasingSystem.competitiveOrdering.long"]
     if os.environ.get("FAST_RUN"):
         argv += ["--stop", "bid_patch_1.json"]
     run_test(argv)

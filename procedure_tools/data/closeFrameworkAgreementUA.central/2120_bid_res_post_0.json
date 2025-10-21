@@ -127,6 +127,18 @@
         "id": "6d91695aedb54c2c9f46df4b9ad739c8"
       },
       "value": true
+    },
+    {
+      "requirement": {
+        "id": "8b17169700814395ac6b7fc19453aea7"
+      },
+      "value": 90
+    },
+    {
+      "requirement": {
+        "id": "4efe50cfda844d219442c71f0d545bbb"
+      },
+      "value": 1
     }
   ]
 }
