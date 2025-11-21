@@ -30,6 +30,28 @@
           "code": "KGM",
           "name": "кг"
         },
+        "product": "3d54653e06314d8dab24b615daa4891f"
+      },
+      {
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "id": "{{ tender['items'][1].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        },
+        "product": "3d54653e06314d8dab24b615daa4891f"
+      },
+      {
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "id": "{{ tender['items'][2].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        },
         "product": "44b4fd92010445c49d13037ef61f198e"
       }
     ],
@@ -76,6 +98,54 @@
       }
     ],
     "requirementResponses": [
+      {
+        "requirement": {
+          "id": "b5a82b22214e33365b3f973f6436e585"
+        },
+        "values": ["NONAME"]
+      },
+      {
+        "requirement": {
+          "id": "3d54653e06314d8dab24b615daa4891f"
+        },
+        "value": 0
+      },
+      {
+        "requirement": {
+          "id": "44b4fd92010445c49d13037ef61f198e"
+        },
+        "value": -40
+      },
+      {
+        "requirement": {
+          "id": "033e0cc943144a3530ca732f8817eddf"
+        },
+        "value": true
+      },
+      {
+        "requirement": {
+          "id": "e0a9a6e9ce4344159b0ff10b488de7f8"
+        },
+        "values": ["NONAME"]
+      },
+      {
+        "requirement": {
+          "id": "488a5c4e77424ea89b6d26d07c125d3f"
+        },
+        "value": 0
+      },
+      {
+        "requirement": {
+          "id": "39f0af254cbd4ed18d8903c00eaac547"
+        },
+        "value": -40
+      },
+      {
+        "requirement": {
+          "id": "28c058f73a5b4bdd8551f35ae49bbabf"
+        },
+        "value": true
+      },
       {
         "requirement": {
           "id": "de3377496c1446ada05084caec0cf575"
