@@ -1,0 +1,95 @@
+{
+  "data": {
+    "budget": {
+      "amount": 10000,
+      "amountNet": 12222,
+      "breakdown": [
+        {
+          "description": "Детальний опис джерел фінансування закупівлі.",
+          "title": "other",
+          "value": {
+            "amount": 1500,
+            "currency": "UAH"
+          }
+        }
+      ],
+      "currency": "UAH",
+      "description": "Загальний опис джерел фінансування закупівлі.",
+      "id": "12303111000-2",
+      "period": {
+        "endDate": "2019-12-31T00:00:00",
+        "startDate": "2019-01-01T00:00:00"
+      },
+      "project": {
+        "id": "123",
+        "name": "Тестова назва проєкту"
+      }
+    },
+    "buyers": [
+      {
+        "address": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "01220",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова, 11, корпус 1"
+        },
+        "identifier": {
+          "id": "111983",
+          "legalName": "Державне тестове підприемство",
+          "scheme": "UA-EDR"
+        },
+        "kind": "general",
+        "name": "ДТП"
+      }
+    ],
+    "classification": {
+      "description": "Фармацевтична продукція",
+      "scheme": "ДК021",
+      "id": "33600000-6"
+    },
+    "items": [
+      {
+        "classification": {
+          "description": "Фармацевтична продукція",
+          "scheme": "ДК021",
+          "id": "33600000-6"
+        },
+        "deliveryDate": {
+          "endDate": "2019-10-16T01:00:00+03:00"
+        },
+        "description": "Тестова назва предмета закупівлі",
+        "quantity": 1000,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      }
+    ],
+    "mode": "test",
+    "procuringEntity": {
+      "address": {
+        "countryName": "Україна",
+        "locality": "м. Київ",
+        "postalCode": "01220",
+        "region": "м. Київ",
+        "streetAddress": "вул. Тестова, 11, корпус 1"
+      },
+      "identifier": {
+        "id": "21725150",
+        "legalName": "Державне тестове підприемство",
+        "scheme": "UA-EDR"
+      },
+      "kind": "general",
+      "name": "ДТП"
+    },
+    "status": "draft",
+    "tender": {
+      "procurementMethod": "selective",
+      "procurementMethodType": "priceQuotation",
+      "tenderPeriod": {
+        "startDate": "{{ from_now_iso() }}"
+      }
+    }
+  }
+}

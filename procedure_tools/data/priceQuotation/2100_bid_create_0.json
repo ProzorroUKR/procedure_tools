@@ -1,0 +1,123 @@
+{
+  "data": {
+    "documents": [
+      {
+        "title": "bid_document_file.txt"
+      },
+      {
+        "confidentiality": "buyerOnly",
+        "confidentialityRationale": "Доступ до цього документу має бути обмежений лише для замовника",
+        "title": "bid_confidential_document_file.txt"
+      }
+    ],
+    "eligibilityDocuments": [
+      {
+        "title": "bid_eligibility_document_file.txt"
+      }
+    ],
+    "financialDocuments": [
+      {
+        "title": "bid_financial_document_file.txt"
+      }
+    ],
+    "items": [
+      {
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "id": "{{ tender['items'][0].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        },
+        "product": "44b4fd92010445c49d13037ef61f198e"
+      }
+    ],
+    "value": {
+      "amount": 500,
+      "currency": "UAH",
+      "valueAddedTaxIncluded": true
+    },
+    "qualificationDocuments": [
+      {
+        "title": "bid_qualification_document_file.txt"
+      }
+    ],
+    "status": "draft",
+    "tenderers": [
+      {
+        "address": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "21100",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова, 33"
+        },
+        "contactPoint": {
+          "email": "factory@example.com",
+          "name": "Нейменко Нейм Неймович",
+          "telephone": "+380000000000"
+        },
+        "identifier": {
+          "id": "00137256",
+          "scheme": "UA-EDR",
+          "uri": "http://factory.example.com"
+        },
+        "name": "Тестове підприємство",
+        "scale": "micro",
+        "signerInfo": {
+          "authorizedBy": "Статут компанії",
+          "email": "example@email.com",
+          "iban": "111111111111111",
+          "name": "Test Testovich",
+          "position": "Генеральний директор",
+          "telephone": "+380950000000"
+        }
+      }
+    ],
+    "requirementResponses": [
+      {
+        "requirement": {
+          "id": "de3377496c1446ada05084caec0cf575"
+        },
+        "values": ["рулонні"]
+      },
+      {
+        "requirement": {
+          "id": "ba9baddcd92343b6bcf853704b824431"
+        },
+        "value": 1000
+      },
+      {
+        "requirement": {
+          "id": "3b344492b91049ddba544b5df7f34a00"
+        },
+        "value": 1999
+      },
+      {
+        "requirement": {
+          "id": "5789528c96e34abdbbae736b66657d8e"
+        },
+        "value": 2.99
+      },
+      {
+        "requirement": {
+          "id": "db7f7fd2c82d476099198b055df62dea"
+        },
+        "value": 10.98
+      },
+      {
+        "requirement": {
+          "id": "77ff1fe55d4a42b59f8b15b6feb30d3f"
+        },
+        "value": false
+      },
+      {
+        "requirement": {
+          "id": "f85f5606c2124ae38ced752622203a1b"
+        },
+        "value": true
+      }
+    ]
+  }
+}

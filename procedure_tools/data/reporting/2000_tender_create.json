@@ -25,7 +25,11 @@
     "valueCurrencyEquality": true
   },
   "data": {
-    "cause": "openUnsuccessful",
+    "causeDetails": {
+      "title": "defencePurchase",
+      "scheme": "DECREE1178",
+      "description": "Задоволення нагальних потреб Збройних Сил, інших військових формувань та правоохоронних органів на їх запит"
+    },
     "description": "Тестова назва предмета закупівлі",
     "description_en": "Procurement item test name",
     "items": [
