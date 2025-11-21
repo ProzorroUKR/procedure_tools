@@ -25,9 +25,11 @@
     "valueCurrencyEquality": true
   },
   "data": {
-    "cause": "twiceUnsuccessful",
-    "causeDescription": "оригінальний тендер не вдався двічі",
-    "causeDescription_en": "original tender has failed twice",
+    "causeDetails": {
+      "title": "additionalPurchase",
+      "scheme": "DECREE1178",
+      "description": "Виникла необхідність у постачанні додаткового обсягу товару у того самого постачальника, що здійснюється протягом трьох років після укладення договору про закупівлю і загальна вартість такого постачання не перевищує 50 відсотків ціни договору про закупівлю"
+    },
     "description": "Тестова назва предмета закупівлі",
     "description_en": "Procurement item test name",
     "items": [
