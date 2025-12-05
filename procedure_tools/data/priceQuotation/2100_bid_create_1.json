@@ -1,0 +1,193 @@
+{
+  "data": {
+    "documents": [
+      {
+        "title": "bid_document_file.txt"
+      },
+      {
+        "confidentiality": "buyerOnly",
+        "confidentialityRationale": "Доступ до цього документу має бути обмежений лише для замовника",
+        "title": "bid_confidential_document_file.txt"
+      }
+    ],
+    "eligibilityDocuments": [
+      {
+        "title": "bid_eligibility_document_file.txt"
+      }
+    ],
+    "financialDocuments": [
+      {
+        "title": "bid_financial_document_file.txt"
+      }
+    ],
+    "items": [
+      {
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "id": "{{ tender['items'][0].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        },
+        "product": "3d54653e06314d8dab24b615daa4891f"
+      },
+      {
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "id": "{{ tender['items'][1].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        },
+        "product": "3d54653e06314d8dab24b615daa4891f"
+      },
+      {
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "id": "{{ tender['items'][2].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        },
+        "product": "44b4fd92010445c49d13037ef61f198e"
+      }
+    ],
+    "value": {
+      "amount": 650,
+      "currency": "UAH",
+      "valueAddedTaxIncluded": true
+    },
+    "qualificationDocuments": [
+      {
+        "title": "bid_qualification_document_file.txt"
+      }
+    ],
+    "status": "draft",
+    "tenderers": [
+      {
+        "address": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "21100",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова, 33"
+        },
+        "contactPoint": {
+          "email": "factory@example.com",
+          "name": "Нейменко Нейм Неймович",
+          "telephone": "+380000000000"
+        },
+        "identifier": {
+          "id": "00137255",
+          "scheme": "UA-EDR",
+          "uri": "http://factory.example.com"
+        },
+        "name": "Тестове підприємство",
+        "scale": "micro",
+        "signerInfo": {
+          "authorizedBy": "Статут компанії",
+          "email": "example@email.com",
+          "iban": "111111111111111",
+          "name": "Test Testovich",
+          "position": "Генеральний директор",
+          "telephone": "+380950000000"
+        }
+      }
+    ],
+    "requirementResponses": [
+      {
+        "requirement": {
+          "id": "b5a82b22214e33365b3f973f6436e585"
+        },
+        "values": ["NONAME"]
+      },
+      {
+        "requirement": {
+          "id": "3d54653e06314d8dab24b615daa4891f"
+        },
+        "value": 0
+      },
+      {
+        "requirement": {
+          "id": "44b4fd92010445c49d13037ef61f198e"
+        },
+        "value": -40
+      },
+      {
+        "requirement": {
+          "id": "033e0cc943144a3530ca732f8817eddf"
+        },
+        "value": true
+      },
+      {
+        "requirement": {
+          "id": "e0a9a6e9ce4344159b0ff10b488de7f8"
+        },
+        "values": ["NONAME"]
+      },
+      {
+        "requirement": {
+          "id": "488a5c4e77424ea89b6d26d07c125d3f"
+        },
+        "value": 0
+      },
+      {
+        "requirement": {
+          "id": "39f0af254cbd4ed18d8903c00eaac547"
+        },
+        "value": -40
+      },
+      {
+        "requirement": {
+          "id": "28c058f73a5b4bdd8551f35ae49bbabf"
+        },
+        "value": true
+      },
+      {
+        "requirement": {
+          "id": "de3377496c1446ada05084caec0cf575"
+        },
+        "values": ["рулонні"]
+      },
+      {
+        "requirement": {
+          "id": "ba9baddcd92343b6bcf853704b824431"
+        },
+        "value": 1000
+      },
+      {
+        "requirement": {
+          "id": "3b344492b91049ddba544b5df7f34a00"
+        },
+        "value": 1999
+      },
+      {
+        "requirement": {
+          "id": "5789528c96e34abdbbae736b66657d8e"
+        },
+        "value": 2.99
+      },
+      {
+        "requirement": {
+          "id": "db7f7fd2c82d476099198b055df62dea"
+        },
+        "value": 10.98
+      },
+      {
+        "requirement": {
+          "id": "77ff1fe55d4a42b59f8b15b6feb30d3f"
+        },
+        "value": false
+      },
+      {
+        "requirement": {
+          "id": "f85f5606c2124ae38ced752622203a1b"
+        },
+        "value": true
+      }
+    ]
+  }
+}
