@@ -238,12 +238,121 @@
         "code": "prepayment",
         "duration": {
           "days": 2,
+          "type": "working"
+        },
+        "percentage": 70,
+        "sequenceNumber": 1,
+        "title": "executionOfWorks",
+        "type": "financing",
+		"relatedLot": "dd22c9c085f64e019f943999b5b41fe5"
+      },
+	  {
+        "code": "postpayment",
+        "duration": {
+          "days": 999,
           "type": "banking"
+        },
+        "percentage": 30,
+        "sequenceNumber": 2,
+        "title": "executionOfWorks",
+        "type": "financing",
+		"relatedLot": "dd22c9c085f64e019f943999b5b41fe5"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 500,
+          "type": "working"
+        },
+        "percentage": 22,
+        "sequenceNumber": 3,
+        "title": "signingTheContract",
+        "type": "delivery",
+		"relatedLot": "dd22c9c085f64e019f943999b5b41fe5"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 78,
+        "sequenceNumber": 4,
+        "title": "signingTheContract",
+        "type": "delivery",
+		"relatedLot": "dd22c9c085f64e019f943999b5b41fe5"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
         },
         "percentage": 100,
         "sequenceNumber": 1,
-        "title": "signingTheContract",
-        "type": "financing"
+        "title": "deliveryOfGoods",
+        "type": "financing",
+		"relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "sequenceNumber": 2,
+        "title": "submissionDateOfApplications",
+        "type": "delivery",
+		"relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 2,
+          "type": "banking"
+        },
+        "percentage": 33,
+        "sequenceNumber": 1,
+        "title": "submittingServices",
+        "type": "financing",
+		"relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73"
+      },
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 33,
+          "type": "working"
+        },
+        "percentage": 67,
+        "sequenceNumber": 2,
+        "title": "submittingServices",
+        "type": "financing",
+		"relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73"
+      },
+      {
+        "code": "recurring",
+        "duration": {
+          "days": 22,
+          "type": "working"
+        },
+        "percentage": 55,
+        "sequenceNumber": 3,
+        "title": "submittingPayment",
+        "type": "delivery",
+		"relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73"
+      },
+      {
+        "code": "recurring",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 45,
+        "sequenceNumber": 4,
+        "title": "submittingPayment",
+        "type": "delivery",
+		"relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73"
       }
     ],
     "mode": "test",

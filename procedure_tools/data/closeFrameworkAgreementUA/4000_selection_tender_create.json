@@ -74,6 +74,41 @@
       }
     ],
     "mode": "test",
+    "milestones": [
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 2,
+          "type": "banking"
+        },
+        "percentage": 75,
+        "sequenceNumber": 1,
+        "title": "signingTheContract",
+        "type": "financing"
+      },
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 55,
+          "type": "working"
+        },
+        "percentage": 25,
+        "sequenceNumber": 2,
+        "title": "executionOfWorks",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 100,
+        "sequenceNumber": 3,
+        "title": "signingTheContract",
+        "type": "delivery"
+      }
+    ],
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "closeFrameworkAgreementSelectionUA",
     "procuringEntity": {

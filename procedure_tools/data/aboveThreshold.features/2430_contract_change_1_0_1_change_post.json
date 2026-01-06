@@ -2,7 +2,7 @@
   "data": {
     "rationale": "Зниження ціни трішечки.",
     "rationaleTypes": [
-      "priceReduction"
+      "externalIndicators"
     ]
   }
 }

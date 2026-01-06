@@ -142,9 +142,20 @@
           "days": 2,
           "type": "banking"
         },
-        "percentage": 100,
+        "percentage": 75,
         "sequenceNumber": 1,
         "title": "signingTheContract",
+        "type": "financing"
+      },
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 55,
+          "type": "working"
+        },
+        "percentage": 25,
+        "sequenceNumber": 2,
+        "title": "executionOfWorks",
         "type": "financing"
       }
     ],
