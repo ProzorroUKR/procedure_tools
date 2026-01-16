@@ -26,10 +26,10 @@
   },
   "data": {
     "causeDetails": {
-      "title": "defencePurchase",
-      "scheme": "DECREE1178",
+      "code": "defencePurchase",
       "description": "Задоволення нагальних потреб Збройних Сил, інших військових формувань та правоохоронних органів на їх запит",
-      "code": "defencePurchase"
+      "scheme": "DECREE1178",
+      "title": "defencePurchase"
     },
     "description": "Тестова назва предмета закупівлі",
     "description_en": "Procurement item test name",
@@ -81,7 +81,7 @@
         "title": "executionOfWorks",
         "type": "financing"
       },
-	  {
+      {
         "code": "postpayment",
         "duration": {
           "days": 999,

@@ -73,7 +73,6 @@
         "title": "Тестова назва лоту"
       }
     ],
-    "mode": "test",
     "milestones": [
       {
         "code": "prepayment",
@@ -109,6 +108,7 @@
         "type": "delivery"
       }
     ],
+    "mode": "test",
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "closeFrameworkAgreementSelectionUA",
     "procuringEntity": {
