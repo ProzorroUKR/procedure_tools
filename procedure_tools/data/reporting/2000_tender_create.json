@@ -26,9 +26,10 @@
   },
   "data": {
     "causeDetails": {
-      "title": "defencePurchase",
+      "code": "defencePurchase",
+      "description": "Задоволення нагальних потреб Збройних Сил, інших військових формувань та правоохоронних органів на їх запит",
       "scheme": "DECREE1178",
-      "description": "Задоволення нагальних потреб Збройних Сил, інших військових формувань та правоохоронних органів на їх запит"
+      "title": "defencePurchase"
     },
     "description": "Тестова назва предмета закупівлі",
     "description_en": "Procurement item test name",
@@ -73,11 +74,22 @@
         "code": "prepayment",
         "duration": {
           "days": 2,
+          "type": "working"
+        },
+        "percentage": 70,
+        "sequenceNumber": 1,
+        "title": "executionOfWorks",
+        "type": "financing"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 999,
           "type": "banking"
         },
-        "percentage": 100,
-        "sequenceNumber": 1,
-        "title": "signingTheContract",
+        "percentage": 30,
+        "sequenceNumber": 2,
+        "title": "executionOfWorks",
         "type": "financing"
       }
     ],

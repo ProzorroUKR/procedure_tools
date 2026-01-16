@@ -1,6 +1,7 @@
 {
   "data": {
     "contractNumber": 2,
+    "dateSigned": "{{ from_now_iso() }}",
     "period": {
       "endDate": "{{ from_now_iso(days=365) }}",
       "startDate": "{{ from_now_iso() }}"
@@ -10,7 +11,6 @@
       "amount": 500,
       "amountNet": 500,
       "valueAddedTaxIncluded": false
-    },
-    "dateSigned": "{{ from_now_iso() }}"
+    }
   }
 }

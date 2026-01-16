@@ -45,15 +45,15 @@
     ],
     "classification": {
       "description": "Фармацевтична продукція",
-      "scheme": "ДК021",
-      "id": "33600000-6"
+      "id": "33600000-6",
+      "scheme": "ДК021"
     },
     "items": [
       {
         "classification": {
           "description": "Фармацевтична продукція",
-          "scheme": "ДК021",
-          "id": "33600000-6"
+          "id": "33600000-6",
+          "scheme": "ДК021"
         },
         "deliveryDate": {
           "endDate": "2019-10-16T01:00:00+03:00"

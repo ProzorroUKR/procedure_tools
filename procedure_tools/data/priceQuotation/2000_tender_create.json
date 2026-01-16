@@ -25,27 +25,331 @@
     "valueCurrencyEquality": true
   },
   "data": {
+    "agreement": {
+      "id": "49758e7891b146a089c1327e54e6179e"
+    },
     "contractTemplateName": "33600000.0002.01",
-    "items": [
+    "criteria": [
       {
-        "category": "5693ce27fe454c6badc428088688f31c",
-        "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
-        "additionalClassifications": [
+        "classification": {
+          "id": "CRITERION.OTHER.SUBJECT_OF_PROCUREMENT.TECHNICAL_FEATURES",
+          "scheme": "ESPD211"
+        },
+        "description": "Технічна специфікація повинна містити опис усіх необхідних характеристик товарів, робіт або послуг, що закуповуються, у тому числі їх технічні, функціональні та якісні характеристики. Характеристики товарів, робіт або послуг можуть містити опис конкретного технологічного процесу або технології виробництва чи порядку постачання товару (товарів), виконання необхідних робіт, надання послуги (послуг)",
+        "id": "161052af0fc14c48840273fa600ac6fd",
+        "legislation": [
           {
-            "scheme": "INN",
-            "id": "topotecan",
-            "description": "Topotecan"
+            "article": "22.2.3",
+            "identifier": {
+              "id": "922-VIII",
+              "legalName": "Закон України \"Про публічні закупівлі\"",
+              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2024-04-19"
           },
           {
-            "scheme": "ATX",
-            "id": "L01EL02",
-            "description": "L01EL02"
+            "article": "23",
+            "identifier": {
+              "id": "922-VIII",
+              "legalName": "Закон України \"Про публічні закупівлі\"",
+              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1426"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2024-04-19"
+          },
+          {
+            "article": "2.1",
+            "identifier": {
+              "id": "1135-2023-п",
+              "legalName": "Про внесення змін до постанов Кабінету Міністрів України від 14 вересня 2020 р. № 822 і від 12 жовтня 2022 р. № 1178",
+              "uri": "https://zakon.rada.gov.ua/laws/show/1135-2023-%D0%BF#n24"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2023-10-31"
           }
         ],
+        "relatedItem": "271693efb03704c0638da4baeee94a5b",
+        "relatesTo": "item",
+        "requirementGroups": [
+          {
+            "description": "Підтверджується, що",
+            "id": "5189d2a530a84d32b81e824d1db96a06",
+            "requirements": [
+              {
+                "dataType": "string",
+                "expectedMaxItems": 1,
+                "expectedMinItems": 1,
+                "expectedValues": [
+                  "ROYAL",
+                  "FORWARD",
+                  "NONAME",
+                  "BOWAY"
+                ],
+                "id": "b5a82b22214e33365b3f973f6436e585",
+                "title": "Requirement string 1"
+              },
+              {
+                "dataType": "integer",
+                "id": "3d54653e06314d8dab24b615daa4891f",
+                "maxValue": 120,
+                "minValue": 0,
+                "title": "Requirement integer 1",
+                "unit": {
+                  "code": "MON",
+                  "name": "місяць"
+                }
+              },
+              {
+                "dataType": "number",
+                "id": "44b4fd92010445c49d13037ef61f198e",
+                "maxValue": 200.85,
+                "minValue": -55,
+                "title": "Requirement number 1",
+                "unit": {
+                  "code": "CEL",
+                  "name": "градус Цельсія"
+                }
+              },
+              {
+                "dataType": "boolean",
+                "expectedValue": true,
+                "id": "033e0cc943144a3530ca732f8817eddf",
+                "title": "Requirement boolean 1"
+              }
+            ]
+          }
+        ],
+        "source": "tenderer",
+        "title": "Технічні, якісні та кількісні характеристики предмета закупівлі"
+      },
+      {
+        "classification": {
+          "id": "CRITERION.OTHER.SUBJECT_OF_PROCUREMENT.TECHNICAL_FEATURES",
+          "scheme": "ESPD211"
+        },
+        "description": "Технічна специфікація повинна містити опис усіх необхідних характеристик товарів, робіт або послуг, що закуповуються, у тому числі їх технічні, функціональні та якісні характеристики. Характеристики товарів, робіт або послуг можуть містити опис конкретного технологічного процесу або технології виробництва чи порядку постачання товару (товарів), виконання необхідних робіт, надання послуги (послуг)",
+        "id": "bffef0d7bf2b420c87c441dae72ae3b0",
+        "legislation": [
+          {
+            "article": "22.2.3",
+            "identifier": {
+              "id": "922-VIII",
+              "legalName": "Закон України \"Про публічні закупівлі\"",
+              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2024-04-19"
+          },
+          {
+            "article": "23",
+            "identifier": {
+              "id": "922-VIII",
+              "legalName": "Закон України \"Про публічні закупівлі\"",
+              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1426"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2024-04-19"
+          },
+          {
+            "article": "2.1",
+            "identifier": {
+              "id": "1135-2023-п",
+              "legalName": "Про внесення змін до постанов Кабінету Міністрів України від 14 вересня 2020 р. № 822 і від 12 жовтня 2022 р. № 1178",
+              "uri": "https://zakon.rada.gov.ua/laws/show/1135-2023-%D0%BF#n24"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2023-10-31"
+          }
+        ],
+        "relatedItem": "991693efb03704c0638da4baeee94a5b",
+        "relatesTo": "item",
+        "requirementGroups": [
+          {
+            "description": "Підтверджується, що",
+            "id": "f4146a0d4ce64a59808655dc188c7297",
+            "requirements": [
+              {
+                "dataType": "string",
+                "expectedMaxItems": 1,
+                "expectedMinItems": 1,
+                "expectedValues": [
+                  "ROYAL",
+                  "FORWARD",
+                  "NONAME",
+                  "BOWAY"
+                ],
+                "id": "e0a9a6e9ce4344159b0ff10b488de7f8",
+                "title": "Requirement string 1"
+              },
+              {
+                "dataType": "integer",
+                "id": "488a5c4e77424ea89b6d26d07c125d3f",
+                "maxValue": 120,
+                "minValue": 0,
+                "title": "Requirement integer 1",
+                "unit": {
+                  "code": "MON",
+                  "name": "місяць"
+                }
+              },
+              {
+                "dataType": "number",
+                "id": "39f0af254cbd4ed18d8903c00eaac547",
+                "maxValue": 200.85,
+                "minValue": -55,
+                "title": "Requirement number 1",
+                "unit": {
+                  "code": "CEL",
+                  "name": "градус Цельсія"
+                }
+              },
+              {
+                "dataType": "boolean",
+                "expectedValue": true,
+                "id": "28c058f73a5b4bdd8551f35ae49bbabf",
+                "title": "Requirement boolean 1"
+              }
+            ]
+          }
+        ],
+        "source": "tenderer",
+        "title": "Технічні, якісні та кількісні характеристики предмета закупівлі"
+      },
+      {
+        "classification": {
+          "id": "CRITERION.OTHER.SUBJECT_OF_PROCUREMENT.TECHNICAL_FEATURES",
+          "scheme": "ESPD211"
+        },
+        "description": "Технічна специфікація повинна містити опис усіх необхідних характеристик товарів, робіт або послуг, що закуповуються, у тому числі їх технічні, функціональні та якісні характеристики. Характеристики товарів, робіт або послуг можуть містити опис конкретного технологічного процесу або технології виробництва чи порядку постачання товару (товарів), виконання необхідних робіт, надання послуги (послуг)",
+        "id": "67479a1a3be24dbea1cd685a125333bd",
+        "legislation": [
+          {
+            "article": "22.2.3",
+            "identifier": {
+              "id": "922-VIII",
+              "legalName": "Закон України \"Про публічні закупівлі\"",
+              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2024-04-19"
+          },
+          {
+            "article": "23",
+            "identifier": {
+              "id": "922-VIII",
+              "legalName": "Закон України \"Про публічні закупівлі\"",
+              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1426"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2024-04-19"
+          },
+          {
+            "article": "2.1",
+            "identifier": {
+              "id": "1135-2023-п",
+              "legalName": "Про внесення змін до постанов Кабінету Міністрів України від 14 вересня 2020 р. № 822 і від 12 жовтня 2022 р. № 1178",
+              "uri": "https://zakon.rada.gov.ua/laws/show/1135-2023-%D0%BF#n24"
+            },
+            "type": "NATIONAL_LEGISLATION",
+            "version": "2023-10-31"
+          }
+        ],
+        "relatedItem": "5693ce27fe454c6badc428088688f31c",
+        "relatesTo": "item",
+        "requirementGroups": [
+          {
+            "description": "Підтверджується, що",
+            "id": "8faa882d7b314ecc9740e9d2d40a947c",
+            "requirements": [
+              {
+                "dataType": "string",
+                "expectedMinItems": 1,
+                "expectedValues": [
+                  "рулонні",
+                  "конвертові",
+                  "вакуумні"
+                ],
+                "id": "de3377496c1446ada05084caec0cf575",
+                "title": "Requirement string 2"
+              },
+              {
+                "dataType": "integer",
+                "expectedValue": 1000,
+                "id": "ba9baddcd92343b6bcf853704b824431",
+                "title": "Requirement integer 2",
+                "unit": {
+                  "code": "MON",
+                  "name": "місяць"
+                }
+              },
+              {
+                "dataType": "integer",
+                "id": "3b344492b91049ddba544b5df7f34a00",
+                "minValue": 90,
+                "title": "Requirement integer 3",
+                "unit": {
+                  "code": "4H",
+                  "name": "мікрометр"
+                }
+              },
+              {
+                "dataType": "number",
+                "id": "5789528c96e34abdbbae736b66657d8e",
+                "minValue": 2.98,
+                "title": "Requirement number 2",
+                "unit": {
+                  "code": "H87",
+                  "name": "штука"
+                }
+              },
+              {
+                "dataType": "number",
+                "expectedValue": 10.98,
+                "id": "db7f7fd2c82d476099198b055df62dea",
+                "title": "Requirement number 3",
+                "unit": {
+                  "code": "MON",
+                  "name": "місяць"
+                }
+              },
+              {
+                "dataType": "boolean",
+                "expectedValue": false,
+                "id": "77ff1fe55d4a42b59f8b15b6feb30d3f",
+                "title": "Requirement boolean 2"
+              },
+              {
+                "dataType": "boolean",
+                "id": "f85f5606c2124ae38ced752622203a1b",
+                "title": "Requirement boolean 3"
+              }
+            ]
+          }
+        ],
+        "source": "tenderer",
+        "title": "Технічні, якісні та кількісні характеристики предмета закупівлі"
+      }
+    ],
+    "items": [
+      {
+        "additionalClassifications": [
+          {
+            "description": "Topotecan",
+            "id": "topotecan",
+            "scheme": "INN"
+          },
+          {
+            "description": "L01EL02",
+            "id": "L01EL02",
+            "scheme": "ATX"
+          }
+        ],
+        "category": "5693ce27fe454c6badc428088688f31c",
         "classification": {
           "description": "Фармацевтична продукція",
-          "scheme": "ДК021",
-          "id": "33600000-6"
+          "id": "33600000-6",
+          "scheme": "ДК021"
         },
         "deliveryAddress": {
           "countryName": "Україна",
@@ -60,72 +364,32 @@
         },
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "quantity": 1,
-        "unit": {
-          "code": "KGM",
-          "name": "кг"
-        },
-        "id": "271693efb03704c0638da4baeee94a5b"
-      },
-      {
-        "category": "5693ce27fe454c6badc428088688f31c",
+        "id": "271693efb03704c0638da4baeee94a5b",
         "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
-        "additionalClassifications": [
-          {
-            "scheme": "INN",
-            "id": "topotecan",
-            "description": "Topotecan"
-          },
-          {
-            "scheme": "ATX",
-            "id": "L01EL02",
-            "description": "L01EL02"
-          }
-        ],
-        "classification": {
-          "description": "Фармацевтична продукція",
-          "scheme": "ДК021",
-          "id": "33600000-6"
-        },
-        "deliveryAddress": {
-          "countryName": "Україна",
-          "locality": "м. Київ",
-          "postalCode": "79000",
-          "region": "м. Київ",
-          "streetAddress": "вул. Тестова 1"
-        },
-        "deliveryDate": {
-          "endDate": "2027-08-10T16:02:36.221351+03:00",
-          "startDate": "2027-07-11T16:02:36.221327+03:00"
-        },
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
         "quantity": 1,
         "unit": {
           "code": "KGM",
           "name": "кг"
-        },
-        "id": "991693efb03704c0638da4baeee94a5b"
+        }
       },
       {
-        "category": "5693ce27fe454c6badc428088688f31c",
-        "profile": "01c07d6f048a4211b7050c9597ad3aed",
         "additionalClassifications": [
           {
-            "scheme": "INN",
+            "description": "Topotecan",
             "id": "topotecan",
-            "description": "Topotecan"
+            "scheme": "INN"
           },
           {
-            "scheme": "ATX",
+            "description": "L01EL02",
             "id": "L01EL02",
-            "description": "L01EL02"
+            "scheme": "ATX"
           }
         ],
+        "category": "5693ce27fe454c6badc428088688f31c",
         "classification": {
           "description": "Фармацевтична продукція",
-          "scheme": "ДК021",
-          "id": "33600000-6"
+          "id": "33600000-6",
+          "scheme": "ДК021"
         },
         "deliveryAddress": {
           "countryName": "Україна",
@@ -140,12 +404,53 @@
         },
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
+        "id": "991693efb03704c0638da4baeee94a5b",
+        "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
         "quantity": 1,
-          "unit": {
+        "unit": {
           "code": "KGM",
           "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Topotecan",
+            "id": "topotecan",
+            "scheme": "INN"
+          },
+          {
+            "description": "L01EL02",
+            "id": "L01EL02",
+            "scheme": "ATX"
+          }
+        ],
+        "category": "5693ce27fe454c6badc428088688f31c",
+        "classification": {
+          "description": "Фармацевтична продукція",
+          "id": "33600000-6",
+          "scheme": "ДК021"
         },
-        "id": "5693ce27fe454c6badc428088688f31c"
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова 1"
+        },
+        "deliveryDate": {
+          "endDate": "2027-08-10T16:02:36.221351+03:00",
+          "startDate": "2027-07-11T16:02:36.221327+03:00"
+        },
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "id": "5693ce27fe454c6badc428088688f31c",
+        "profile": "01c07d6f048a4211b7050c9597ad3aed",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
       }
     ],
     "mainProcurementCategory": "goods",
@@ -192,311 +497,6 @@
       "amount": 1000,
       "currency": "UAH",
       "valueAddedTaxIncluded": true
-    },
-    "agreement": {
-      "id": "49758e7891b146a089c1327e54e6179e"
-    },
-    "criteria": [
-      {
-        "title": "Технічні, якісні та кількісні характеристики предмета закупівлі",
-        "description": "Технічна специфікація повинна містити опис усіх необхідних характеристик товарів, робіт або послуг, що закуповуються, у тому числі їх технічні, функціональні та якісні характеристики. Характеристики товарів, робіт або послуг можуть містити опис конкретного технологічного процесу або технології виробництва чи порядку постачання товару (товарів), виконання необхідних робіт, надання послуги (послуг)",
-        "id": "161052af0fc14c48840273fa600ac6fd",
-        "source": "tenderer",
-        "classification": {
-          "scheme": "ESPD211",
-          "id": "CRITERION.OTHER.SUBJECT_OF_PROCUREMENT.TECHNICAL_FEATURES"
-        },
-        "relatesTo": "item",
-        "relatedItem": "271693efb03704c0638da4baeee94a5b",
-        "legislation": [
-          {
-            "version": "2024-04-19",
-            "identifier": {
-              "id": "922-VIII",
-              "legalName": "Закон України \"Про публічні закупівлі\"",
-              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "22.2.3"
-          },
-          {
-            "version": "2024-04-19",
-            "identifier": {
-              "id": "922-VIII",
-              "legalName": "Закон України \"Про публічні закупівлі\"",
-              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1426"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "23"
-          },
-          {
-            "version": "2023-10-31",
-            "identifier": {
-              "id": "1135-2023-п",
-              "legalName": "Про внесення змін до постанов Кабінету Міністрів України від 14 вересня 2020 р. № 822 і від 12 жовтня 2022 р. № 1178",
-              "uri": "https://zakon.rada.gov.ua/laws/show/1135-2023-%D0%BF#n24"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "2.1"
-          }
-        ],
-        "requirementGroups": [
-          {
-            "description": "Підтверджується, що",
-            "id": "5189d2a530a84d32b81e824d1db96a06",
-            "requirements": [
-              {
-                "title": "Requirement string 1",
-                "dataType": "string",
-                "expectedValues": [
-                  "ROYAL",
-                  "FORWARD",
-                  "NONAME",
-                  "BOWAY"
-                ],
-                "expectedMinItems": 1,
-                "expectedMaxItems": 1,
-                "id": "b5a82b22214e33365b3f973f6436e585"
-              },
-              {
-                "title": "Requirement integer 1",
-                "dataType": "integer",
-				"unit": {
-                  "code": "MON",
-                  "name": "місяць"
-                },
-                "maxValue": 120,
-                "minValue": 0,
-                "id": "3d54653e06314d8dab24b615daa4891f"
-              },
-              {
-                "title": "Requirement number 1",
-                "dataType": "number",
-                "unit": {
-                  "code": "CEL",
-                  "name": "градус Цельсія"
-                },
-                "maxValue": 200.85,
-                "minValue": -55,
-                "id": "44b4fd92010445c49d13037ef61f198e"
-              },
-              {
-                "title": "Requirement boolean 1",
-                "dataType": "boolean",
-                "expectedValue": true,
-                "id": "033e0cc943144a3530ca732f8817eddf"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Технічні, якісні та кількісні характеристики предмета закупівлі",
-        "description": "Технічна специфікація повинна містити опис усіх необхідних характеристик товарів, робіт або послуг, що закуповуються, у тому числі їх технічні, функціональні та якісні характеристики. Характеристики товарів, робіт або послуг можуть містити опис конкретного технологічного процесу або технології виробництва чи порядку постачання товару (товарів), виконання необхідних робіт, надання послуги (послуг)",
-        "id": "bffef0d7bf2b420c87c441dae72ae3b0",
-        "source": "tenderer",
-        "classification": {
-          "scheme": "ESPD211",
-          "id": "CRITERION.OTHER.SUBJECT_OF_PROCUREMENT.TECHNICAL_FEATURES"
-        },
-        "relatesTo": "item",
-        "relatedItem": "991693efb03704c0638da4baeee94a5b",
-        "legislation": [
-          {
-            "version": "2024-04-19",
-            "identifier": {
-              "id": "922-VIII",
-              "legalName": "Закон України \"Про публічні закупівлі\"",
-              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "22.2.3"
-          },
-          {
-            "version": "2024-04-19",
-            "identifier": {
-              "id": "922-VIII",
-              "legalName": "Закон України \"Про публічні закупівлі\"",
-              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1426"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "23"
-          },
-          {
-            "version": "2023-10-31",
-            "identifier": {
-              "id": "1135-2023-п",
-              "legalName": "Про внесення змін до постанов Кабінету Міністрів України від 14 вересня 2020 р. № 822 і від 12 жовтня 2022 р. № 1178",
-              "uri": "https://zakon.rada.gov.ua/laws/show/1135-2023-%D0%BF#n24"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "2.1"
-          }
-        ],
-        "requirementGroups": [
-          {
-            "description": "Підтверджується, що",
-            "id": "f4146a0d4ce64a59808655dc188c7297",
-            "requirements": [
-              {
-                "title": "Requirement string 1",
-                "dataType": "string",
-                "expectedValues": [
-                  "ROYAL",
-                  "FORWARD",
-                  "NONAME",
-                  "BOWAY"
-                ],
-                "expectedMinItems": 1,
-                "expectedMaxItems": 1,
-                "id": "e0a9a6e9ce4344159b0ff10b488de7f8"
-              },
-              {
-                "title": "Requirement integer 1",
-                "dataType": "integer",
-				"unit": {
-                  "code": "MON",
-                  "name": "місяць"
-                },
-                "maxValue": 120,
-                "minValue": 0,
-                "id": "488a5c4e77424ea89b6d26d07c125d3f"
-              },
-              {
-                "title": "Requirement number 1",
-                "dataType": "number",
-                "unit": {
-                  "code": "CEL",
-                  "name": "градус Цельсія"
-                },
-                "maxValue": 200.85,
-                "minValue": -55,
-                "id": "39f0af254cbd4ed18d8903c00eaac547"
-              },
-              {
-                "title": "Requirement boolean 1",
-                "dataType": "boolean",
-                "expectedValue": true,
-                "id": "28c058f73a5b4bdd8551f35ae49bbabf"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Технічні, якісні та кількісні характеристики предмета закупівлі",
-        "description": "Технічна специфікація повинна містити опис усіх необхідних характеристик товарів, робіт або послуг, що закуповуються, у тому числі їх технічні, функціональні та якісні характеристики. Характеристики товарів, робіт або послуг можуть містити опис конкретного технологічного процесу або технології виробництва чи порядку постачання товару (товарів), виконання необхідних робіт, надання послуги (послуг)",
-        "id": "67479a1a3be24dbea1cd685a125333bd",
-        "source": "tenderer",
-        "classification": {
-          "scheme": "ESPD211",
-          "id": "CRITERION.OTHER.SUBJECT_OF_PROCUREMENT.TECHNICAL_FEATURES"
-        },
-        "relatesTo": "item",
-        "relatedItem": "5693ce27fe454c6badc428088688f31c",
-        "legislation": [
-          {
-            "version": "2024-04-19",
-            "identifier": {
-              "id": "922-VIII",
-              "legalName": "Закон України \"Про публічні закупівлі\"",
-              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "22.2.3"
-          },
-          {
-            "version": "2024-04-19",
-            "identifier": {
-              "id": "922-VIII",
-              "legalName": "Закон України \"Про публічні закупівлі\"",
-              "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1426"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "23"
-          },
-          {
-            "version": "2023-10-31",
-            "identifier": {
-              "id": "1135-2023-п",
-              "legalName": "Про внесення змін до постанов Кабінету Міністрів України від 14 вересня 2020 р. № 822 і від 12 жовтня 2022 р. № 1178",
-              "uri": "https://zakon.rada.gov.ua/laws/show/1135-2023-%D0%BF#n24"
-            },
-            "type": "NATIONAL_LEGISLATION",
-            "article": "2.1"
-          }
-        ],
-        "requirementGroups": [
-          {
-            "description": "Підтверджується, що",
-            "id": "8faa882d7b314ecc9740e9d2d40a947c",
-            "requirements": [
-              {
-                "title": "Requirement string 2",
-                "dataType": "string",
-                "expectedValues": [
-                  "рулонні",
-                  "конвертові",
-                  "вакуумні"
-                ],
-                "expectedMinItems": 1,
-                "id": "de3377496c1446ada05084caec0cf575"
-              },
-              {
-                "title": "Requirement integer 2",
-                "dataType": "integer",
-				"unit": {
-                  "code": "MON",
-                  "name": "місяць"
-                },
-                "expectedValue": 1000,
-                "id": "ba9baddcd92343b6bcf853704b824431"
-              },
-              {
-                "title": "Requirement integer 3",
-                "dataType": "integer",
-				"unit": {
-                  "code": "4H",
-                  "name": "мікрометр"
-                },
-                "minValue": 90,
-                "id": "3b344492b91049ddba544b5df7f34a00"
-              },
-              {
-                "title": "Requirement number 2",
-                "dataType": "number",
-                "unit": {
-                  "code": "H87",
-                  "name": "штука"
-                },
-                "minValue": 2.98,
-                "id": "5789528c96e34abdbbae736b66657d8e"
-              },
-              {
-                "title": "Requirement number 3",
-                "dataType": "number",
-                "unit": {
-                  "code": "MON",
-                  "name": "місяць"
-                },
-                "expectedValue": 10.98,
-                "id": "db7f7fd2c82d476099198b055df62dea"
-              },
-              {
-                "title": "Requirement boolean 2",
-                "dataType": "boolean",
-                "expectedValue": false,
-                "id": "77ff1fe55d4a42b59f8b15b6feb30d3f"
-              },
-              {
-                "title": "Requirement boolean 3",
-                "dataType": "boolean",
-                "id": "f85f5606c2124ae38ced752622203a1b"
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    }
   }
 }

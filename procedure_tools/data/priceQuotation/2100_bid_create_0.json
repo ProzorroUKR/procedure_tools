@@ -25,76 +25,39 @@
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][0].id }}",
+        "product": "3d54653e06314d8dab24b615daa4891f",
         "quantity": 1,
         "unit": {
           "code": "KGM",
           "name": "кг"
-        },
-        "product": "3d54653e06314d8dab24b615daa4891f"
+        }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][1].id }}",
+        "product": "3d54653e06314d8dab24b615daa4891f",
         "quantity": 1,
         "unit": {
           "code": "KGM",
           "name": "кг"
-        },
-        "product": "3d54653e06314d8dab24b615daa4891f"
+        }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][2].id }}",
+        "product": "44b4fd92010445c49d13037ef61f198e",
         "quantity": 1,
         "unit": {
           "code": "KGM",
           "name": "кг"
-        },
-        "product": "44b4fd92010445c49d13037ef61f198e"
+        }
       }
     ],
-    "value": {
-      "amount": 500,
-      "currency": "UAH",
-      "valueAddedTaxIncluded": true
-    },
     "qualificationDocuments": [
       {
         "title": "bid_qualification_document_file.txt"
-      }
-    ],
-    "status": "draft",
-    "tenderers": [
-      {
-        "address": {
-          "countryName": "Україна",
-          "locality": "м. Київ",
-          "postalCode": "21100",
-          "region": "м. Київ",
-          "streetAddress": "вул. Тестова, 33"
-        },
-        "contactPoint": {
-          "email": "factory@example.com",
-          "name": "Нейменко Нейм Неймович",
-          "telephone": "+380000000000"
-        },
-        "identifier": {
-          "id": "00137256",
-          "scheme": "UA-EDR",
-          "uri": "http://factory.example.com"
-        },
-        "name": "Тестове підприємство",
-        "scale": "micro",
-        "signerInfo": {
-          "authorizedBy": "Статут компанії",
-          "email": "example@email.com",
-          "iban": "111111111111111",
-          "name": "Test Testovich",
-          "position": "Генеральний директор",
-          "telephone": "+380950000000"
-        }
       }
     ],
     "requirementResponses": [
@@ -102,7 +65,9 @@
         "requirement": {
           "id": "b5a82b22214e33365b3f973f6436e585"
         },
-        "values": ["NONAME"]
+        "values": [
+          "NONAME"
+        ]
       },
       {
         "requirement": {
@@ -126,7 +91,9 @@
         "requirement": {
           "id": "e0a9a6e9ce4344159b0ff10b488de7f8"
         },
-        "values": ["NONAME"]
+        "values": [
+          "NONAME"
+        ]
       },
       {
         "requirement": {
@@ -150,7 +117,9 @@
         "requirement": {
           "id": "de3377496c1446ada05084caec0cf575"
         },
-        "values": ["рулонні"]
+        "values": [
+          "рулонні"
+        ]
       },
       {
         "requirement": {
@@ -188,6 +157,43 @@
         },
         "value": true
       }
-    ]
+    ],
+    "status": "draft",
+    "tenderers": [
+      {
+        "address": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "21100",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова, 33"
+        },
+        "contactPoint": {
+          "email": "factory@example.com",
+          "name": "Нейменко Нейм Неймович",
+          "telephone": "+380000000000"
+        },
+        "identifier": {
+          "id": "00137256",
+          "scheme": "UA-EDR",
+          "uri": "http://factory.example.com"
+        },
+        "name": "Тестове підприємство",
+        "scale": "micro",
+        "signerInfo": {
+          "authorizedBy": "Статут компанії",
+          "email": "example@email.com",
+          "iban": "111111111111111",
+          "name": "Test Testovich",
+          "position": "Генеральний директор",
+          "telephone": "+380950000000"
+        }
+      }
+    ],
+    "value": {
+      "amount": 500,
+      "currency": "UAH",
+      "valueAddedTaxIncluded": true
+    }
   }
 }

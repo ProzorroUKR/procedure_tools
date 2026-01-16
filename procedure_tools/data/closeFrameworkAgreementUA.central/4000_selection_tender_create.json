@@ -129,6 +129,52 @@
         "title": "Тестова назва лоту"
       }
     ],
+    "milestones": [
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 2,
+          "type": "banking"
+        },
+        "percentage": 80,
+        "sequenceNumber": 1,
+        "title": "signingTheContract",
+        "type": "financing"
+      },
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 99,
+          "type": "working"
+        },
+        "percentage": 20,
+        "sequenceNumber": 2,
+        "title": "executionOfWorks",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 500,
+          "type": "working"
+        },
+        "percentage": 22,
+        "sequenceNumber": 3,
+        "title": "signingTheContract",
+        "type": "delivery"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 78,
+        "sequenceNumber": 4,
+        "title": "signingTheContract",
+        "type": "delivery"
+      }
+    ],
     "mode": "test",
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "procurementMethodType": "closeFrameworkAgreementSelectionUA",
