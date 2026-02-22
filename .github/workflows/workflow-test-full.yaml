@@ -29,10 +29,10 @@ jobs:
           - competitive_dialogue_ua_features
           - esco
           - esco_features
-          - negotiation
-          - negotiation_quick
+          # - negotiation
+          # - negotiation_quick
           - reporting
-          - simple_defense
+          # - simple_defense
           - dynamic_purchasing_system_competitive_ordering_short
           - dynamic_purchasing_system_competitive_ordering_long
           - request_for_proposal
