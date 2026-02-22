@@ -28,7 +28,6 @@
     "agreement": {
       "id": "49758e7891b146a089c1327e54e6179e"
     },
-    "contractTemplateName": "33600000.0002.01",
     "criteria": [
       {
         "classification": {
@@ -476,15 +475,7 @@
         "scheme": "UA-EDR"
       },
       "kind": "special",
-      "name": "Тестовий заклад #1 м.Київ",
-      "signerInfo": {
-        "authorizedBy": "Статут компанії",
-        "email": "example@email.com",
-        "iban": "111111111111111",
-        "name": "Test Testovich",
-        "position": "Генеральний директор",
-        "telephone": "+380950000000"
-      }
+      "name": "Тестовий заклад #1 м.Київ"
     },
     "status": "draft",
     "tenderPeriod": {

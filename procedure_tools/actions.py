@@ -1111,6 +1111,29 @@ def upload_tender_documents(
     )
 
 
+def upload_contract_proforma(
+    client: CDBClient,
+    ds_client: DSClient,
+    args,
+    context,
+    tender_id,
+    tender_token,
+    prefix="",
+):
+    return upload_documents(
+        ds_client,
+        args,
+        context,
+        data_file_prefix="contract_proforma_attach",
+        attach_callback=partial(
+            client.post,
+            f"tenders/{tender_id}/documents",
+            acc_token=tender_token,
+        ),
+        prefix=prefix,
+    )
+
+
 def upload_tender_notice(
     client: CDBClient,
     ds_client: DSClient,

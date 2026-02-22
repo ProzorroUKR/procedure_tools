@@ -26,7 +26,6 @@
   },
   "data": {
     "awardCriteria": "lifeCycleCost",
-    "contractTemplateName": "00000000.0002.01",
     "items": [
       {
         "additionalClassifications": [
@@ -436,15 +435,7 @@
       },
       "kind": "general",
       "name": "Тестовий заклад #1 м.Київ",
-      "name_en": "Test facility #1 of Kyiv",
-      "signerInfo": {
-        "authorizedBy": "Статут компанії",
-        "email": "example@email.com",
-        "iban": "111111111111111",
-        "name": "Test Testovich",
-        "position": "Генеральний директор",
-        "telephone": "+380950000000"
-      }
+      "name_en": "Test facility #1 of Kyiv"
     },
     "status": "draft",
     "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",
