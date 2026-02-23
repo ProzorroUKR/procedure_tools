@@ -65,9 +65,7 @@ def get_default_data_dirs():
     project_dir = get_project_dir()
     data_path = os.path.join(project_dir, DATA_SUB_DIR_DEFAULT)
     return [
-        item
-        for item in os.listdir(data_path)
-        if os.path.isdir(os.path.join(data_path, item)) and item != "__pycache__"
+        item for item in os.listdir(data_path) if os.path.isdir(os.path.join(data_path, item)) and item != "__pycache__"
     ]
 
 
