@@ -25,7 +25,6 @@
     "valueCurrencyEquality": true
   },
   "data": {
-    "contractTemplateName": "00000000.0002.01",
     "enquiryPeriod": {
       "endDate": "{{ from_now_iso(days=30) }}"
     },
@@ -333,15 +332,7 @@
         "uri": "http://www.dus.gov.ua/"
       },
       "kind": "general",
-      "name": "Державне управління справами",
-      "signerInfo": {
-        "authorizedBy": "Статут компанії",
-        "email": "example@email.com",
-        "iban": "111111111111111",
-        "name": "Test Testovich",
-        "position": "Генеральний директор",
-        "telephone": "+380950000000"
-      }
+      "name": "Державне управління справами"
     },
     "status": "draft",
     "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",

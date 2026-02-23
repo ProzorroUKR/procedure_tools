@@ -39,6 +39,12 @@ cat > $FILE <<- EOM
         pip install -e .[color]
         \`\`\`
 
+    * with tests requirements:
+
+        \`\`\`
+        pip install -e .[test]
+        \`\`\`
+
 ## Update
 
 1. Pull
@@ -161,11 +167,11 @@ export DS_HOST=${DS_HOST}
 export DS_USERNAME=${FAKE_DS_USERNAME}
 export DS_PASSWORD=${FAKE_DS_PASSWORD}
 
-python setup.py test
+pytest
 \`\`\`
 or
 \`\`\`
-API_HOST=${API_HOST} API_TOKEN=${FAKE_API_TOKEN} DS_HOST=${DS_HOST} DS_USERNAME=${FAKE_DS_USERNAME} DS_PASSWORD=${FAKE_DS_PASSWORD} python setup.py test
+API_HOST=${API_HOST} API_TOKEN=${FAKE_API_TOKEN} DS_HOST=${DS_HOST} DS_USERNAME=${FAKE_DS_USERNAME} DS_PASSWORD=${FAKE_DS_PASSWORD} pytest
 \`\`\`
 EOM
 

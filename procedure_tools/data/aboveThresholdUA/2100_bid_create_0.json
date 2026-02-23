@@ -103,15 +103,7 @@
           "uri": "http://factory.example.com"
         },
         "name": "Тестове підприємство",
-        "scale": "micro",
-        "signerInfo": {
-          "authorizedBy": "Статут компанії",
-          "email": "example@email.com",
-          "iban": "111111111111111",
-          "name": "Test Testovich",
-          "position": "Генеральний директор",
-          "telephone": "+380950000000"
-        }
+        "scale": "micro"
       }
     ]
   }

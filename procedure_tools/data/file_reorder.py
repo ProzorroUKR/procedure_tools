@@ -19,6 +19,7 @@ number_map = {
     "tender_create": "2000",
     "tender_credentials": "2000",
     "tender_document": "2010",
+    "contract_proforma": "2010",
     "criteria_create": "2020",
     "tender_notice": "2030",
     "tender_patch": "2040",

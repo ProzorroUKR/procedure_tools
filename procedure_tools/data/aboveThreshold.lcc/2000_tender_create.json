@@ -26,7 +26,6 @@
   },
   "data": {
     "awardCriteria": "lifeCycleCost",
-    "contractTemplateName": "00000000.0002.01",
     "items": [
       {
         "additionalClassifications": [
@@ -332,15 +331,7 @@
         "scheme": "UA-EDR"
       },
       "kind": "special",
-      "name": "Тестовий заклад #1 м.Київ",
-      "signerInfo": {
-        "authorizedBy": "Статут компанії",
-        "email": "example@email.com",
-        "iban": "111111111111111",
-        "name": "Test Testovich",
-        "position": "Генеральний директор",
-        "telephone": "+380950000000"
-      }
+      "name": "Тестовий заклад #1 м.Київ"
     },
     "status": "draft",
     "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",

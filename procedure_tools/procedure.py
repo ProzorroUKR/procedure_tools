@@ -48,6 +48,7 @@ from procedure_tools.actions import (
     post_tender_plan,
     re_upload_evaluation_report,
     upload_bids_proposal,
+    upload_contract_proforma,
     upload_evaluation_report,
     upload_qualifications_evaluation_reports,
     upload_tender_documents,
@@ -304,6 +305,16 @@ def process_procedure(
     submission_method_details = get_submission_method_details(response)
 
     upload_tender_documents(
+        client,
+        ds_client,
+        args,
+        context,
+        tender_id,
+        tender_token,
+        prefix=prefix,
+    )
+
+    upload_contract_proforma(
         client,
         ds_client,
         args,
