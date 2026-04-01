@@ -195,7 +195,7 @@
         "scheme": "UA-EDR",
         "uri": "http://www.dus.gov.ua/"
       },
-      "kind": "general",
+      "kind": "central",
       "name": "Державне управління справами"
     },
     "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",

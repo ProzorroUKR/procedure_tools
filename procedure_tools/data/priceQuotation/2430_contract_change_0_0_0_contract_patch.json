@@ -9,6 +9,11 @@
             "description": "{{ contracts[0]['items'][0].additionalClassifications[0].description }}",
             "id": "{{ contracts[0]['items'][0].additionalClassifications[0].id }}",
             "scheme": "{{ contracts[0]['items'][0].additionalClassifications[0].scheme }}"
+          },
+          {
+            "description": "{{ contracts[0]['items'][0].additionalClassifications[1].description }}",
+            "id": "{{ contracts[0]['items'][0].additionalClassifications[1].id }}",
+            "scheme": "{{ contracts[0]['items'][0].additionalClassifications[1].scheme }}"
           }
         ],
         "classification": {
@@ -35,8 +40,9 @@
           "code": "{{ contracts[0]['items'][0].unit.code }}",
           "name": "{{ contracts[0]['items'][0].unit.name }}",
           "value": {
-            "amount": 10.0,
-            "valueAddedTaxIncluded": false
+            "amount": "{{ contracts[0]['items'][0].unit.value.amount }}",
+            "currency": "{{ contracts[0]['items'][0].unit.value.currency }}",
+            "valueAddedTaxIncluded": "{{ contracts[0]['items'][0].unit.value.valueAddedTaxIncluded }}"
           }
         }
       },
@@ -46,6 +52,11 @@
             "description": "{{ contracts[0]['items'][1].additionalClassifications[0].description }}",
             "id": "{{ contracts[0]['items'][1].additionalClassifications[0].id }}",
             "scheme": "{{ contracts[0]['items'][1].additionalClassifications[0].scheme }}"
+          },
+          {
+            "description": "{{ contracts[0]['items'][1].additionalClassifications[1].description }}",
+            "id": "{{ contracts[0]['items'][1].additionalClassifications[1].id }}",
+            "scheme": "{{ contracts[0]['items'][1].additionalClassifications[1].scheme }}"
           }
         ],
         "classification": {
@@ -72,8 +83,9 @@
           "code": "{{ contracts[0]['items'][1].unit.code }}",
           "name": "{{ contracts[0]['items'][1].unit.name }}",
           "value": {
-            "amount": 10.0,
-            "valueAddedTaxIncluded": false
+            "amount": "{{ contracts[0]['items'][1].unit.value.amount }}",
+            "currency": "{{ contracts[0]['items'][1].unit.value.currency }}",
+            "valueAddedTaxIncluded": "{{ contracts[0]['items'][1].unit.value.valueAddedTaxIncluded }}"
           }
         }
       },
@@ -83,6 +95,11 @@
             "description": "{{ contracts[0]['items'][2].additionalClassifications[0].description }}",
             "id": "{{ contracts[0]['items'][2].additionalClassifications[0].id }}",
             "scheme": "{{ contracts[0]['items'][2].additionalClassifications[0].scheme }}"
+          },
+          {
+            "description": "{{ contracts[0]['items'][2].additionalClassifications[1].description }}",
+            "id": "{{ contracts[0]['items'][2].additionalClassifications[1].id }}",
+            "scheme": "{{ contracts[0]['items'][2].additionalClassifications[1].scheme }}"
           }
         ],
         "classification": {
@@ -109,8 +126,9 @@
           "code": "{{ contracts[0]['items'][2].unit.code }}",
           "name": "{{ contracts[0]['items'][2].unit.name }}",
           "value": {
-            "amount": 10.0,
-            "valueAddedTaxIncluded": false
+            "amount": "{{ contracts[0]['items'][2].unit.value.amount }}",
+            "currency": "{{ contracts[0]['items'][2].unit.value.currency }}",
+            "valueAddedTaxIncluded": "{{ contracts[0]['items'][2].unit.value.valueAddedTaxIncluded }}"
           }
         }
       }

@@ -452,6 +452,30 @@
         }
       }
     ],
+    "milestones": [
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "sequenceNumber": 1,
+        "title": "executionOfWorks",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "sequenceNumber": 2,
+        "title": "signingTheContract",
+        "type": "delivery"
+      }
+    ],
     "mainProcurementCategory": "goods",
     "mode": "test",
     "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
