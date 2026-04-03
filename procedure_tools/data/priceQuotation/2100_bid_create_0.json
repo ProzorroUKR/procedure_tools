@@ -31,7 +31,7 @@
           "code": "KWH",
           "name": "кВт⋅год",
           "value": {
-            "amount": 165.0,
+            "amount": 155.0,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
@@ -47,7 +47,7 @@
           "code": "KGM",
           "name": "кг",
           "value": {
-            "amount": 188.0,
+            "amount": 85.0,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
@@ -63,7 +63,7 @@
           "code": "MTR",
           "name": "м",
           "value": {
-            "amount": 147.0,
+            "amount": 260.0,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
@@ -169,6 +169,18 @@
       {
         "requirement": {
           "id": "f85f5606c2124ae38ced752622203a1b"
+        },
+        "value": true
+      },
+      {
+        "requirement": {
+          "id": "e638a1444c3a48d187ad5450f33a9bab"
+        },
+        "value": true
+      },
+      {
+        "requirement": {
+          "id": "6d91695aedb54c2c9f46df4b9ad739c8"
         },
         "value": true
       }
