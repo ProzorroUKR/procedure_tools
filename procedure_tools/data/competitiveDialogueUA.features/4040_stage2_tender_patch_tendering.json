@@ -1,5 +1,29 @@
 {
   "data": {
-    "status": "active.tendering"
+    "status": "active.tendering",
+    "milestones": [
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "sequenceNumber": 1,
+        "title": "executionOfWorks",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "sequenceNumber": 2,
+        "title": "signingTheContract",
+        "type": "delivery"
+      }
+    ]
   }
 }

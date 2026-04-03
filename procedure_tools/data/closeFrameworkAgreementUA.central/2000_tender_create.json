@@ -223,6 +223,28 @@
         "sequenceNumber": 2,
         "title": "executionOfWorks",
         "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 500,
+          "type": "working"
+        },
+        "percentage": 22,
+        "sequenceNumber": 3,
+        "title": "signingTheContract",
+        "type": "delivery"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 78,
+        "sequenceNumber": 4,
+        "title": "signingTheContract",
+        "type": "delivery"
       }
     ],
     "mode": "test",

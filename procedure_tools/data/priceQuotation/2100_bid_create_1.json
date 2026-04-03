@@ -28,8 +28,13 @@
         "product": "3d54653e06314d8dab24b615daa4891f",
         "quantity": 1,
         "unit": {
-          "code": "KGM",
-          "name": "кг"
+          "code": "KHZ",
+          "name": "кГц",
+          "value": {
+            "amount": 199.0,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
@@ -40,7 +45,12 @@
         "quantity": 1,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 146.0,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
@@ -50,8 +60,13 @@
         "product": "44b4fd92010445c49d13037ef61f198e",
         "quantity": 1,
         "unit": {
-          "code": "KGM",
-          "name": "кг"
+          "code": "KMQ",
+          "name": "кг/м³",
+          "value": {
+            "amount": 305.0,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       }
     ],
