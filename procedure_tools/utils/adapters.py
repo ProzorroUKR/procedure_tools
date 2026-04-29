@@ -6,6 +6,20 @@ from urllib3 import Retry
 DEFAULT_TIMEOUT = 60
 DEFAULT_MAX_RETRIES = 5
 DEFAULT_RETRY_FORCELIST = (408, 409, 412, 429, 500, 502, 503, 504)
+DEFAULT_RETRY_ALLOWED_METHODS = frozenset(
+    (
+        "HEAD",
+        "GET",
+        "PUT",
+        "PATCH",
+        "POST",
+        "DELETE",
+        "OPTIONS",
+        "TRACE",
+    )
+)
+DEFAULT_RETRY_BACKOFF_FACTOR = 0.5
+DEFAULT_RETRY_BACKOFF_MAX = 60.0
 
 
 class HTTPAdapter(adapters.HTTPAdapter):
@@ -32,12 +46,18 @@ class HTTPAdapter(adapters.HTTPAdapter):
 def mount(
     session,
     timeout=DEFAULT_TIMEOUT,
-    max_reties_total=DEFAULT_MAX_RETRIES,
+    max_retries_total=DEFAULT_MAX_RETRIES,
     status_forcelist=DEFAULT_RETRY_FORCELIST,
+    allowed_methods=DEFAULT_RETRY_ALLOWED_METHODS,
+    backoff_factor=DEFAULT_RETRY_BACKOFF_FACTOR,
+    backoff_max=DEFAULT_RETRY_BACKOFF_MAX,
 ):
     max_retries = Retry(
-        total=max_reties_total,
+        total=max_retries_total,
         status_forcelist=status_forcelist,
+        allowed_methods=allowed_methods,
+        backoff_factor=backoff_factor,
+        backoff_max=backoff_max,
         raise_on_redirect=False,
         raise_on_status=False,
     )
