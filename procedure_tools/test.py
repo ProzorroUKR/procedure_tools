@@ -14,6 +14,8 @@ DS_PASSWORD = "DS_PASSWORD"
 
 REQUIRED_ENV_VARIABLES = [API_HOST, API_TOKEN, DS_HOST, DS_USERNAME, DS_PASSWORD]
 
+INACTIVE_REASON = "Currently inactive procedure"
+skipinactive = pytest.mark.skip(reason=INACTIVE_REASON)
 
 skipifenv = pytest.mark.skipif(
     any([not os.environ.get(v) for v in REQUIRED_ENV_VARIABLES]),
@@ -235,12 +237,14 @@ def test_complex_asset_arma():
     run_test(argv)
 
 
+@skipinactive
 @skipifenv
 def test_negotiation():
     argv = ["--data", "negotiation"]
     run_test(argv)
 
 
+@skipinactive
 @skipifenv
 def test_negotiation_quick():
     argv = ["--data", "negotiation.quick"]
@@ -261,6 +265,7 @@ def test_price_quotation():
     run_test(argv)
 
 
+@skipinactive
 @skipifenv
 def test_simple_defense():
     argv = ["--data", "simple.defense"]
@@ -299,3 +304,29 @@ def test_international_financial_institutions_request_for_proposal():
     if os.environ.get("FAST_RUN"):
         argv += ["--stop", "tender_patch.json"]
     run_test(argv)
+
+
+def has_skipinactive_marker(test_func):
+    marks = getattr(test_func, "pytestmark", [])
+    return any(
+        all(
+            (
+                getattr(mark, "name", None) == "skip",
+                getattr(mark, "kwargs", {}).get("reason") == INACTIVE_REASON,
+            )
+        )
+        for mark in marks
+    )
+
+
+WORKFLOW_TEST_CASES = [  # pyright: ignore[reportUnusedVariable]
+    name.removeprefix("test_")
+    for name, test_func in globals().items()
+    if all(
+        (
+            name.startswith("test_"),
+            callable(test_func),
+            not has_skipinactive_marker(test_func),
+        )
+    )
+]
