@@ -62,17 +62,15 @@ def read_file(path, context=None, args=None, silent_io_error=False, **kwargs):
             "fake": fake,
             "fake_en": fake_en,
         }
+        context_now_kwargs = {
+            "acceleration": acceleration,
+            "client_timedelta": client_timedelta,
+        }
         context_now = {
-            "from_now": partial(
-                helpers.from_now,
-                acceleration=acceleration,
-                client_timedelta=client_timedelta,
-            ),
-            "from_now_iso": partial(
-                helpers.from_now_iso,
-                acceleration=acceleration,
-                client_timedelta=client_timedelta,
-            ),
+            "from_date": partial(helpers.from_date, **context_now_kwargs),
+            "from_date_iso": partial(helpers.from_date_iso, **context_now_kwargs),
+            "from_now": partial(helpers.from_now, **context_now_kwargs),
+            "from_now_iso": partial(helpers.from_now_iso, **context_now_kwargs),
         }
         context_modules = {
             "datetime": datetime,

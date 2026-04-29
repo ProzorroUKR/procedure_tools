@@ -1001,6 +1001,8 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
     )
     # End of deprecated code
 
+    context["contracts"] = get_contracts(client, args, context, contracts_ids)
+
     contract_change_action_index = 0
     while True:
         responses = change_contracts(

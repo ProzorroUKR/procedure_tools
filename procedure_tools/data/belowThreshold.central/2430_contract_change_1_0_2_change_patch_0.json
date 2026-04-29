@@ -1,6 +1,6 @@
 {
   "data": {
-    "dateSigned": "{{ from_now_iso() }}",
+    "dateSigned": "{{ contracts[0].dateModified }}",
     "status": "active"
   }
 }
