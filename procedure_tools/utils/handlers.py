@@ -174,11 +174,32 @@ def contract_credentials_success_handler(response):
     data = response.json()["data"]
     access = response.json()["access"]
 
-    msg = "Contract patched:\n"
+    msg = "Contract credentials retrieved:\n"
     msg += format_log_entry("id", data["id"])
     msg += format_log_entry("token", access["token"])
 
     logging.info(msg)
+
+
+def contract_access_success_handler(role: str, contract_id: str):
+    def handler(response):
+        data = response.json()["data"]
+        access = response.json()["access"]
+
+        msg = f"Contract access for {role} retrieved:\n"
+        msg += format_log_entry("id", contract_id)
+        msg += format_log_entry("token", access["token"])
+        msg += format_log_entry("role", role)
+        msg += format_log_entry("identifier.id", data["identifier"]["id"])
+        msg += format_log_entry("identifier.scheme", data["identifier"]["scheme"])
+
+        legal_name = data["identifier"].get("legalName")
+        if legal_name:
+            msg += format_log_entry("identifier.legalName", legal_name)
+
+        logging.info(msg)
+
+    return handler
 
 
 def bid_create_success_handler(response):

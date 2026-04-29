@@ -1,10 +1,10 @@
 {
   "data": {
     "contractNumber": 2,
-    "dateSigned": "{{ from_now_iso() }}",
+    "dateSigned": "{{ contracts[1].dateModified }}",
     "period": {
-      "endDate": "{{ from_now_iso(days=365) }}",
-      "startDate": "{{ from_now_iso() }}"
+      "startDate": "{{ contracts[1].dateModified }}",
+      "endDate": "{{ from_date_iso(contracts[1].dateModified, days=365) }}"
     },
     "status": "active",
     "value": {

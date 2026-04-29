@@ -50,15 +50,18 @@ jobs:
           - above_threshold
           - above_threshold_features
           - above_threshold_lcc
+          - above_threshold_econtract
           - above_threshold_eu
           - above_threshold_eu_features
           - above_threshold_eu_lcc
+          - above_threshold_eu_econtract
           - above_threshold_ua
           - above_threshold_ua_features
           - above_threshold_ua_lcc
           - below_threshold
           - below_threshold_central
           - below_threshold_features
+          - below_threshold_econtract
           - close_framework_agreement_ua
           - close_framework_agreement_ua_central
           - competitive_dialogue_eu
@@ -66,9 +69,11 @@ jobs:
           - competitive_dialogue_ua_features
           - esco
           - esco_features
+          - complex_asset_arma
           # - negotiation
           # - negotiation_quick
           - reporting
+          - price_quotation
           # - simple_defense
           - dynamic_purchasing_system_competitive_ordering_short
           - dynamic_purchasing_system_competitive_ordering_long

@@ -1,7 +1,7 @@
 {
   "data": {
     "contractNumber": 2,
-    "dateSigned": "{{ from_now_iso() }}",
+    "dateSigned": "{{ contracts[1].dateModified }}",
     "items": [
       {
         "additionalClassifications": [
@@ -30,21 +30,21 @@
         "description": "{{ contracts[1]['items'][0].description }}",
         "description_en": "{{ contracts[1]['items'][0].description_en }}",
         "id": "{{ contracts[1]['items'][0].id }}",
-        "quantity": 1,
+        "quantity": 100,
         "relatedLot": "{{ contracts[1]['items'][0].relatedLot }}",
         "unit": {
           "code": "{{ contracts[1]['items'][0].unit.code }}",
           "name": "{{ contracts[1]['items'][0].unit.name }}",
           "value": {
-            "amount": 10.0,
+            "amount": 50.0,
             "valueAddedTaxIncluded": false
           }
         }
       }
     ],
     "period": {
-      "endDate": "{{ from_now_iso(days=365) }}",
-      "startDate": "{{ from_now_iso() }}"
+      "startDate": "{{ contracts[1].dateModified }}",
+      "endDate": "{{ from_date_iso(contracts[1].dateModified, days=365) }}"
     },
     "status": "active",
     "value": {

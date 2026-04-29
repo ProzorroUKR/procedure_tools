@@ -1,0 +1,231 @@
+{
+  "data": [
+    {
+      "requirement": {
+        "id": "96fd24cfa8d14dbb9950c220d17bb473"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "7215ab2809a442279e852354f4bcd3f9"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "0bceb2c332d94918b8589fd923c27b52"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "9cf6483d4e4047679d6a38e1f4eaabaf"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "61b383c4faed4730986b0c148460ba29"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "c65e547680f842d4814eb5336205ce7b"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "1ca3df034bc1445d85626b8b3e346bec"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "074af5fc85ea4c12b78d9b6de6a1cafd"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "a2ce5cecddf447deb6e5522561cb38d2"
+      },
+      "values": [
+        "Українська"
+      ]
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "2f7afcac9ccd443ba15417d10f434738"
+      },
+      "value": 3.0
+    },
+    {
+      "requirement": {
+        "id": "8b9c45c8665249bda707958c8300c8d9"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "d5805733751346d7962513f8da0691e4"
+      },
+      "value": 5.0
+    },
+    {
+      "requirement": {
+        "id": "55033fcc887f4a50b32aa19c3e3a6cc0"
+      },
+      "value": 0
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "aaa1f58b48f64ea39fa86f54df208420"
+      },
+      "value": 3.0
+    },
+    {
+      "requirement": {
+        "id": "d573dd9472484cb6b4ff195ca2b5b3e5"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "388be3b2947541fb9686a7bdc13cd01b"
+      },
+      "value": 5.0
+    },
+    {
+      "requirement": {
+        "id": "a26ba37ec98345cebcdc9e532fb270ca"
+      },
+      "value": 0
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "1f3090b459a3435db0fecd9d0337d492"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "4e0ac5d991d14d9b9e865cb167edac71"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "549d50f251da4b31a798a40d06ca39fb"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "82fd1f74407142788e6f15ef322eb405"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "e638a1444c3a48d187ad5450f33a9bab"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "6d91695aedb54c2c9f46df4b9ad739c8"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "c85e0b6b4dfd4007a7b51a42b61ee9f9"
+      },
+      "value": 90
+    },
+    {
+      "requirement": {
+        "id": "556ccd8b550b44a28ec0c90b9263f709"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "b3ab8dcd9a5d4e71afd00b7b4e6d373d"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "329de622783a4576b3bf1af0ce21acd2"
+      },
+      "value": 1
+    }
+  ]
+}

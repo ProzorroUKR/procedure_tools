@@ -76,6 +76,14 @@ def test_above_threshold_lcc():
 
 
 @skipifenv
+def test_above_threshold_econtract():
+    argv = ["--data", "aboveThreshold.econtract"]
+    if os.environ.get("FAST_RUN"):
+        argv += ["--stop", "bid_patch_1.json"]
+    run_test(argv)
+
+
+@skipifenv
 def test_above_threshold_eu():
     argv = ["--data", "aboveThresholdEU"]
     if os.environ.get("FAST_RUN"):
@@ -94,6 +102,14 @@ def test_above_threshold_eu_features():
 @skipifenv
 def test_above_threshold_eu_lcc():
     argv = ["--data", "aboveThresholdEU.lcc"]
+    if os.environ.get("FAST_RUN"):
+        argv += ["--stop", "bid_patch_1.json"]
+    run_test(argv)
+
+
+@skipifenv
+def test_above_threshold_eu_econtract():
+    argv = ["--data", "aboveThresholdEU.econtract"]
     if os.environ.get("FAST_RUN"):
         argv += ["--stop", "bid_patch_1.json"]
     run_test(argv)
@@ -144,6 +160,14 @@ def test_below_threshold_features():
     argv = ["--data", "belowThreshold.features"]
     if os.environ.get("FAST_RUN"):
         argv += ["--stop", "tender_patch.json"]
+    run_test(argv)
+
+
+@skipifenv
+def test_below_threshold_econtract():
+    argv = ["--data", "belowThreshold.econtract"]
+    if os.environ.get("FAST_RUN"):
+        argv += ["--stop", "bid_patch_1.json"]
     run_test(argv)
 
 
@@ -204,6 +228,14 @@ def test_esco_features():
 
 
 @skipifenv
+def test_complex_asset_arma():
+    argv = ["--data", "complexAsset.arma"]
+    if os.environ.get("FAST_RUN"):
+        argv += ["--stop", "bid_patch_1.json"]
+    run_test(argv)
+
+
+@skipifenv
 def test_negotiation():
     argv = ["--data", "negotiation"]
     run_test(argv)
@@ -218,6 +250,14 @@ def test_negotiation_quick():
 @skipifenv
 def test_reporting():
     argv = ["--data", "reporting"]
+    run_test(argv)
+
+
+@skipifenv
+def test_price_quotation():
+    argv = ["--data", "priceQuotation"]
+    if os.environ.get("FAST_RUN"):
+        argv += ["--stop", "bid_patch_1.json"]
     run_test(argv)
 
 

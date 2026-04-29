@@ -28,8 +28,8 @@
         "product": "3d54653e06314d8dab24b615daa4891f",
         "quantity": 1,
         "unit": {
-          "code": "KHZ",
-          "name": "кГц",
+          "code": "DMQ",
+          "name": "кубічний дециметр",
           "value": {
             "amount": 89.0,
             "currency": "UAH",
@@ -44,8 +44,8 @@
         "product": "3d54653e06314d8dab24b615daa4891f",
         "quantity": 1,
         "unit": {
-          "code": "KGM",
-          "name": "кг",
+          "code": "DMQ",
+          "name": "кубічний дециметр",
           "value": {
             "amount": 133.0,
             "currency": "UAH",
@@ -60,10 +60,10 @@
         "product": "44b4fd92010445c49d13037ef61f198e",
         "quantity": 1,
         "unit": {
-          "code": "KMQ",
-          "name": "кг/м³",
+          "code": "DMQ",
+          "name": "кубічний дециметр",
           "value": {
-            "amount": 428.0,
+            "amount": 428.9966542,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
