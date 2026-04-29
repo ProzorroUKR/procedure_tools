@@ -24,6 +24,7 @@ from procedure_tools.utils.handlers import (
     auction_multilot_participation_url_success_handler,
     auction_participation_url_success_handler,
     bid_create_success_handler,
+    contract_access_success_handler,
     contract_credentials_success_handler,
     default_success_handler,
     document_attach_success_handler,
@@ -1313,6 +1314,25 @@ def patch_contract_credentials(
         acc_token=tender_token,
         auth_token=args.token,
         success_handler=contract_credentials_success_handler,
+    )
+
+
+def post_contract_access(
+    client: CDBClient,
+    args,
+    context,
+    contract_id,
+    role,
+    identifier,
+    tender_token,
+):
+    logging.info(f"Getting access for contract {contract_id} for {role}...\n")
+    return client.post(
+        f"contracts/{contract_id}/access",
+        json={"data": {"identifier": identifier}},
+        acc_token=tender_token,
+        auth_token=args.token,
+        success_handler=contract_access_success_handler(role=role, contract_id=contract_id),
     )
 
 

@@ -1,4 +1,5 @@
 import logging
+from os import EX_OK
 import random
 
 from faker import Faker
@@ -27,6 +28,7 @@ from procedure_tools.actions import (
     patch_award,
     patch_bids,
     patch_complaints,
+    post_contract_access,
     patch_contract_credentials,
     patch_contracts,
     patch_contracts_buyer_signer_info,
@@ -120,6 +122,7 @@ def process_procedure(
     tender_id=None,
     tender_token=None,
     prefix="",
+    prev_prefix="",
     session=None,
 ):
     context = context or {}
@@ -143,6 +146,16 @@ def process_procedure(
     context["submission"] = args.submission
     context["client_timedelta"] = client.client_timedelta
 
+    process_framework(client, ds_client, args, context, prefix, session=session)
+    process_plan(client, ds_client, args, context, prefix, session=session)
+    process_tender_initialization(client, ds_client, args, context, prefix, session=session)
+    process_tender(client, ds_client, args, context, prefix, session=session)
+    process_contracts(client, ds_client, args, context, prefix, session=session)
+    process_agreements(client, ds_client, args, context, prefix, session=session)
+    process_tender_finalization(client, ds_client, args, context, prefix, session=session)
+
+
+def process_framework(client, ds_client, args, context, prefix, session=None):
     response = create_framework(
         client,
         args,
@@ -161,7 +174,9 @@ def process_procedure(
             framework_token,
             prefix=prefix,
         )
-        context["framework"] = response.json()["data"]
+
+        framework = get_data(response)
+        context["framework"] = framework
 
         responses = create_sublissions(
             client,
@@ -213,92 +228,121 @@ def process_procedure(
         agreement = get_data(response)
         context["agreement"] = agreement
 
-    if not tender_id and not tender_token:
-        # It means that we are starting a new procedure
-        # not a second stage of another
 
-        response = create_plan(
+def process_plan(client, ds_client, args, context, prefix, session=None):
+    tender = context.get(f"{prefix}tender", {})
+    tender_access = context.get(f"{prefix}tender_access", {})
+    tender_id = tender.get("id")
+    tender_token = tender_access.get("token")
+
+    if tender_id or tender_token:
+        # It means that we are continuing a second stage of another procedure
+        # So we don't need to create a new plan
+        return
+
+    response = create_plan(
+        client,
+        args,
+        context,
+        prefix=prefix,
+    )
+
+    if not response:
+        # No plan data, skip
+        return
+
+    plan = get_data(response)
+    context[f"{prefix}plan"] = plan
+
+    plan_access = get_access(response)
+    context[f"{prefix}plan_access"] = plan_access
+
+    config = get_config(response)
+    context[f"{prefix}tender_config"] = config
+
+    plan_id = get_id(response)
+    plan_token = get_token(response)
+
+    response = patch_plan(
+        client,
+        args,
+        context,
+        plan_id,
+        plan_token,
+        prefix=prefix,
+    )
+
+
+def process_tender_initialization(client, ds_client, args, context, prefix, session=None):
+    tender = context.get(f"{prefix}tender", {})
+    tender_access = context.get(f"{prefix}tender_access", {})
+    tender_id = tender.get("id")
+    tender_token = tender_access.get("token")
+
+    if tender_id or tender_token:
+        # It means that we are continuing a second stage of another procedure
+        # Tender already created at the end of the previous stage, so we don't need to create it
+        return
+
+    plan_id = context.get(f"{prefix}plan", {}).get("id")
+
+    response = create_tender(
+        client,
+        args,
+        context,
+        plan_id=plan_id,
+        prefix=prefix,
+    )
+
+    if not response:
+        # We haven't started a new procedure
+        # That's the end
+        return
+
+    tender = get_data(response)
+    context[f"{prefix}tender"] = tender
+
+    tender_access = get_access(response)
+    context[f"{prefix}tender_access"] = tender_access
+
+    config = get_config(response)
+    context[f"{prefix}tender_config"] = config
+
+    tender_id = get_id(response)
+    tender_token = get_token(response)
+
+    if not plan_id:
+        # Create multiple plans
+        # Used in central kind procedures
+        plans_responses = create_plans(
             client,
             args,
             context,
             prefix=prefix,
         )
-
-        if response:
-            # Start a new procedure from a plan
-            plan_id = get_id(response)
-            plan_token = get_token(response)
-            response = patch_plan(
+        for plan_response in plans_responses:
+            # Attach multiple plans to the tender
+            plan_id = plan_response.json()["data"]["id"]
+            post_tender_plan(
                 client,
                 args,
                 context,
+                tender_id,
+                tender_token,
                 plan_id,
-                plan_token,
                 prefix=prefix,
             )
-            response = create_tender(
-                client,
-                args,
-                context,
-                plan_id=plan_id,
-                prefix=prefix,
-            )
-        else:
-            # Start procedure without a plan
-            plan_id = None
-            response = create_tender(
-                client,
-                args,
-                context,
-                prefix=prefix,
-            )
+    return tender_id, tender_token
 
-        if not response:
-            # We haven't started a new procedure
-            # That's the end
-            return
 
-        tender = get_data(response)
-        context[f"{prefix}tender"] = tender
-
-        tender_access = get_access(response)
-        context[f"{prefix}tender_access"] = tender_access
-
-        config = get_config(response)
-        context[f"{prefix}tender_config"] = config
-
-        tender_id = get_id(response)
-        tender_token = get_token(response)
-
-        if not plan_id:
-            # Create multiple plans
-            # Used in central kind procedures
-            plans_responses = create_plans(
-                client,
-                args,
-                context,
-                prefix=prefix,
-            )
-            for plan_response in plans_responses:
-                # Attach multiple plans to the tender
-                plan_id = plan_response.json()["data"]["id"]
-                post_tender_plan(
-                    client,
-                    args,
-                    context,
-                    tender_id,
-                    tender_token,
-                    plan_id,
-                    prefix=prefix,
-                )
+def process_tender(client, ds_client, args, context, prefix, session=None):
+    tender = context.get(f"{prefix}tender", {})
+    tender_access = context.get(f"{prefix}tender_access", {})
+    config = context.get(f"{prefix}tender_config", {})
+    tender_id = tender.get("id")
+    tender_token = tender_access.get("token")
 
     response = get_tender(client, args, context, tender_id)
-
-    tender = get_data(response)
-    context[f"{prefix}tender"] = tender
-
-    config = get_config(response)
-    context[f"{prefix}tender_config"] = config
 
     method = get_procurement_method(response)
     method_type = get_procurement_method_type(response)
@@ -482,6 +526,9 @@ def process_procedure(
         bids_jsons = [bids_response.json() for bids_response in bids_responses]
         bids_ids = [bid_json["data"]["id"] for bid_json in bids_jsons]
         bids_tokens = [bid_json["access"]["token"] for bid_json in bids_jsons]
+        context[f"{prefix}bids"] = bids_jsons
+        context[f"{prefix}bids_ids"] = bids_ids
+        context[f"{prefix}bids_tokens"] = bids_tokens
         if tender_criteria:
             bids_documents = [bid_json["data"].get("documents", []) for bid_json in bids_jsons]
             post_bid_res(
@@ -811,44 +858,112 @@ def process_procedure(
             date_info_str="end of award complaint period",
         )
 
-    contracts_ids = []
 
-    if method_type not in (
+def process_contracts(client, ds_client, args, context, prefix, session=None):
+    tender = context.get(f"{prefix}tender", {})
+    method_type = tender.get("procurementMethodType")
+
+    if method_type in (
         "closeFrameworkAgreementUA",
         "competitiveDialogueEU",
         "competitiveDialogueUA",
     ):
-        response = get_tender_contracts(client, args, context, tender_id)
-        contracts_ids = get_ids(response, status_exclude="cancelled")
+        return  # No contracts for this method types
+
+    procuring_entity = tender.get("procuringEntity")
+    buyers = procuring_entity.get("buyers", [])
+    tender_entities = buyers or [procuring_entity]
+    is_econtract = any(entity.get("contract_owner") for entity in tender_entities)
+    if is_econtract:
+        process_contracts_econtract(client, ds_client, args, context, prefix, session=session)
+    else:
+        process_contracts_legacy(client, ds_client, args, context, prefix, session=session)
+
+
+def process_contracts_econtract(client, ds_client, args, context, prefix, session=None):
+    tender = context.get(f"{prefix}tender", {})
+    tender_access = context.get(f"{prefix}tender_access", {})
+    tender_id = tender.get("id")
+    tender_token = tender_access.get("token")
+
+    contracts_ids = []
+
+    response = get_tender_contracts(client, args, context, tender_id)
+    contracts_ids = get_ids(response, status_exclude="cancelled")
+
+    contracts_buyers_tokens = []
+    contracts_suppliers_tokens = []
+
+    contracts = get_contracts(client, args, context, contracts_ids)
+    context["contracts"] = contracts
+
+    for contract in contracts:
+        contract_id = contract["id"]
+
+        # Get buyer access
+        identifier = contract["buyer"]["identifier"]
+        response = post_contract_access(
+            client,
+            args,
+            context,
+            contract_id,
+            role="buyer",
+            identifier=identifier,
+            tender_token=tender_token,
+        )
+        contracts_buyers_tokens.append(get_token(response))
+
+        # Get supplier access
+        identifier = contract["suppliers"][0]["identifier"]
+        response = post_contract_access(
+            client,
+            args,
+            context,
+            contract_id,
+            role="supplier",
+            identifier=identifier,
+            tender_token=tender_token,
+        )
+        contracts_suppliers_tokens.append(get_token(response))
+
+    logging.info("Contracts access retrieved.\n")
+
+    logging.info("Coming soon...\n")
+    raise SystemExit(EX_OK)
+
+
+def process_contracts_legacy(client, ds_client, args, context, prefix, session=None):
+    tender = context.get(f"{prefix}tender", {})
+    tender_access = context.get(f"{prefix}tender_access", {})
+    tender_id = tender.get("id")
+    tender_token = tender_access.get("token")
+    method = tender.get("procurementMethod")
+
+    bids_ids = context.get(f"{prefix}bids_ids")
+    bids_tokens = context.get(f"{prefix}bids_tokens")
+
+    contracts_ids = []
+
+    response = get_tender_contracts(client, args, context, tender_id)
+    contracts_ids = get_ids(response, status_exclude="cancelled")
 
     contracts_tokens = []
     contracts_award_ids = []
 
-    context["contracts"] = []
+    context["contracts"] = get_contracts(client, args, context, contracts_ids)
 
-    if method_type not in (
-        "closeFrameworkAgreementUA",
-        "competitiveDialogueEU",
-        "competitiveDialogueUA",
-    ):
-        context["contracts"] = get_contracts(client, args, context, contracts_ids)
+    for contracts_id in contracts_ids:
+        response = patch_contract_credentials(
+            client,
+            args,
+            context,
+            contracts_id,
+            tender_token,
+        )
+        contracts_tokens.append(get_token(response))
+        contracts_award_ids.append(get_award_id(response))
 
-        for contracts_id in contracts_ids:
-            response = patch_contract_credentials(
-                client,
-                args,
-                context,
-                contracts_id,
-                tender_token,
-            )
-            contracts_tokens.append(get_token(response))
-            contracts_award_ids.append(get_award_id(response))
-
-    if method != "limited" and method_type not in (
-        "closeFrameworkAgreementUA",
-        "competitiveDialogueEU",
-        "competitiveDialogueUA",
-    ):
+    if method != "limited":
         patch_contracts_buyer_signer_info(
             client,
             args,
@@ -875,43 +990,43 @@ def process_procedure(
             prefix=prefix,
         )
 
-    if method_type not in (
-        "closeFrameworkAgreementUA",
-        "competitiveDialogueEU",
-        "competitiveDialogueUA",
-    ):
+    # Deprecated, use change_contracts instead
+    patch_contracts(
+        client,
+        args,
+        context,
+        contracts_ids,
+        contracts_tokens,
+        prefix=prefix,
+    )
+    # End of deprecated code
 
-        # Deprecated, use change_contracts instead
-
-        patch_contracts(
+    contract_change_action_index = 0
+    while True:
+        responses = change_contracts(
             client,
             args,
             context,
             contracts_ids,
             contracts_tokens,
+            action_index=contract_change_action_index,
             prefix=prefix,
         )
+        if not responses:
+            # There were no files for this action index,
+            # that means we have reached the end of actions
+            break
+        contract_change_action_index += 1
 
-        # End of deprecated code
+    context["contracts"] = get_contracts(client, args, context, contracts_ids)
 
-        contract_change_action_index = 0
-        while True:
-            responses = change_contracts(
-                client,
-                args,
-                context,
-                contracts_ids,
-                contracts_tokens,
-                action_index=contract_change_action_index,
-                prefix=prefix,
-            )
-            if not responses:
-                # There were no files for this action index,
-                # that means we have reached the end of actions
-                break
-            contract_change_action_index += 1
 
-        context["contracts"] = get_contracts(client, args, context, contracts_ids)
+def process_agreements(client, ds_client, args, context, prefix, session=None):
+    tender = context.get(f"{prefix}tender", {})
+    tender_access = context.get(f"{prefix}tender_access", {})
+    tender_id = tender.get("id")
+    tender_token = tender_access.get("token")
+    method_type = tender.get("procurementMethodType")
 
     if method_type in ("closeFrameworkAgreementUA",):
         response = get_tender(client, args, context, tender_id)
@@ -941,6 +1056,14 @@ def process_procedure(
             tender_token,
         )
 
+
+def process_tender_finalization(client, ds_client, args, context, prefix, session=None):
+    tender = context.get(f"{prefix}tender", {})
+    tender_access = context.get(f"{prefix}tender_access", {})
+    tender_id = tender.get("id")
+    tender_token = tender_access.get("token")
+    method_type = tender.get("procurementMethodType")
+
     wait_status(
         client,
         args,
@@ -963,14 +1086,29 @@ def process_procedure(
             tender_id,
             tender_token,
         )
+
+        tender_id = get_id(response)
         tender_token = get_token(response)
 
+        stage2_prefix = f"stage2_"
+
+        tender = get_data(response)
+        context[f"{stage2_prefix}tender"] = tender
+
+        tender_access = get_access(response)
+        context[f"{stage2_prefix}tender_access"] = tender_access
+
+        config = get_config(response)
+        context[f"{stage2_prefix}tender_config"] = config
+
+        # Start a new procedure for the stage2
         process_procedure(
             args,
             context,
             tender_id=tender_id,
             tender_token=tender_token,
-            prefix="stage2_",
+            prefix=stage2_prefix,
+            prev_prefix=prefix,
             session=session,
         )
 
@@ -981,20 +1119,23 @@ def process_procedure(
         response = get_agreement(client, args, context, agreement_id)
         context["agreement"] = response.json()["data"]
 
-        response = create_tender(
+        tender_id, tender_token = process_tender_initialization(
             client,
+            ds_client,
             args,
             context,
-            prefix="selection_",
+            None,
+            "selection_",
+            session=session,
         )
-        tender_id = get_id(response)
-        tender_token = get_token(response)
 
+        # Start a new procedure for the selection stage
         process_procedure(
             args,
             context,
             tender_id=tender_id,
             tender_token=tender_token,
             prefix="selection_",
+            prev_prefix=prefix,
             session=session,
         )
