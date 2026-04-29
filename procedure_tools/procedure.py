@@ -119,10 +119,7 @@ def init_procedure(args, session=None):
 def process_procedure(
     args,
     context=None,
-    tender_id=None,
-    tender_token=None,
     prefix="",
-    prev_prefix="",
     session=None,
 ):
     context = context or {}
@@ -231,11 +228,8 @@ def process_framework(client, ds_client, args, context, prefix, session=None):
 
 def process_plan(client, ds_client, args, context, prefix, session=None):
     tender = context.get(f"{prefix}tender", {})
-    tender_access = context.get(f"{prefix}tender_access", {})
-    tender_id = tender.get("id")
-    tender_token = tender_access.get("token")
 
-    if tender_id or tender_token:
+    if tender:
         # It means that we are continuing a second stage of another procedure
         # So we don't need to create a new plan
         return
@@ -284,7 +278,8 @@ def process_tender_initialization(client, ds_client, args, context, prefix, sess
         # Tender already created at the end of the previous stage, so we don't need to create it
         return
 
-    plan_id = context.get(f"{prefix}plan", {}).get("id")
+    plan = context.get(f"{prefix}plan", {})
+    plan_id = plan.get("id")
 
     response = create_tender(
         client,
@@ -336,11 +331,11 @@ def process_tender_initialization(client, ds_client, args, context, prefix, sess
 
 
 def process_tender(client, ds_client, args, context, prefix, session=None):
-    tender = context.get(f"{prefix}tender", {})
-    tender_access = context.get(f"{prefix}tender_access", {})
-    config = context.get(f"{prefix}tender_config", {})
-    tender_id = tender.get("id")
-    tender_token = tender_access.get("token")
+    tender = context[f"{prefix}tender"]
+    tender_access = context[f"{prefix}tender_access"]
+    config = context[f"{prefix}tender_config"]
+    tender_id = tender["id"]
+    tender_token = tender_access["token"]
 
     response = get_tender(client, args, context, tender_id)
 
@@ -860,8 +855,8 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
 
 
 def process_contracts(client, ds_client, args, context, prefix, session=None):
-    tender = context.get(f"{prefix}tender", {})
-    method_type = tender.get("procurementMethodType")
+    tender = context[f"{prefix}tender"]
+    method_type = tender["procurementMethodType"]
 
     if method_type in (
         "closeFrameworkAgreementUA",
@@ -881,10 +876,10 @@ def process_contracts(client, ds_client, args, context, prefix, session=None):
 
 
 def process_contracts_econtract(client, ds_client, args, context, prefix, session=None):
-    tender = context.get(f"{prefix}tender", {})
-    tender_access = context.get(f"{prefix}tender_access", {})
-    tender_id = tender.get("id")
-    tender_token = tender_access.get("token")
+    tender = context[f"{prefix}tender"]
+    tender_access = context[f"{prefix}tender_access"]
+    tender_id = tender["id"]
+    tender_token = tender_access["token"]
 
     contracts_ids = []
 
@@ -933,14 +928,14 @@ def process_contracts_econtract(client, ds_client, args, context, prefix, sessio
 
 
 def process_contracts_legacy(client, ds_client, args, context, prefix, session=None):
-    tender = context.get(f"{prefix}tender", {})
-    tender_access = context.get(f"{prefix}tender_access", {})
-    tender_id = tender.get("id")
-    tender_token = tender_access.get("token")
-    method = tender.get("procurementMethod")
+    tender = context[f"{prefix}tender"]
+    tender_access = context[f"{prefix}tender_access"]
+    tender_id = tender["id"]
+    tender_token = tender_access["token"]
+    method = tender["procurementMethod"]
 
-    bids_ids = context.get(f"{prefix}bids_ids")
-    bids_tokens = context.get(f"{prefix}bids_tokens")
+    bids_ids = context.get(f"{prefix}bids_ids", [])
+    bids_tokens = context.get(f"{prefix}bids_tokens", [])
 
     contracts_ids = []
 
@@ -1024,11 +1019,11 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
 
 
 def process_agreements(client, ds_client, args, context, prefix, session=None):
-    tender = context.get(f"{prefix}tender", {})
-    tender_access = context.get(f"{prefix}tender_access", {})
-    tender_id = tender.get("id")
-    tender_token = tender_access.get("token")
-    method_type = tender.get("procurementMethodType")
+    tender = context[f"{prefix}tender"]
+    tender_access = context[f"{prefix}tender_access"]
+    tender_id = tender["id"]
+    tender_token = tender_access["token"]
+    method_type = tender["procurementMethodType"]
 
     if method_type in ("closeFrameworkAgreementUA",):
         response = get_tender(client, args, context, tender_id)
@@ -1060,11 +1055,11 @@ def process_agreements(client, ds_client, args, context, prefix, session=None):
 
 
 def process_tender_finalization(client, ds_client, args, context, prefix, session=None):
-    tender = context.get(f"{prefix}tender", {})
-    tender_access = context.get(f"{prefix}tender_access", {})
-    tender_id = tender.get("id")
-    tender_token = tender_access.get("token")
-    method_type = tender.get("procurementMethodType")
+    tender = context[f"{prefix}tender"]
+    tender_access = context[f"{prefix}tender_access"]
+    tender_id = tender["id"]
+    tender_token = tender_access["token"]
+    method_type = tender["procurementMethodType"]
 
     wait_status(
         client,
@@ -1094,11 +1089,13 @@ def process_tender_finalization(client, ds_client, args, context, prefix, sessio
 
         stage2_prefix = f"stage2_"
 
-        tender = get_data(response)
-        context[f"{stage2_prefix}tender"] = tender
-
         tender_access = get_access(response)
         context[f"{stage2_prefix}tender_access"] = tender_access
+
+        response = get_tender(client, args, context, tender_id)
+
+        tender = get_data(response)
+        context[f"{stage2_prefix}tender"] = tender
 
         config = get_config(response)
         context[f"{stage2_prefix}tender_config"] = config
@@ -1107,10 +1104,7 @@ def process_tender_finalization(client, ds_client, args, context, prefix, sessio
         process_procedure(
             args,
             context,
-            tender_id=tender_id,
-            tender_token=tender_token,
             prefix=stage2_prefix,
-            prev_prefix=prefix,
             session=session,
         )
 
@@ -1121,12 +1115,13 @@ def process_tender_finalization(client, ds_client, args, context, prefix, sessio
         response = get_agreement(client, args, context, agreement_id)
         context["agreement"] = response.json()["data"]
 
-        tender_id, tender_token = process_tender_initialization(
+        selection_prefix = "selection_"
+
+        process_tender_initialization(
             client,
             ds_client,
             args,
             context,
-            None,
             "selection_",
             session=session,
         )
@@ -1135,9 +1130,6 @@ def process_tender_finalization(client, ds_client, args, context, prefix, sessio
         process_procedure(
             args,
             context,
-            tender_id=tender_id,
-            tender_token=tender_token,
-            prefix="selection_",
-            prev_prefix=prefix,
+            prefix=selection_prefix,
             session=session,
         )
