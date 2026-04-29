@@ -3,7 +3,7 @@ name: Full Test Workflow
 on: [workflow_dispatch]
 
 jobs:
-  prepare-matrix:
+  extract-test-cases:
     runs-on: ubuntu-latest
     outputs:
       cases: ${{ steps.get-cases.outputs.cases }}
@@ -17,19 +17,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .[test]
-      - name: Extract workflow test cases from test.py
+      - name: Extract workflow test cases
         id: get-cases
         run: |
           python .github/scripts/export_workflow_test_cases.py
 
   pytest-full:
-    needs: prepare-matrix
+    needs: extract-test-cases
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       max-parallel: 5
       matrix:
-        case: ${{ fromJson(needs.prepare-matrix.outputs.cases) }}
+        case: ${{ fromJson(needs.extract-test-cases.outputs.cases) }}
     env:
       PYTHONUNBUFFERED: 1
     steps:
