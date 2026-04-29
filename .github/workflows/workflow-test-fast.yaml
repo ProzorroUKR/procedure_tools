@@ -7,6 +7,25 @@ on:
     branches: [master]
 
 jobs:
+  prepare-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      cases: ${{ steps.get-cases.outputs.cases }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[test]
+      - name: Extract workflow test cases from test.py
+        id: get-cases
+        run: |
+          python .github/scripts/export_workflow_test_cases.py
+
   flake8:
     runs-on: ubuntu-latest
     steps:
@@ -41,44 +60,13 @@ jobs:
         run: |
           black . --check
   pytest-fast:
+    needs: prepare-matrix
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
       fail-fast: false
       matrix:
-        case:
-          - above_threshold
-          - above_threshold_features
-          - above_threshold_lcc
-          - above_threshold_econtract
-          - above_threshold_eu
-          - above_threshold_eu_features
-          - above_threshold_eu_lcc
-          - above_threshold_eu_econtract
-          - above_threshold_ua
-          - above_threshold_ua_features
-          - above_threshold_ua_lcc
-          - below_threshold
-          - below_threshold_central
-          - below_threshold_features
-          - below_threshold_econtract
-          - close_framework_agreement_ua
-          - close_framework_agreement_ua_central
-          - competitive_dialogue_eu
-          - competitive_dialogue_ua
-          - competitive_dialogue_ua_features
-          - esco
-          - esco_features
-          - complex_asset_arma
-          # - negotiation
-          # - negotiation_quick
-          - reporting
-          - price_quotation
-          # - simple_defense
-          - dynamic_purchasing_system_competitive_ordering_short
-          - dynamic_purchasing_system_competitive_ordering_long
-          - request_for_proposal
-          - international_financial_institutions_request_for_proposal
+        case: ${{ fromJson(needs.prepare-matrix.outputs.cases) }}
     env:
       PYTHONUNBUFFERED: 1
     steps:
