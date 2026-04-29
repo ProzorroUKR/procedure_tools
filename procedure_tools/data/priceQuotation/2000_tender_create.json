@@ -463,8 +463,8 @@
         "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
         "quantity": 1,
         "unit": {
-          "code": "KGM",
-          "name": "кг"
+          "code": "DMQ",
+          "name": "кубічний дециметр"
         }
       },
       {
@@ -503,8 +503,8 @@
         "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
         "quantity": 1,
         "unit": {
-          "code": "KGM",
-          "name": "кг"
+          "code": "DMQ",
+          "name": "кубічний дециметр"
         }
       },
       {
@@ -543,8 +543,8 @@
         "profile": "01c07d6f048a4211b7050c9597ad3aed",
         "quantity": 1,
         "unit": {
-          "code": "KGM",
-          "name": "кг"
+          "code": "DMQ",
+          "name": "кубічний дециметр"
         }
       }
     ],

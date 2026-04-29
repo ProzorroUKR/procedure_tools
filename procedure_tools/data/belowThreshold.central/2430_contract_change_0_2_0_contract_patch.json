@@ -30,7 +30,7 @@
         "description": "{{ contracts[2]['items'][0].description }}",
         "description_en": "{{ contracts[2]['items'][0].description_en }}",
         "id": "{{ contracts[2]['items'][0].id }}",
-        "quantity": 1,
+        "quantity": 10,
         "relatedBuyer": "{{ contracts[2]['items'][0].relatedBuyer }}",
         "relatedLot": "{{ contracts[2]['items'][0].relatedLot }}",
         "unit": {

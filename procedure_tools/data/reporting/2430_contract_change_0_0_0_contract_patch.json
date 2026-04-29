@@ -35,7 +35,7 @@
           "code": "{{ contracts[0]['items'][0].unit.code }}",
           "name": "{{ contracts[0]['items'][0].unit.name }}",
           "value": {
-            "amount": 10.0,
+            "amount": 475000.0,
             "valueAddedTaxIncluded": false
           }
         }

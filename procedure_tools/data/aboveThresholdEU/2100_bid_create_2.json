@@ -22,19 +22,54 @@
     ],
     "items": [
       {
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "Тестова назва предмета закупівлі-1",
+        "description_en": "Procurement item test name-1",
         "id": "{{ tender['items'][0].id }}",
         "quantity": 1,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 123.11111,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
+        }
+      },
+      {
+        "description": "Тестова назва предмета закупівлі-2",
+        "description_en": "Procurement item test name-2",
+        "id": "{{ tender['items'][1].id }}",
+        "quantity": 3,
+        "unit": {
+          "code": "KGM",
+          "name": "кг",
+          "value": {
+            "amount": 23,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
+        }
+      },
+      {
+        "description": "Тестова назва предмета закупівлі-3",
+        "description_en": "Procurement item test name-3",
+        "id": "{{ tender['items'][2].id }}",
+        "quantity": 25,
+        "unit": {
+          "code": "KGM",
+          "name": "кг",
+          "value": {
+            "amount": 59,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "id": "{{ tender['items'][1].id }}",
+        "id": "{{ tender['items'][3].id }}",
         "quantity": 1,
         "unit": {
           "code": "KGM",
@@ -47,7 +82,7 @@
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
         "subcontractingDetails": "ДКП «Орфей», Україна",
         "value": {
-          "amount": 500
+          "amount": 1667.208333
         }
       },
       {

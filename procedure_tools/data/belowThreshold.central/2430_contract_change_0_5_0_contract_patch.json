@@ -30,14 +30,14 @@
         "description": "{{ contracts[5]['items'][0].description }}",
         "description_en": "{{ contracts[5]['items'][0].description_en }}",
         "id": "{{ contracts[5]['items'][0].id }}",
-        "quantity": 1,
+        "quantity": 3,
         "relatedBuyer": "{{ contracts[5]['items'][0].relatedBuyer }}",
         "relatedLot": "{{ contracts[5]['items'][0].relatedLot }}",
         "unit": {
           "code": "{{ contracts[5]['items'][0].unit.code }}",
           "name": "{{ contracts[5]['items'][0].unit.name }}",
           "value": {
-            "amount": 10.0,
+            "amount": 33.333334,
             "valueAddedTaxIncluded": false
           }
         }

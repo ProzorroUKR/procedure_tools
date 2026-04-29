@@ -24,7 +24,7 @@
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "id": "{{ tender['items'][2].id }}",
+        "id": "{{ tender['items'][4].id }}",
         "quantity": 1,
         "unit": {
           "code": "KGM",

@@ -30,7 +30,7 @@
           "code": "KGM",
           "name": "кг",
           "value": {
-            "amount": 10,
+            "amount": 500,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
