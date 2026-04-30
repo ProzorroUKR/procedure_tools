@@ -194,10 +194,6 @@ def response_handler(
     success_handler=default_success_handler,
     error_handler=default_error_handler,
 ):
-    msg = "Response status code: "
-    msg += fore_status_code(response.status_code)
-    msg += "\n"
-    logging.info(msg)
     if 200 <= response.status_code < 300:
         success_handler(response)
     else:
