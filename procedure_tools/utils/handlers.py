@@ -91,11 +91,68 @@ def extract_path_values(payload, path: str):
     return values
 
 
+def get_wildcard_prefix(path: str):
+    wildcard_marker = "[*]"
+    marker_index = path.find(wildcard_marker)
+    if marker_index == -1:
+        return None
+    return path[: marker_index + len(wildcard_marker)]
+
+
+def split_wildcard_path(path: str):
+    wildcard_marker = "[*]"
+    marker_index = path.find(wildcard_marker)
+    if marker_index == -1:
+        return path, ""
+    prefix = path[:marker_index]
+    suffix = path[marker_index + len(wildcard_marker) :]
+    return prefix, suffix
+
+
 def format_log_fields(payload: dict, fields: list[str]) -> str:
     msg = ""
-    for path in fields:
-        for value, resolved_path in extract_path_values(payload, path):
-            msg += format_log_entry(resolved_path, str(value))
+    index = 0
+    while index < len(fields):
+        path = fields[index]
+        wildcard_prefix = get_wildcard_prefix(path)
+
+        if not wildcard_prefix:
+            for value, resolved_path in extract_path_values(payload, path):
+                msg += format_log_entry(resolved_path, str(value))
+            index += 1
+            continue
+
+        grouped_paths = [path]
+        next_index = index + 1
+        while next_index < len(fields):
+            next_path = fields[next_index]
+            if get_wildcard_prefix(next_path) != wildcard_prefix:
+                break
+            grouped_paths.append(next_path)
+            next_index += 1
+
+        groups = {}
+        group_order = []
+
+        for grouped_path in grouped_paths:
+            wildcard_root, wildcard_suffix = split_wildcard_path(grouped_path)
+            for value, resolved_path in extract_path_values(payload, grouped_path):
+                group_key = resolved_path
+                if wildcard_suffix and resolved_path.endswith(wildcard_suffix):
+                    group_key = resolved_path[: -len(wildcard_suffix)]
+
+                if group_key not in groups:
+                    groups[group_key] = []
+                    group_order.append(group_key)
+
+                groups[group_key].append((resolved_path, value))
+
+        for group_key in group_order:
+            for resolved_path, value in groups[group_key]:
+                msg += format_log_entry(resolved_path, str(value))
+
+        index = next_index
+
     return msg
 
 
@@ -435,25 +492,17 @@ def auction_participation_url_success_handler(response):
     logging.info(msg)
 
 
-def auction_multilot_participation_url_success_handler(response, related_lot=None):
-    data = response.json()["data"]
-
-    msg = "Auction participation url for bid:\n"
-    msg += format_log_fields(response.json(), ["data.id"])
-
-    for i, lot_value in enumerate(data["lotValues"]):
-        if related_lot and lot_value["relatedLot"] != related_lot:
-            continue
-
-        msg += "Lot value:\n"
-        msg += format_log_fields(
-            response.json(),
-            [
-                f"data.lotValues[{i}].relatedLot",
-                f"data.lotValues[{i}].status",
-                f"data.lotValues[{i}].participationUrl",
-            ],
-        )
+def auction_multilot_participation_url_success_handler(response):
+    msg = "Auction participation urls for bid:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.id",
+            "data.lotValues[*].relatedLot",
+            "data.lotValues[*].status",
+            "data.lotValues[*].participationUrl",
+        ],
+    )
 
     logging.info(msg)
 
