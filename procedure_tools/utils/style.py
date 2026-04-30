@@ -5,13 +5,17 @@ try:
     FORE_SUCCESS = Fore.GREEN
     FORE_WARNING = Fore.YELLOW
     FORE_ERROR = Fore.RED
+    FORE_DEBUG = Fore.BLUE
     FORE_RESET = Style.RESET_ALL
+    STYLE_DIM = Style.DIM
 except ImportError:
     FORE_INFO = ""
     FORE_SUCCESS = ""
     FORE_WARNING = ""
     FORE_ERROR = ""
+    FORE_DEBUG = ""
     FORE_RESET = ""
+    STYLE_DIM = ""
 
 
 def fore(msg, fr):
@@ -32,6 +36,23 @@ def fore_warning(msg):
 
 def fore_error(msg):
     return fore(msg, FORE_ERROR)
+
+
+def level_fore(levelname):
+    """Foreground ANSI code for a logging level (no reset); use to build multi-field lines."""
+    colors = {
+        "DEBUG": FORE_DEBUG,
+        "INFO": FORE_SUCCESS,
+        "WARNING": FORE_WARNING,
+        "ERROR": FORE_ERROR,
+        "CRITICAL": FORE_ERROR,
+    }
+    return colors.get(levelname, FORE_INFO) or ""
+
+
+def fore_log_level(msg, levelname):
+    """ANSI-colored log level name for terminals (no-op if colorama unavailable)."""
+    return fore(msg, level_fore(levelname) or FORE_INFO)
 
 
 def fore_status_code(code):

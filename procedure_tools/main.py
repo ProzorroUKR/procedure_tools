@@ -14,16 +14,44 @@ from procedure_tools.utils.data import (
 )
 from procedure_tools.utils.file import DATA_DIR_DEFAULT, get_default_data_dirs
 from procedure_tools.utils.handlers import EX_OK
+from procedure_tools.utils.style import fore_log_level
 from procedure_tools.version import __version__
 
-logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.DEBUG,
-    format="[%(asctime)s] %(message)s",
-    datefmt="%H:%M:%S",
-)
-
 WAIT_EVENTS = (WAIT_EDR_QUAL, WAIT_EDR_PRE_QUAL)
+
+LOG_DATEFMT = "%H:%M:%S"
+
+LOG_FORMAT_DEFAULT = "%(asctime)s %(message)s"
+LOG_FORMAT_DEBUG = "%(asctime)s %(levelname)s %(name)s %(message)s"
+
+
+class ColoredRecordFieldsFilter(logging.Filter):
+    def __init__(self, datefmt=None):
+        super().__init__()
+        self.datefmt = datefmt or "%H:%M:%S"
+        self.time_fmt = logging.Formatter(datefmt=self.datefmt)
+
+    def filter(self, record):
+        t = self.time_fmt.formatTime(record, self.datefmt)
+        record.asctime = fore_log_level(f"[{t}]", record.levelname)
+        record.levelname = fore_log_level(record.levelname, record.levelname)
+        record.name = fore_log_level(record.name or "", record.levelname)
+        return True
+
+
+COLORED_RECORD_FIELDS_FILTER = ColoredRecordFieldsFilter(LOG_DATEFMT)
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+for handler in logging.root.handlers:
+    handler.addFilter(COLORED_RECORD_FIELDS_FILTER)
+    handler.setFormatter(logging.Formatter(LOG_FORMAT_DEFAULT, datefmt=LOG_DATEFMT))
+
+
+def apply_debug_log_format(debug: bool):
+    fmt = LOG_FORMAT_DEBUG if debug else LOG_FORMAT_DEFAULT
+    formatter = logging.Formatter(fmt, datefmt=LOG_DATEFMT)
+    for handler in logging.root.handlers:
+        handler.setFormatter(formatter)
 
 
 class Formatter(argparse.RawTextHelpFormatter):
@@ -117,6 +145,7 @@ def main():
 
     try:
         args = parser.parse_args()
+        apply_debug_log_format(args.debug)
         session = requests.Session()
         adapters.mount(session)
         init_procedure(args, session=session)
