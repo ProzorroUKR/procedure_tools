@@ -129,6 +129,7 @@ def process_procedure(
         args.token,
         args.path,
         session=session,
+        debug_request=args.debug_request,
         debug=args.debug,
     )
     ds_client = DSClient(
@@ -136,6 +137,7 @@ def process_procedure(
         args.ds_username,
         args.ds_password,
         session=session,
+        debug_request=args.debug_request,
         debug=args.debug,
     )
 

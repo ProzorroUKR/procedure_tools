@@ -39,7 +39,6 @@ def fore_error(msg):
 
 
 def level_fore(levelname):
-    """Foreground ANSI code for a logging level (no reset); use to build multi-field lines."""
     colors = {
         "DEBUG": FORE_DEBUG,
         "INFO": FORE_SUCCESS,
@@ -51,7 +50,6 @@ def level_fore(levelname):
 
 
 def fore_log_level(msg, levelname):
-    """ANSI-colored log level name for terminals (no-op if colorama unavailable)."""
     return fore(msg, level_fore(levelname) or FORE_INFO)
 
 

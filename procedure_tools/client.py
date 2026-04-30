@@ -39,13 +39,14 @@ class BaseApiClient(object):
         self,
         host,
         session=None,
+        debug_request=False,
         debug=False,
         **kwargs,
     ):
         logging.info(f"Initializing {self.name} client\n")
         self.host = host
         self.kwargs = kwargs
-        self.debug = debug
+        self.debug_request = debug_request
         configure_urllib3_logging(debug)
         if session:
             self.session = session
@@ -65,8 +66,7 @@ class BaseApiClient(object):
         return text
 
     def log_debug_exchange(self, method, url, request_kwargs, response):
-        """Log method, URL, status, and bodies at INFO when --debug (visible with default logging)."""
-        logging.info("%s %s -> %s", method, url, response.status_code)
+        """Log method, URL, status, and bodies at INFO when --debug-request."""
         if request_kwargs.get("json") is not None:
             logging.info("Request:\n %s", self.format_data(request_kwargs["json"]))
         elif request_kwargs.get("data") is not None:
@@ -94,7 +94,7 @@ class BaseApiClient(object):
         request_kwargs["headers"].update(kwargs.get("headers", {}))
         url = self.get_url(path)
         response = self.session.request(method=method, url=url, **request_kwargs)
-        if self.debug:
+        if self.debug_request:
             self.log_debug_exchange(method, url, request_kwargs, response)
         handlers = {}
         if success_handler:
@@ -133,7 +133,7 @@ class CDBClient(BaseApiClient):
         super(CDBClient, self).__init__(host, session=session, **request_kwargs)
         self.path_prefix = path_prefix
         self.headers.update({"Content-Type": "application/json"})
-        # GET request to retrieve cookies and server time (via request() so --debug applies)
+        # GET request to retrieve cookies and server time (via request() so --debug-request applies)
         response = self.get(self.get_api_path(self.SPORE_PATH))
         # Calculate client time delta with server
         client_datetime = get_utcnow()

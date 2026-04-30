@@ -31,6 +31,7 @@ def run_test(argv):
         "/api/2.5/",
         "--submission",
         "quick(mode:no-auction)",
+        "--debug",
     ]
     args = (
         [

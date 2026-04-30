@@ -25,36 +25,37 @@ LOG_FORMAT_DEFAULT = "%(asctime)s %(message)s"
 LOG_FORMAT_DEBUG = "%(asctime)s %(levelname)s %(name)s %(message)s"
 
 
-class ColoredRecordFieldsFilter(logging.Filter):
-    def __init__(self, datefmt=None):
-        super().__init__()
-        self.datefmt = datefmt or "%H:%M:%S"
-        self.time_fmt = logging.Formatter(datefmt=self.datefmt)
+class OutputFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        dfmt = datefmt if datefmt is not None else self.datefmt
+        plain = super().formatTime(record, dfmt)
+        return fore_log_level(f"[{plain}]", record.level)
 
+
+class ColoredRecordFieldsFilter(logging.Filter):
     def filter(self, record):
-        t = self.time_fmt.formatTime(record, self.datefmt)
-        record.asctime = fore_log_level(f"[{t}]", record.levelname)
-        record.levelname = fore_log_level(record.levelname, record.levelname)
-        record.name = fore_log_level(record.name or "", record.levelname)
+        record.level = record.levelname  # back up uncolored levelname
+        record.levelname = fore_log_level(record.levelname, record.level)
+        record.name = fore_log_level(record.name or "", record.level)
         return True
 
 
-COLORED_RECORD_FIELDS_FILTER = ColoredRecordFieldsFilter(LOG_DATEFMT)
+COLORED_RECORD_FIELDS_FILTER = ColoredRecordFieldsFilter()
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 for handler in logging.root.handlers:
     handler.addFilter(COLORED_RECORD_FIELDS_FILTER)
-    handler.setFormatter(logging.Formatter(LOG_FORMAT_DEFAULT, datefmt=LOG_DATEFMT))
+    handler.setFormatter(OutputFormatter(LOG_FORMAT_DEFAULT, datefmt=LOG_DATEFMT))
 
 
 def apply_debug_log_format(debug: bool):
     fmt = LOG_FORMAT_DEBUG if debug else LOG_FORMAT_DEFAULT
-    formatter = logging.Formatter(fmt, datefmt=LOG_DATEFMT)
+    formatter = OutputFormatter(fmt, datefmt=LOG_DATEFMT)
     for handler in logging.root.handlers:
         handler.setFormatter(formatter)
 
 
-class Formatter(argparse.RawTextHelpFormatter):
+class ArgumentParserFormatter(argparse.RawTextHelpFormatter):
     def _format_action(self, action):
         return "\n\n" + super()._format_action(action)
 
@@ -65,7 +66,7 @@ def _format_choices(choices):
 
 def main():
     parser = argparse.ArgumentParser(
-        formatter_class=Formatter,
+        formatter_class=ArgumentParserFormatter,
     )
     parser.add_argument("host", help="CDB API Host")
     parser.add_argument("token", help="CDB API Token")
@@ -139,7 +140,12 @@ def main():
     )
     parser.add_argument(
         "--debug",
-        help="Show requests and responses",
+        help="Debug log level",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--debug-request",
+        help="Log HTTP request/response bodies",
         action="store_true",
     )
 
