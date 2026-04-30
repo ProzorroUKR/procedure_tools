@@ -1,3 +1,5 @@
+import os
+
 try:
     from colorama import Fore, Style
 
@@ -19,6 +21,8 @@ except ImportError:
 
 
 def fore(msg, fr):
+    if os.getenv("NO_COLOR"):
+        return msg
     return fr + msg + FORE_RESET
 
 

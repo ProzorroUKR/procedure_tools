@@ -1,5 +1,7 @@
 import json
 import logging
+import os
+import sys
 from base64 import b64encode
 from copy import copy
 from datetime import timedelta
@@ -14,6 +16,15 @@ from procedure_tools.utils.handlers import (
     response_handler,
 )
 from procedure_tools.version import __version__
+
+try:
+    from pygments import highlight
+    from pygments.formatters import TerminalFormatter
+    from pygments.lexers import JsonLexer
+except ImportError:
+    highlight = None
+    TerminalFormatter = None
+    JsonLexer = None
 
 API_PATH_PREFIX_DEFAULT = "/api/0/"
 
@@ -63,7 +74,23 @@ class BaseApiClient(object):
             text = json.dumps(data, ensure_ascii=False, indent=4)
         except TypeError:
             text = str(data)
-        return text
+        return self.colorize_json_text(text)
+
+    def colorize_json_text(self, text):
+        # Keep plain output when terminal color rendering is unavailable.
+        if not (highlight and TerminalFormatter and JsonLexer):
+            return text
+        if os.getenv("NO_COLOR"):
+            return text
+        try:
+            if not sys.stdout.isatty():
+                return text
+        except Exception:
+            return text
+        try:
+            return highlight(text, JsonLexer(), TerminalFormatter()).rstrip("\n")
+        except Exception:
+            return text
 
     def log_debug_exchange(self, method, url, request_kwargs, response):
         """Log method, URL, status, and bodies at INFO when --debug-request."""
@@ -94,7 +121,7 @@ class BaseApiClient(object):
         request_kwargs["headers"].update(kwargs.get("headers", {}))
         url = self.get_url(path)
         response = self.session.request(method=method, url=url, **request_kwargs)
-        if self.debug_request:
+        if self.debug_request and self.SPORE_PATH not in str(path):
             self.log_debug_exchange(method, url, request_kwargs, response)
         handlers = {}
         if success_handler:
