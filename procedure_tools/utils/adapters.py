@@ -28,7 +28,7 @@ class HTTPAdapter(adapters.HTTPAdapter):
         super(HTTPAdapter, self).__init__(max_retries=max_retries)
 
     def send(self, request, *args, **kwargs):
-        exc = None
+        last_exc = None
         for attempt in range(max(1, 1 + DEFAULT_MAX_RETRIES)):
             if attempt > 0:
                 logging.info("Retrying after connection error")
@@ -36,11 +36,12 @@ class HTTPAdapter(adapters.HTTPAdapter):
                 kwargs["timeout"] = self.timeout
                 logging.info(f"[{request.method}] {request.url}")
                 return super(HTTPAdapter, self).send(request, *args, **kwargs)
-            except ConnectionError as exc:
-                logging.info("Connection error: %s", exc)
+            except ConnectionError as err:
+                last_exc = err
+                logging.info("Connection error: %s", err)
                 continue
-        if exc:
-            raise exc
+        if last_exc:
+            raise last_exc
 
 
 def mount(
