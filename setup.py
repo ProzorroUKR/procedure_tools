@@ -21,6 +21,7 @@ dev_require = [
 ]
 color_require = [
     "colorama",
+    "pygments",
 ]
 
 setup(
