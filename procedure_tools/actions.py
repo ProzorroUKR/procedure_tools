@@ -1495,20 +1495,13 @@ def wait_auction_participation_urls(
                         ]
                     )
                 ]
-                for lot_value in active_lot_values:
-                    related_lot = lot_value["relatedLot"]
-                    if related_lot in success_lots_ids[bid_id]:
-                        continue
-                    if participation_url_exists(lot_value):
-                        success_lots_ids[bid_id].append(related_lot)
-                        response_handler(
-                            response,
-                            success_handler=partial(
-                                auction_multilot_participation_url_success_handler,
-                                related_lot=related_lot,
-                            ),
-                        )
                 if all(map(participation_url_exists, active_lot_values)):
+                    response_handler(
+                        response,
+                        success_handler=partial(
+                            auction_multilot_participation_url_success_handler,
+                        ),
+                    )
                     success_bids_ids.append(bid_id)
             else:
                 if participation_url_exists(data):

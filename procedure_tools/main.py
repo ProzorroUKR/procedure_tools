@@ -32,7 +32,7 @@ class OutputFormatter(logging.Formatter):
         return fore_log_level(f"[{plain}]", record.level)
 
 
-class ColoredRecordFieldsFilter(logging.Filter):
+class OutputFilter(logging.Filter):
     def filter(self, record):
         record.level = record.levelname  # back up uncolored levelname
         record.levelname = fore_log_level(record.levelname, record.level)
@@ -40,12 +40,13 @@ class ColoredRecordFieldsFilter(logging.Filter):
         return True
 
 
-COLORED_RECORD_FIELDS_FILTER = ColoredRecordFieldsFilter()
+OUTPUT_FILTER = OutputFilter()
+OUTPUT_FORMATTER = OutputFormatter(LOG_FORMAT_DEFAULT, datefmt=LOG_DATEFMT)
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 for handler in logging.root.handlers:
-    handler.addFilter(COLORED_RECORD_FIELDS_FILTER)
-    handler.setFormatter(OutputFormatter(LOG_FORMAT_DEFAULT, datefmt=LOG_DATEFMT))
+    handler.addFilter(OUTPUT_FILTER)
+    handler.setFormatter(OUTPUT_FORMATTER)
 
 
 def apply_debug_log_format(debug: bool):
