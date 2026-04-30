@@ -15,6 +15,7 @@ from procedure_tools.utils.handlers import (
     client_init_response_handler,
     response_handler,
 )
+from procedure_tools.utils.style import fore_info
 from procedure_tools.version import __version__
 
 try:
@@ -92,14 +93,41 @@ class BaseApiClient(object):
         except Exception:
             return text
 
+    def format_headers(self, headers):
+        return "\n".join(f"{header}: {fore_info(str(value))}" for header, value in headers.items())
+
+    def format_cookies(self, cookies):
+        return "; ".join(f"{name}={fore_info(str(value))}" for name, value in cookies.items())
+
     def log_debug_exchange(self, method, url, request_kwargs, response):
         """Log method, URL, status, and bodies at INFO when --debug-request."""
+        prepared_request = response.request
+        logging.info("Request method: %s", prepared_request.method or method)
+        logging.info("Request URL: %s", prepared_request.url or url)
+        if prepared_request.headers:
+            request_headers = self.format_headers(dict(prepared_request.headers))
+            logging.info("Request headers:\n%s\n", request_headers)
+        cookie_header = prepared_request.headers.get("Cookie")
+        if cookie_header:
+            request_cookies = "; ".join(
+                f"{name}={fore_info(value)}"
+                for name, _, value in (
+                    cookie.strip().partition("=") for cookie in cookie_header.split(";") if cookie.strip()
+                )
+            )
+            logging.info("Request cookies:\n%s\n", request_cookies)
         if request_kwargs.get("json") is not None:
-            logging.info("Request:\n %s", self.format_data(request_kwargs["json"]))
+            logging.info("Request:\n%s\n", self.format_data(request_kwargs["json"]))
         elif request_kwargs.get("data") is not None:
-            logging.info("Request data:\n %s", request_kwargs["data"])
+            logging.info("Request data:\n%s\n", request_kwargs["data"])
         elif request_kwargs.get("files"):
             logging.info("Request: multipart/form-data (file upload)")
+        if response.headers:
+            response_headers = self.format_headers(dict(response.headers))
+            logging.info("Response headers:\n%s\n", response_headers)
+        if response.cookies:
+            response_cookies = self.format_cookies(response.cookies.get_dict())
+            logging.info("Response cookies:\n%s\n", response_cookies)
         text = response.text
         if text:
             try:
