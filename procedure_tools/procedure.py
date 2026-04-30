@@ -715,15 +715,7 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
     if (
         config["hasAuction"]
         and bids_jsons
-        and (
-            not submission_method_details
-            or all(
-                [
-                    "mode:fast-forward" not in submission_method_details,
-                    "mode:no-auction" not in submission_method_details,
-                ]
-            )
-        )
+        and "mode:no-auction" not in (submission_method_details or "")
     ):
         wait_auction_participation_urls(client, args, tender_id, bids_jsons)
 
