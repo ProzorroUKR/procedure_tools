@@ -41,6 +41,7 @@ DEFAULT_RETRY_ALLOWED_METHODS = frozenset(
 )
 DEFAULT_RETRY_BACKOFF_FACTOR = 0.5
 DEFAULT_RETRY_BACKOFF_MAX = 60.0
+HTTP_LOG_PAD = 3
 
 
 class RetryingHTTPAdapter(adapters.HTTPAdapter):
@@ -190,7 +191,10 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
                 return body_text
         return body_text
 
-    def get_debug_exchange(self, request, response):
+    def pad_log_lines(self, text, pad=HTTP_LOG_PAD):
+        return "\n".join(f"{'':<{pad}}{line}" for line in (text or "").splitlines())
+
+    def get_debug_request(self, request):
         log_lines = [self.format_http_request_start_line(request)]
         request_headers = dict(request.headers or {})
         if "Host" not in request_headers:
@@ -199,16 +203,17 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
                 request_headers = {"Host": host_value, **request_headers}
         if request_headers:
             log_lines.append(self.format_headers(request_headers))
-        log_lines.append("")
+            log_lines.append("")
         request_body = self.format_request_body(request)
         if request_body is not None:
             log_lines.append(request_body)
-        log_lines.append("")
+        return "\n".join(log_lines)
 
-        log_lines.append(self.format_http_response_start_line(response))
+    def get_debug_response(self, response):
+        log_lines = [self.format_http_response_start_line(response)]
         if response.headers:
             log_lines.append(self.format_headers(dict(response.headers)))
-        log_lines.append("")
+            log_lines.append("")
         text = response.text
         if text:
             try:
@@ -221,13 +226,18 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         return "\n".join(log_lines)
 
     def send(self, request, *args, **kwargs):
-        response = self.transport_adapter.send(request, *args, **kwargs)
-        debug_exchange = ""
+        logging.info(f"{request.method} {request.url}")
         if self.should_log_exchange(request.url):
-            debug_exchange += "\n\n"
-            debug_exchange += self.get_debug_exchange(request, response)
-            debug_exchange += "\n"
-        logging.info(f"[{request.method}] {request.url}{debug_exchange}")
+            debug_request = self.get_debug_request(request)
+            logging.info(f"HTTP Request:\n\n{self.pad_log_lines(debug_request)}\n")
+        response = self.transport_adapter.send(request, *args, **kwargs)
+        if self.should_log_exchange(request.url):
+            debug_response = self.get_debug_response(response)
+            logging.info(f"HTTP Response:\n\n{self.pad_log_lines(debug_response)}\n")
+        else:
+            status_text = fore_status_code(response.status_code)
+            reason_text = fore_warning(response.reason) if response.reason else ""
+            logging.info(f"Response status: {status_text} {reason_text}\n")
         return response
 
     def close(self):
