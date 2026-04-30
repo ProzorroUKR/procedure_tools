@@ -52,6 +52,7 @@ class BaseApiClient(object):
         host,
         session=None,
         debug_request=False,
+        debug_json_level=None,
         debug=False,
         **kwargs,
     ):
@@ -59,6 +60,7 @@ class BaseApiClient(object):
         self.host = host
         self.kwargs = kwargs
         self.debug_request = debug_request
+        self.debug_json_level = debug_json_level
         configure_urllib3_logging(debug)
         if session:
             self.session = session
@@ -71,11 +73,33 @@ class BaseApiClient(object):
         return urljoin(self.host, api_path)
 
     def format_data(self, data):
+        data = self.fold_json(data, self.debug_json_level)
         try:
             text = json.dumps(data, ensure_ascii=False, indent=4)
         except TypeError:
             text = str(data)
         return self.colorize_json_text(text)
+
+    def fold_json(self, data, max_level, current_level=0):
+        if max_level is None:
+            return data
+
+        if isinstance(data, dict):
+            if current_level >= max_level:
+                return {"...": f"{len(data)} keys folded"}
+            return {key: self.fold_json(value, max_level, current_level + 1) for key, value in data.items()}
+
+        if isinstance(data, list):
+            if current_level >= max_level:
+                return [f"... {len(data)} items folded"]
+            return [self.fold_json(item, max_level, current_level + 1) for item in data]
+
+        if isinstance(data, tuple):
+            if current_level >= max_level:
+                return ("... tuple folded",)
+            return tuple(self.fold_json(item, max_level, current_level + 1) for item in data)
+
+        return data
 
     def colorize_json_text(self, text):
         # Keep plain output when terminal color rendering is unavailable.
@@ -100,7 +124,7 @@ class BaseApiClient(object):
         return "; ".join(f"{name}={fore_info(str(value))}" for name, value in cookies.items())
 
     def log_debug_exchange(self, method, url, request_kwargs, response):
-        """Log method, URL, status, and bodies at INFO when --debug-request."""
+        """Log method, URL, status, and bodies at INFO when debug request logging is enabled."""
         prepared_request = response.request
         logging.info("Request method: %s", prepared_request.method or method)
         logging.info("Request URL: %s", prepared_request.url or url)
@@ -188,7 +212,7 @@ class CDBClient(BaseApiClient):
         super(CDBClient, self).__init__(host, session=session, **request_kwargs)
         self.path_prefix = path_prefix
         self.headers.update({"Content-Type": "application/json"})
-        # GET request to retrieve cookies and server time (via request() so --debug-request applies)
+        # GET request to retrieve cookies and server time (via request() so debug request logging applies)
         response = self.get(self.get_api_path(self.SPORE_PATH))
         # Calculate client time delta with server
         client_datetime = get_utcnow()

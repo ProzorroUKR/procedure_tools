@@ -81,7 +81,7 @@ usage: procedure [-h] [-v] [-a 460800] [-p /api/0/] [-d aboveThresholdUA]
                  [-m quick(mode:no-auction)] [-s tender_create.json]
                  [--pause tender_create.json] [-w edr-qualification] [-e SEED]
                  [--reviewer-token REVIEWER_TOKEN] [--bot-token BOT_TOKEN]
-                 [--debug] [--debug-request]
+                 [--debug] [--debug-req]
                  host token ds_host ds_username ds_password
 
 positional arguments:
@@ -171,7 +171,8 @@ options:
 
   --debug               Debug log level
 
-  --debug-request       Log HTTP request/response bodies
+  --debug-req, --debug-request
+                        Log HTTP request/response bodies
 ```
 
 ## Usage example
