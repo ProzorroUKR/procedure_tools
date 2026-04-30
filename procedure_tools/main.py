@@ -14,19 +14,48 @@ from procedure_tools.utils.data import (
 )
 from procedure_tools.utils.file import DATA_DIR_DEFAULT, get_default_data_dirs
 from procedure_tools.utils.handlers import EX_OK
+from procedure_tools.utils.style import fore_log_level
 from procedure_tools.version import __version__
-
-logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.DEBUG,
-    format="[%(asctime)s] %(message)s",
-    datefmt="%H:%M:%S",
-)
 
 WAIT_EVENTS = (WAIT_EDR_QUAL, WAIT_EDR_PRE_QUAL)
 
+LOG_DATEFMT = "%H:%M:%S"
 
-class Formatter(argparse.RawTextHelpFormatter):
+LOG_FORMAT_DEFAULT = "%(asctime)s %(message)s"
+LOG_FORMAT_DEBUG = "%(asctime)s %(levelname)s %(name)s %(message)s"
+
+
+class OutputFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        dfmt = datefmt if datefmt is not None else self.datefmt
+        plain = super().formatTime(record, dfmt)
+        return fore_log_level(f"[{plain}]", record.level)
+
+
+class ColoredRecordFieldsFilter(logging.Filter):
+    def filter(self, record):
+        record.level = record.levelname  # back up uncolored levelname
+        record.levelname = fore_log_level(record.levelname, record.level)
+        record.name = fore_log_level(record.name or "", record.level)
+        return True
+
+
+COLORED_RECORD_FIELDS_FILTER = ColoredRecordFieldsFilter()
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+for handler in logging.root.handlers:
+    handler.addFilter(COLORED_RECORD_FIELDS_FILTER)
+    handler.setFormatter(OutputFormatter(LOG_FORMAT_DEFAULT, datefmt=LOG_DATEFMT))
+
+
+def apply_debug_log_format(debug: bool):
+    fmt = LOG_FORMAT_DEBUG if debug else LOG_FORMAT_DEFAULT
+    formatter = OutputFormatter(fmt, datefmt=LOG_DATEFMT)
+    for handler in logging.root.handlers:
+        handler.setFormatter(formatter)
+
+
+class ArgumentParserFormatter(argparse.RawTextHelpFormatter):
     def _format_action(self, action):
         return "\n\n" + super()._format_action(action)
 
@@ -37,7 +66,7 @@ def _format_choices(choices):
 
 def main():
     parser = argparse.ArgumentParser(
-        formatter_class=Formatter,
+        formatter_class=ArgumentParserFormatter,
     )
     parser.add_argument("host", help="CDB API Host")
     parser.add_argument("token", help="CDB API Token")
@@ -111,12 +140,18 @@ def main():
     )
     parser.add_argument(
         "--debug",
-        help="Show requests and responses",
+        help="Debug log level",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--debug-request",
+        help="Log HTTP request/response bodies",
         action="store_true",
     )
 
     try:
         args = parser.parse_args()
+        apply_debug_log_format(args.debug)
         session = requests.Session()
         adapters.mount(session)
         init_procedure(args, session=session)

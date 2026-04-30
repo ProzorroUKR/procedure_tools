@@ -18,6 +18,14 @@ from procedure_tools.version import __version__
 API_PATH_PREFIX_DEFAULT = "/api/0/"
 
 
+def configure_urllib3_logging(debug):
+    level = logging.DEBUG if debug else logging.WARNING
+    logging.getLogger("urllib3").setLevel(level)
+    for name in logging.root.manager.loggerDict:
+        if name == "urllib3" or (isinstance(name, str) and name.startswith("urllib3.")):
+            logging.getLogger(name).setLevel(level)
+
+
 class BaseApiClient(object):
     name = "api"
 
@@ -31,18 +39,20 @@ class BaseApiClient(object):
         self,
         host,
         session=None,
+        debug_request=False,
         debug=False,
         **kwargs,
     ):
         logging.info(f"Initializing {self.name} client\n")
         self.host = host
         self.kwargs = kwargs
-        self.debug = debug
+        self.debug_request = debug_request
+        configure_urllib3_logging(debug)
         if session:
             self.session = session
         else:
             self.session = requests.Session()
-            adapters.mount(session)
+            adapters.mount(self.session)
         self.headers = copy(self.HEADERS_DEFAULT)
 
     def get_url(self, api_path):
@@ -55,20 +65,24 @@ class BaseApiClient(object):
             text = str(data)
         return text
 
-    def log_request(self, data):
-        if data is not None:
-            request_text = self.format_data(data)
-            logging.debug(f"Request:\n {request_text}")
-
-    def log_response(self, text):
-        if text is not None:
+    def log_debug_exchange(self, method, url, request_kwargs, response):
+        """Log method, URL, status, and bodies at INFO when --debug-request."""
+        if request_kwargs.get("json") is not None:
+            logging.info("Request:\n %s", self.format_data(request_kwargs["json"]))
+        elif request_kwargs.get("data") is not None:
+            logging.info("Request data:\n %s", request_kwargs["data"])
+        elif request_kwargs.get("files"):
+            logging.info("Request: multipart/form-data (file upload)")
+        text = response.text
+        if text:
             try:
                 data = json.loads(text)
+                response_text = self.format_data(data)
             except json.JSONDecodeError:
                 response_text = text
-            else:
-                response_text = self.format_data(data)
-            logging.debug(f"Response:\n {response_text}")
+            logging.info("Response:\n %s", response_text)
+        else:
+            logging.info("Response: (empty body)")
 
     def request(self, method, path, **kwargs):
         request_kwargs = copy(kwargs)
@@ -80,18 +94,14 @@ class BaseApiClient(object):
         request_kwargs["headers"].update(kwargs.get("headers", {}))
         url = self.get_url(path)
         response = self.session.request(method=method, url=url, **request_kwargs)
-        if self.debug:
-            self.log_request(request_kwargs.get("json", None))
-            self.log_response(response.text)
-        if response.status_code == 409:
-            response = self.request(method, path, **kwargs)
-        else:
-            handlers = {}
-            if success_handler:
-                handlers["success_handler"] = success_handler
-            if error_handler:
-                handlers["error_handler"] = error_handler
-            response_handler(response, **handlers)
+        if self.debug_request:
+            self.log_debug_exchange(method, url, request_kwargs, response)
+        handlers = {}
+        if success_handler:
+            handlers["success_handler"] = success_handler
+        if error_handler:
+            handlers["error_handler"] = error_handler
+        response_handler(response, **handlers)
         return response
 
     def get(self, path, **kwargs):
@@ -123,9 +133,8 @@ class CDBClient(BaseApiClient):
         super(CDBClient, self).__init__(host, session=session, **request_kwargs)
         self.path_prefix = path_prefix
         self.headers.update({"Content-Type": "application/json"})
-        spore_url = self.get_url(self.get_api_path(self.SPORE_PATH))
-        # GET request to retrieve cookies and server time
-        response = self.session.get(spore_url)
+        # GET request to retrieve cookies and server time (via request() so --debug-request applies)
+        response = self.get(self.get_api_path(self.SPORE_PATH))
         # Calculate client time delta with server
         client_datetime = get_utcnow()
         try:
