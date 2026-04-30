@@ -145,13 +145,23 @@ def main():
         action="store_true",
     )
     parser.add_argument(
+        "--debug-req",
         "--debug-request",
+        dest="debug_request",
         help="Log HTTP request/response bodies",
         action="store_true",
+    )
+    parser.add_argument(
+        "--debug-json-level",
+        dest="debug_json_level",
+        type=int,
+        help="Fold debug request/response JSON to specified nesting level (>=0)",
     )
 
     try:
         args = parser.parse_args()
+        if args.debug_json_level is not None and args.debug_json_level < 0:
+            parser.error("--debug-json-level must be >= 0")
         apply_debug_log_format(args.debug)
         session = requests.Session()
         adapters.mount(session)

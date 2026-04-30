@@ -42,6 +42,25 @@ def fore_error(msg):
     return fore(msg, FORE_ERROR)
 
 
+def fore_debug(msg):
+    return fore(msg, FORE_DEBUG)
+
+
+def fore_method(method):
+    normalized_method = str(method or "").upper()
+    color = {
+        "GET": FORE_SUCCESS,
+        "POST": FORE_INFO,
+        "PUT": FORE_WARNING,
+        "PATCH": FORE_WARNING,
+        "DELETE": FORE_ERROR,
+        "HEAD": FORE_DEBUG,
+        "OPTIONS": FORE_DEBUG,
+        "TRACE": FORE_DEBUG,
+    }.get(normalized_method, FORE_INFO)
+    return fore(normalized_method, color)
+
+
 def level_fore(levelname):
     colors = {
         "DEBUG": FORE_DEBUG,

@@ -130,6 +130,7 @@ def process_procedure(
         args.path,
         session=session,
         debug_request=args.debug_request,
+        debug_json_level=args.debug_json_level,
         debug=args.debug,
     )
     ds_client = DSClient(
@@ -138,6 +139,7 @@ def process_procedure(
         args.ds_password,
         session=session,
         debug_request=args.debug_request,
+        debug_json_level=args.debug_json_level,
         debug=args.debug,
     )
 
