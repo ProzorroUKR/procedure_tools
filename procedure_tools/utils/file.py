@@ -99,31 +99,33 @@ def parse_data_file_parts(data_file, first_part, middle_parts_count):
     Parse the data file parts.
 
     Example:
-        >>> parse_data_file_parts("award_patch_0_0_0_document_attach.json", "award_patch", 3)
-        ("award_patch", ["0", "0", "0"], "document_attach", ["json"])
+        >>> parse_data_file_parts("award_update_0_0_1_document_attach.json", "award_update", 3)
+        ("award_update", ["0", "0", "1"], "document_attach", ["json"])
+        >>> parse_data_file_parts("award_update_0_0_0_award_patch.json", "award_update", 3)
+        ("award_update", ["0", "0", "0"], "award_patch", ["json"])
     """
-    # Result: ["award_patch_0_0_0_document_attach", "json"]
+    # Result: ["award_update_0_0_1_document_attach", "json"]
     data_file_parts = data_file.split(".")
 
     # Result: ["json"]
     extension_parts = data_file_parts[1:]
 
-    # Result: "award_patch_0_0_0_document_attach"
+    # Result: "award_update_0_0_1_document_attach"
     data_file_name = data_file_parts[0]
 
-    # Result: "0_0_0_document_attach"
+    # Result: "0_0_1_document_attach"
     middle_and_last_part = data_file_name.split(f"{first_part}_")[-1]
 
-    # Result: ["0", "0", "0"]
+    # Result: ["0", "0", "1"]
     middle_parts = middle_and_last_part.split("_")[:middle_parts_count]
 
-    # Result: "0_0_0"
+    # Result: "0_0_1"
     middle_part = "_".join(middle_parts)
 
-    # Result: "document_attach"
+    # Result: "document_attach" (or "award_patch" for award body JSON)
     last_part = data_file_name.split(f"{first_part}_{middle_part}_")[-1]
 
-    # Result: ("award_patch" ,["0", "0", "0"], "document_attach", ["json"])
+    # Result: ("award_update", ["0", "0", "1"], "document_attach", ["json"])
     return first_part, middle_parts, last_part, extension_parts
 
 

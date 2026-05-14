@@ -555,19 +555,20 @@ def patch_award(
     """
     Patch awards by action index.
 
-    Note: Award filename has the following format:
-        award_patch_{action_index}_{award_index}_{action_subindex}_{action_extra}.json
-        award_patch_0_0_0_document_attach.json
+    Note: Award update filename has the following format:
+        award_update_{action_index}_{award_index}_{action_subindex}_{action_extra}.json
+        award_update_0_0_0_award_patch.json
+        award_update_0_0_1_document_attach.json
     """
     logging.info("Patching awards...\n")
-    award_patch_data_files = []
-    action_name = "award_patch"
+    award_update_data_files = []
+    action_name = "award_update"
     filename_base = f"{prefix}{action_name}_{action_index}"
     for data_file in get_data_all_files(get_data_path(args.data)):
         if data_file.startswith(filename_base):
-            award_patch_data_files.append(data_file)
+            award_update_data_files.append(data_file)
     responses = []
-    for data_file in award_patch_data_files:
+    for data_file in award_update_data_files:
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(data_file, action_name, 3)
 
         # Award index is the second last part of the filename
@@ -589,7 +590,7 @@ def patch_award(
                 data_file_prefix=data_file_prefix,
                 prefix=prefix,
             )
-        elif extension_parts[-1] == "json":
+        elif action_extra == "award_patch":
             path = get_data_file_path(get_data_path(args.data), data_file)
             with read_file(path, context=context, args=args) as content:
                 award_patch_data = json.loads(content)

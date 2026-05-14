@@ -35,7 +35,7 @@ number_map = {
     "qualification_patch": "2200",
     "evaluation_report": "2210",
     "award_create": "2300",
-    "award_patch": "2310",
+    "award_update": "2310",
     "contract_buyer_signer_info_patch": "2400",
     "contract_suppliers_signer_info_patch": "2410",
     "contract_patch": "2420",
