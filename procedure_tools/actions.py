@@ -12,7 +12,6 @@ from procedure_tools.utils.contextmanagers import open_file, read_file
 from procedure_tools.utils.data import SECONDS_BUFFER, get_contracts_bids_ids, get_ids
 from procedure_tools.utils.date import fix_datetime, get_utcnow, parse_date
 from procedure_tools.utils.file import (
-    generate_data_file_name,
     get_data_all_files,
     get_data_file_path,
     get_data_path,
@@ -398,8 +397,8 @@ def change_contracts(
     Patch contracts by action group index.
 
     Note: Contract update filename has the following format:
-        contract_update_{action_group_index}_{contract_index}_{action_index}_{action_extra}.json
-        contract_update_0_0_0_contract_patch.json
+        contract_update_{action_group_index}_contract_{contract_index}_action_{action_index}_{action_extra}.json
+        contract_update_0_contract_0_action_0_contract_patch.json
     """
     logging.info("Patching contracts...\n")
 
@@ -411,7 +410,12 @@ def change_contracts(
             contract_update_data_files.append(data_file)
     responses = []
     for data_file in contract_update_data_files:
-        action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(data_file, action_name, 3)
+        action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(
+            data_file,
+            action_name,
+            middle_parts_count=3,
+            middle_parts_prefixes=("", "contract_", "action_"),
+        )
 
         # action_parts: [action_group_index, contract_index, action_index]
         contract_index = int(action_parts[1])
@@ -557,9 +561,9 @@ def patch_award(
     Patch awards by action group index.
 
     Note: Award update filename has the following format:
-        award_update_{action_group_index}_{award_index}_{action_index}_{action_extra}.json
-        award_update_0_0_0_award_patch.json
-        award_update_0_0_1_document_attach.json
+        award_update_{action_group_index}_award_{award_index}_action_{action_index}_{action_extra}.json
+        award_update_0_award_0_action_0_award_patch.json
+        award_update_0_award_0_action_1_document_attach.json
     """
     logging.info("Patching awards...\n")
     award_update_data_files = []
@@ -570,7 +574,12 @@ def patch_award(
             award_update_data_files.append(data_file)
     responses = []
     for data_file in award_update_data_files:
-        action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(data_file, action_name, 3)
+        action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(
+            data_file,
+            action_name,
+            middle_parts_count=3,
+            middle_parts_prefixes=("", "award_", "action_"),
+        )
 
         # action_parts: [action_group_index, award_index, action_index]
         award_index = int(action_parts[1])
@@ -579,7 +588,7 @@ def patch_award(
         award_id = awards_ids[award_index]
 
         if action_extra == "document_attach":
-            data_file_prefix = generate_data_file_name(action_name, action_parts, action_extra, extension_parts)
+            data_file_prefix = data_file.lstrip(prefix)
             upload_award_documents(
                 client,
                 ds_client,
