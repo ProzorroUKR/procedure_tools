@@ -755,7 +755,7 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
     ):
         response = get_awards(client, args, context, tender_id)
         awards_ids = get_ids(response)
-        award_action_index = 0
+        award_action_group_index = 0
         while True:
             responses = patch_award(
                 client,
@@ -765,14 +765,14 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
                 tender_id,
                 awards_ids,
                 tender_token,
-                action_index=award_action_index,
+                action_group_index=award_action_group_index,
                 prefix=prefix,
             )
             if not responses:
-                # There were no files for this action index,
+                # There were no files for this action group index,
                 # that means we have reached the end of actions
                 break
-            award_action_index += 1
+            award_action_group_index += 1
             response = get_awards(client, args, context, tender_id)
             awards_ids = get_ids(response)
 
@@ -990,7 +990,7 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
 
     context["contracts"] = get_contracts(client, args, context, contracts_ids)
 
-    contract_change_action_index = 0
+    contract_update_action_group_index = 0
     while True:
         responses = change_contracts(
             client,
@@ -998,14 +998,14 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
             context,
             contracts_ids,
             contracts_tokens,
-            action_index=contract_change_action_index,
+            action_group_index=contract_update_action_group_index,
             prefix=prefix,
         )
         if not responses:
-            # There were no files for this action index,
+            # There were no files for this action group index,
             # that means we have reached the end of actions
             break
-        contract_change_action_index += 1
+        contract_update_action_group_index += 1
 
     context["contracts"] = get_contracts(client, args, context, contracts_ids)
 

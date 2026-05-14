@@ -94,40 +94,68 @@ def get_actual_file_path(path):
     return actual_path
 
 
-def parse_data_file_parts(data_file, first_part, middle_parts_count):
+def parse_data_file_parts(data_file, first_part, *, middle_parts_count=1, middle_parts_prefixes=None):
     """
     Parse the data file parts.
 
     Example:
-        >>> parse_data_file_parts("award_patch_0_0_0_document_attach.json", "award_patch", 3)
-        ("award_patch", ["0", "0", "0"], "document_attach", ["json"])
+        >>> parse_data_file_parts("foo_0_bar.json", "foo")
+        ('foo', ['0'], 'bar', ['json'])
+
+        >>> parse_data_file_parts(
+        ...     "award_update_0_1_2_award_patch.json",
+        ...     "award_update",
+        ...     middle_parts_count=3,
+        ...     middle_parts_prefixes=None,
+        ... )
+        ('award_update', ['0', '1', '2'], 'award_patch', ['json'])
+
+        >>> parse_data_file_parts(
+        ...     "award_update_0_award_1_action_2_award_patch.json",
+        ...     "award_update",
+        ...     middle_parts_count=3,
+        ...     middle_parts_prefixes=["", "award_", "action_"],
+        ... )
+        ('award_update', ['0', '1', '2'], 'award_patch', ['json'])
     """
-    # Result: ["award_patch_0_0_0_document_attach", "json"]
+    # Result: ["award_update_0_award_1_action_2_award_patch", "json"]
     data_file_parts = data_file.split(".")
 
     # Result: ["json"]
     extension_parts = data_file_parts[1:]
 
-    # Result: "award_patch_0_0_0_document_attach"
+    # Result: "award_update_0_award_1_action_2_award_patch"
     data_file_name = data_file_parts[0]
 
-    # Result: "0_0_0_document_attach"
+    # Result: "0_award_1_action_2_award_patch" (without first_part)
     middle_and_last_part = data_file_name.split(f"{first_part}_")[-1]
 
-    # Result: ["0", "0", "0"]
-    middle_parts = middle_and_last_part.split("_")[:middle_parts_count]
+    # Result: ["", "award_", "action_"]
+    prefixes = middle_parts_prefixes
+    if prefixes is None:
+        prefixes = ("",) * middle_parts_count
+    elif len(prefixes) != middle_parts_count:
+        raise ValueError()
 
-    # Result: "0_0_0"
-    middle_part = "_".join(middle_parts)
+    # Result: [0, 1, 2]
+    s = middle_and_last_part
+    middle_parts = []
+    for i in range(middle_parts_count):
+        pref = prefixes[i]
+        if pref:
+            pat = re.compile(rf"^_+{re.escape(pref)}(\d+)(.*)$")
+        elif i == 0:
+            pat = re.compile(r"^(\d+)(.*)$")
+        else:
+            pat = re.compile(r"^_+(\d+)(.*)$")
+        m = pat.match(s)
+        if not m:
+            raise ValueError()
+        middle_parts.append(m.group(1))
+        s = m.group(2)
 
-    # Result: "document_attach"
-    last_part = data_file_name.split(f"{first_part}_{middle_part}_")[-1]
+    # Result: "award_patch"
+    last_part = s.lstrip("_")
 
-    # Result: ("award_patch" ,["0", "0", "0"], "document_attach", ["json"])
+    # Result: ("award_update", ["0", "1", "2"], "award_patch", ["json"])
     return first_part, middle_parts, last_part, extension_parts
-
-
-def generate_data_file_name(first_part, middle_parts, last_part, extension_parts):
-    middle_part = "_".join(middle_parts)
-    extension_part = ".".join(extension_parts)
-    return f"{first_part}_{middle_part}_{last_part}.{extension_part}"
