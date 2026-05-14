@@ -990,7 +990,7 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
 
     context["contracts"] = get_contracts(client, args, context, contracts_ids)
 
-    contract_change_action_index = 0
+    contract_update_action_index = 0
     while True:
         responses = change_contracts(
             client,
@@ -998,14 +998,14 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
             context,
             contracts_ids,
             contracts_tokens,
-            action_index=contract_change_action_index,
+            action_index=contract_update_action_index,
             prefix=prefix,
         )
         if not responses:
             # There were no files for this action index,
             # that means we have reached the end of actions
             break
-        contract_change_action_index += 1
+        contract_update_action_index += 1
 
     context["contracts"] = get_contracts(client, args, context, contracts_ids)
 

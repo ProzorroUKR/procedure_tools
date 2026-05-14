@@ -397,20 +397,20 @@ def change_contracts(
     """
     Patch contracts by action index.
 
-    Note: Contract change filename has the following format:
-        contract_change_{action_index}_{contract_index}_{contract_change_action_index}.json
-        contract_change_0_0_0.json
+    Note: Contract update filename has the following format:
+        contract_update_{action_index}_{contract_index}_{action_subindex}_{action_extra}.json
+        contract_update_0_0_0_contract_patch.json
     """
     logging.info("Patching contracts...\n")
 
-    contract_change_data_files = []
-    action_name = "contract_change"
+    contract_update_data_files = []
+    action_name = "contract_update"
     filename_base = f"{prefix}{action_name}_{action_index}"
     for data_file in get_data_all_files(get_data_path(args.data)):
         if data_file.startswith(filename_base):
-            contract_change_data_files.append(data_file)
+            contract_update_data_files.append(data_file)
     responses = []
-    for data_file in contract_change_data_files:
+    for data_file in contract_update_data_files:
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(data_file, action_name, 3)
 
         contract_index = int(action_parts[1])
@@ -556,8 +556,8 @@ def patch_award(
     Patch awards by action index.
 
     Note: Award filename has the following format:
-        award_patch_{action_index}_{award_index}_{award_action_index}.json
-        award_patch_0_0_0.json
+        award_patch_{action_index}_{award_index}_{action_subindex}_{action_extra}.json
+        award_patch_0_0_0_document_attach.json
     """
     logging.info("Patching awards...\n")
     award_patch_data_files = []

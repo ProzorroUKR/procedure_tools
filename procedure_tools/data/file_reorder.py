@@ -39,7 +39,7 @@ number_map = {
     "contract_buyer_signer_info_patch": "2400",
     "contract_suppliers_signer_info_patch": "2410",
     "contract_patch": "2420",
-    "contract_change": "2430",
+    "contract_update": "2430",
     "agreement_contracts_patch": "3500",
     "agreement_document": "3510",
     "agreement_patch": "3520",
