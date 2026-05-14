@@ -391,21 +391,21 @@ def change_contracts(
     context,
     contracts_ids,
     contracts_tokens,
-    action_index=0,
+    action_group_index=0,
     prefix="",
 ):
     """
-    Patch contracts by action index.
+    Patch contracts by action group index.
 
     Note: Contract update filename has the following format:
-        contract_update_{action_index}_{contract_index}_{action_subindex}_{action_extra}.json
+        contract_update_{action_group_index}_{contract_index}_{action_index}_{action_extra}.json
         contract_update_0_0_0_contract_patch.json
     """
     logging.info("Patching contracts...\n")
 
     contract_update_data_files = []
     action_name = "contract_update"
-    filename_base = f"{prefix}{action_name}_{action_index}"
+    filename_base = f"{prefix}{action_name}_{action_group_index}"
     for data_file in get_data_all_files(get_data_path(args.data)):
         if data_file.startswith(filename_base):
             contract_update_data_files.append(data_file)
@@ -413,6 +413,7 @@ def change_contracts(
     for data_file in contract_update_data_files:
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(data_file, action_name, 3)
 
+        # action_parts: [action_group_index, contract_index, action_index]
         contract_index = int(action_parts[1])
 
         if extension_parts[-1] == "json":
@@ -549,21 +550,21 @@ def patch_award(
     tender_id,
     awards_ids,
     tender_token,
-    action_index=0,
+    action_group_index=0,
     prefix="",
 ):
     """
-    Patch awards by action index.
+    Patch awards by action group index.
 
     Note: Award update filename has the following format:
-        award_update_{action_index}_{award_index}_{action_subindex}_{action_extra}.json
+        award_update_{action_group_index}_{award_index}_{action_index}_{action_extra}.json
         award_update_0_0_0_award_patch.json
         award_update_0_0_1_document_attach.json
     """
     logging.info("Patching awards...\n")
     award_update_data_files = []
     action_name = "award_update"
-    filename_base = f"{prefix}{action_name}_{action_index}"
+    filename_base = f"{prefix}{action_name}_{action_group_index}"
     for data_file in get_data_all_files(get_data_path(args.data)):
         if data_file.startswith(filename_base):
             award_update_data_files.append(data_file)
@@ -571,7 +572,7 @@ def patch_award(
     for data_file in award_update_data_files:
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(data_file, action_name, 3)
 
-        # Award index is the second last part of the filename
+        # action_parts: [action_group_index, award_index, action_index]
         award_index = int(action_parts[1])
 
         # Get award id by index
