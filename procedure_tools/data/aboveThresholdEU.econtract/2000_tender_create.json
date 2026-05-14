@@ -237,13 +237,13 @@
         "minimalStep": {
           "amount": 60,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         },
         "title": "Лот №1",
         "value": {
           "amount": 3000,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         }
       },
       {
@@ -256,13 +256,13 @@
         "minimalStep": {
           "amount": 10,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         },
         "title": "Лот №2",
         "value": {
           "amount": 500,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         }
       },
       {
@@ -275,13 +275,13 @@
         "minimalStep": {
           "amount": 10,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         },
         "title": "Лот №3",
         "value": {
           "amount": 500,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         }
       },
       {
@@ -294,13 +294,13 @@
         "minimalStep": {
           "amount": 10,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         },
         "title": "Лот №4",
         "value": {
           "amount": 500,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         }
       }
     ],
@@ -523,7 +523,7 @@
     "value": {
       "amount": 0,
       "currency": "UAH",
-      "valueAddedTaxIncluded": true
+      "valueAddedTaxIncluded": false
     }
   }
 }

@@ -607,7 +607,7 @@
     "value": {
       "amount": 1000,
       "currency": "UAH",
-      "valueAddedTaxIncluded": true
+      "valueAddedTaxIncluded": false
     }
   }
 }
