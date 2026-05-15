@@ -337,6 +337,19 @@ def contract_credentials_success_handler(response):
     logging.info(msg)
 
 
+def contract_post_success_handler(response):
+    msg = "Contract created:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.id",
+            "data.status",
+        ],
+    )
+
+    logging.info(msg)
+
+
 def contract_access_success_handler(role: str, contract_id: str):
     def handler(response):
         msg = f"Contract access for {role} retrieved:\n"
@@ -417,6 +430,18 @@ def item_patch_success_handler(response):
         [
             "data.id",
             "data.status",
+        ],
+    )
+
+    logging.info(msg)
+
+
+def signatory_post_success_handler(response):
+    msg = "Signatory created:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.role",
         ],
     )
 

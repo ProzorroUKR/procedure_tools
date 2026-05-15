@@ -159,28 +159,28 @@
     },
     "suppliers": [
       {
-        "name": "{{ contracts[0].suppliers.name }}",
+        "name": "{{ contracts[0].suppliers[0].name }}",
         "identifier": {
-          "scheme": "{{ contracts[0].suppliers.identifier.scheme }}",
-          "id": "{{ contracts[0].suppliers.identifier.id }}",
-          "uri": "{{ contracts[0].suppliers.identifier.uri }}"
+          "scheme": "{{ contracts[0].suppliers[0].identifier.scheme }}",
+          "id": "{{ contracts[0].suppliers[0].identifier.id }}",
+          "uri": "{{ contracts[0].suppliers[0].identifier.uri }}"
         },
         "address": {
-          "streetAddress": "{{ contracts[0].suppliers.address.streetAddress }}",
-          "locality": "{{ contracts[0].suppliers.address.locality }}",
-          "region": "{{ contracts[0].suppliers.address.region }}",
-          "postalCode": "{{ contracts[0].suppliers.address.postalCode }}",
-          "countryName": "{{ contracts[0].suppliers.address.countryName }}"
+          "streetAddress": "{{ contracts[0].suppliers[0].address.streetAddress }}",
+          "locality": "{{ contracts[0].suppliers[0].address.locality }}",
+          "region": "{{ contracts[0].suppliers[0].address.region }}",
+          "postalCode": "{{ contracts[0].suppliers[0].address.postalCode }}",
+          "countryName": "{{ contracts[0].suppliers[0].address.countryName }}"
         },
-        "contract_owner": "{{ contracts[0].suppliers.contract_owner }}",
-        "scale": "{{ contracts[0].suppliers.scale }}",
+        "contract_owner": "{{ contracts[0].suppliers[0].contract_owner }}",
+        "scale": "{{ contracts[0].suppliers[0].scale }}",
         "signerInfo": {
-          "name": "{{ contracts[0].suppliers.signerInfo.name }}",
-          "email": "{{ contracts[0].suppliers.signerInfo.email }}",
-          "telephone": "{{ contracts[0].suppliers.signerInfo.telephone }}",
-          "iban": "{{ contracts[0].suppliers.signerInfo.iban }}",
-          "position": "{{ contracts[0].suppliers.signerInfo.position }}",
-          "authorizedBy": "{{ contracts[0].suppliers.signerInfo.authorizedBy }}"
+          "name": "{{ contracts[0].suppliers[0].signerInfo.name }}",
+          "email": "{{ contracts[0].suppliers[0].signerInfo.email }}",
+          "telephone": "{{ contracts[0].suppliers[0].signerInfo.telephone }}",
+          "iban": "{{ contracts[0].suppliers[0].signerInfo.iban }}",
+          "position": "{{ contracts[0].suppliers[0].signerInfo.position }}",
+          "authorizedBy": "{{ contracts[0].suppliers[0].signerInfo.authorizedBy }}"
         }
       }
     ],
