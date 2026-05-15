@@ -90,6 +90,9 @@ def get_contracts_bid_tokens(response, bids_ids, bids_tokens, contracts_award_id
     contracts_bid_tokens = []
     awards = response.json()["data"]
     for contracts_award_id in contracts_award_ids:
+        if contracts_award_id is None:
+            contracts_bid_tokens.append(None)
+            continue
         for award in awards:
             if award["id"] == contracts_award_id:
                 for bids_id, bids_token in zip(bids_ids, bids_tokens):

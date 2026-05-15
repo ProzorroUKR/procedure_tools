@@ -18,7 +18,6 @@ from procedure_tools.utils.file import (
     parse_data_file_parts,
 )
 from procedure_tools.utils.handlers import (
-    agreement_get_success_handler,
     allow_null_success_handler,
     auction_multilot_participation_url_success_handler,
     auction_participation_url_success_handler,
@@ -49,6 +48,11 @@ from procedure_tools.utils.handlers import (
 )
 
 EDR_FILENAME = "edr_identification.yaml"
+
+
+def get_constants(client: CDBClient, args, context):
+    response = client.get(f"constants", auth_token=args.token)
+    return response
 
 
 def get_bids(
@@ -324,6 +328,8 @@ def patch_contracts_buyer_signer_info(
 ):
     logging.info("Patching contracts buyers signer info...\n")
     for contract_index, contract_id in enumerate(contracts_ids):
+        if contracts_tokens[contract_index] is None:
+            continue
         contract_token = contracts_tokens[contract_index]
         data_file = f"{prefix}contract_buyer_signer_info_patch_{contract_index}.json"
         path = get_data_file_path(get_data_path(args.data), data_file)
@@ -348,6 +354,8 @@ def patch_contracts_suppliers_signer_info(
 ):
     logging.info("Patching contracts suppliers signer info...\n")
     for contract_index, contract_id in enumerate(contracts_ids):
+        if contracts_tokens[contract_index] is None:
+            continue
         contract_token = contracts_tokens[contract_index]
         data_file = f"{prefix}contract_suppliers_signer_info_patch_{contract_index}.json"
         path = get_data_file_path(get_data_path(args.data), data_file)
@@ -372,6 +380,8 @@ def patch_contracts(
 ):
     logging.info("Patching contracts...\n")
     for contract_index, contract_id in enumerate(contracts_ids):
+        if contracts_tokens[contract_index] is None:
+            continue
         contract_token = contracts_tokens[contract_index]
         data_file = f"{prefix}contract_patch_{contract_index}.json"
         path = get_data_file_path(get_data_path(args.data), data_file)
@@ -425,6 +435,9 @@ def change_contracts(
 
         # action_parts: [action_group_index, contract_index]
         contract_index = int(action_parts[1])
+
+        if contracts_tokens[contract_index] is None:
+            continue
 
         if action_extra == "contract_patch":
             contract_id = contracts_ids[contract_index]

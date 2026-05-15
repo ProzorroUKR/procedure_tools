@@ -282,19 +282,6 @@ def framework_get_success_handler(response):
     logging.info(msg)
 
 
-def agreement_get_success_handler(response):
-    msg = "Agreement found:\n"
-    msg += format_log_fields(
-        response.json(),
-        [
-            "data.id",
-            "data.status",
-        ],
-    )
-
-    logging.info(msg)
-
-
 def plan_create_success_handler(response):
     """Handle successful plan creation response."""
     msg = "Plan created:\n"
