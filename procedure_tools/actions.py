@@ -18,13 +18,13 @@ from procedure_tools.utils.file import (
     parse_data_file_parts,
 )
 from procedure_tools.utils.handlers import (
-    agreement_get_success_handler,
     allow_null_success_handler,
     auction_multilot_participation_url_success_handler,
     auction_participation_url_success_handler,
     bid_create_success_handler,
     contract_access_success_handler,
     contract_credentials_success_handler,
+    contract_post_success_handler,
     default_success_handler,
     document_attach_success_handler,
     error,
@@ -44,9 +44,15 @@ from procedure_tools.utils.handlers import (
     tender_post_complaint_success_handler,
     tender_post_criteria_success_handler,
     tender_post_plan_success_handler,
+    signatory_post_success_handler,
 )
 
 EDR_FILENAME = "edr_identification.yaml"
+
+
+def get_constants(client: CDBClient, args, context):
+    response = client.get(f"constants", auth_token=args.token)
+    return response
 
 
 def get_bids(
@@ -322,6 +328,8 @@ def patch_contracts_buyer_signer_info(
 ):
     logging.info("Patching contracts buyers signer info...\n")
     for contract_index, contract_id in enumerate(contracts_ids):
+        if contracts_tokens[contract_index] is None:
+            continue
         contract_token = contracts_tokens[contract_index]
         data_file = f"{prefix}contract_buyer_signer_info_patch_{contract_index}.json"
         path = get_data_file_path(get_data_path(args.data), data_file)
@@ -346,6 +354,8 @@ def patch_contracts_suppliers_signer_info(
 ):
     logging.info("Patching contracts suppliers signer info...\n")
     for contract_index, contract_id in enumerate(contracts_ids):
+        if contracts_tokens[contract_index] is None:
+            continue
         contract_token = contracts_tokens[contract_index]
         data_file = f"{prefix}contract_suppliers_signer_info_patch_{contract_index}.json"
         path = get_data_file_path(get_data_path(args.data), data_file)
@@ -370,6 +380,8 @@ def patch_contracts(
 ):
     logging.info("Patching contracts...\n")
     for contract_index, contract_id in enumerate(contracts_ids):
+        if contracts_tokens[contract_index] is None:
+            continue
         contract_token = contracts_tokens[contract_index]
         data_file = f"{prefix}contract_patch_{contract_index}.json"
         path = get_data_file_path(get_data_path(args.data), data_file)
@@ -386,6 +398,7 @@ def patch_contracts(
 
 def change_contracts(
     client: CDBClient,
+    ds_client: DSClient,
     args,
     context,
     contracts_ids,
@@ -397,14 +410,14 @@ def change_contracts(
     Patch contracts by action group index.
 
     Note: Contract update filename has the following format:
-        contract_update_{action_group_index}_contract_{contract_index}_action_{action_index}_{action_extra}.json
-        contract_update_0_contract_0_action_0_contract_patch.json
+        contract_update_{action_group_index}_contract_{contract_index}_{action_extra}.json
+        contract_update_0_contract_0_contract_patch.json
     """
     logging.info("Patching contracts...\n")
 
     contract_update_data_files = []
     action_name = "contract_update"
-    filename_base = f"{prefix}{action_name}_{action_group_index}"
+    filename_base = f"{prefix}{action_name}_{action_group_index}_"
     for data_file in get_data_all_files(get_data_path(args.data)):
         if data_file.startswith(filename_base):
             contract_update_data_files.append(data_file)
@@ -413,61 +426,263 @@ def change_contracts(
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(
             data_file,
             action_name,
-            middle_parts_count=3,
-            middle_parts_prefixes=("", "contract_", "action_"),
+            middle_parts_count=2,
+            middle_parts_prefixes=("", "contract_"),
         )
 
-        # action_parts: [action_group_index, contract_index, action_index]
+        if extension_parts[0] != "json":
+            continue
+
+        # action_parts: [action_group_index, contract_index]
         contract_index = int(action_parts[1])
 
-        if extension_parts[-1] == "json":
-            if action_extra == "contract_patch":
-                contract_id = contracts_ids[contract_index]
-                contract_token = contracts_tokens[contract_index]
-                path = get_data_file_path(get_data_path(args.data), data_file)
-                with read_file(path, context=context, args=args) as content:
-                    contract_patch_data = json.loads(content)
-                    response = client.patch(
-                        f"contracts/{contract_id}",
-                        json=contract_patch_data,
-                        acc_token=contract_token,
-                        auth_token=args.token,
-                        success_handler=item_patch_success_handler,
-                    )
-                responses.append(response)
-                context["contracts"][contract_index] = response.json()["data"]
-            elif action_extra == "change_post":
-                contract_id = contracts_ids[contract_index]
-                contract_token = contracts_tokens[contract_index]
-                path = get_data_file_path(get_data_path(args.data), data_file)
-                with read_file(path, context=context, args=args) as content:
-                    contract_change_post_data = json.loads(content)
-                    response = client.post(
-                        f"contracts/{contract_id}/changes",
-                        json=contract_change_post_data,
-                        acc_token=contract_token,
-                        auth_token=args.token,
-                        success_handler=item_create_success_handler,
-                    )
-                responses.append(response)
-                context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
-            elif action_extra.startswith("change_patch"):
-                change_index = int(action_extra.split("_")[-1])
-                change_id = context["contracts"][contract_index]["changes"][change_index]["id"]
-                contract_id = contracts_ids[contract_index]
-                contract_token = contracts_tokens[contract_index]
-                path = get_data_file_path(get_data_path(args.data), data_file)
-                with read_file(path, context=context, args=args) as content:
-                    contract_change_patch_data = json.loads(content)
-                    response = client.patch(
-                        f"contracts/{contract_id}/changes/{change_id}",
-                        json=contract_change_patch_data,
-                        acc_token=contract_token,
-                        auth_token=args.token,
-                        success_handler=item_patch_success_handler,
-                    )
-                responses.append(response)
-                context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        if contracts_tokens[contract_index] is None:
+            continue
+
+        if action_extra == "contract_patch":
+            contract_id = contracts_ids[contract_index]
+            contract_token = contracts_tokens[contract_index]
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_patch_data = json.loads(content)
+                response = client.patch(
+                    f"contracts/{contract_id}",
+                    json=contract_patch_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=item_patch_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra.startswith("change_post"):
+            contract_id = contracts_ids[contract_index]
+            contract_token = contracts_tokens[contract_index]
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_change_post_data = json.loads(content)
+                response = client.post(
+                    f"contracts/{contract_id}/changes",
+                    json=contract_change_post_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=item_create_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra.startswith("change_patch"):
+            change_index = int(action_extra.split("_")[-1])
+            change_id = context["contracts"][contract_index]["changes"][change_index]["id"]
+            contract_id = contracts_ids[contract_index]
+            contract_token = contracts_tokens[contract_index]
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_change_patch_data = json.loads(content)
+                response = client.patch(
+                    f"contracts/{contract_id}/changes/{change_id}",
+                    json=contract_change_patch_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=item_patch_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+    return responses
+
+
+def change_econtract_contracts(
+    client: CDBClient,
+    ds_client: DSClient,
+    args,
+    context,
+    contracts_ids,
+    contracts_buyers_tokens,
+    contracts_suppliers_tokens,
+    action_group_index=0,
+    prefix="",
+):
+    """
+    Patch contracts by action group index.
+
+    Note: Contract update filename has the following format:
+        contract_update_{action_group_index}_contract_{contract_index}_{role_prefix}_{action_extra}.json
+        contract_update_0_contract_0_buyer_document_attach.json
+    """
+    logging.info("Patching contracts...\n")
+
+    contract_update_data_files = []
+    action_name = "contract_update"
+    filename_base = f"{prefix}{action_name}_{action_group_index}_"
+    for data_file in get_data_all_files(get_data_path(args.data)):
+        if data_file.startswith(filename_base):
+            contract_update_data_files.append(data_file)
+    responses = []
+    for data_file in contract_update_data_files:
+        action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(
+            data_file,
+            action_name,
+            middle_parts_count=2,
+            middle_parts_prefixes=("", "contract_"),
+        )
+
+        if extension_parts[0] != "json":
+            continue
+
+        # action_parts: [action_group_index, contract_index]
+        contract_index = int(action_parts[1])
+
+        # Get contract tokens by role prefix
+        if action_extra.startswith("buyer_"):
+            contracts_tokens = contracts_buyers_tokens
+            action_extra = action_extra[len("buyer_") :]
+        elif action_extra.startswith("supplier_"):
+            contracts_tokens = contracts_suppliers_tokens
+            action_extra = action_extra[len("supplier_") :]
+        else:
+            raise ValueError(f"Invalid role prefix: {action_extra}")
+
+        contract_id = contracts_ids[contract_index]
+        contract_token = contracts_tokens[contract_index]
+        if action_extra == "document_attach":
+            data_file_prefix = data_file[len(prefix) :]
+            document_attach_responses = upload_contract_documents(
+                client,
+                ds_client,
+                args,
+                context,
+                contract_id,
+                contract_token,
+                data_file_prefix=data_file_prefix,
+                prefix=prefix,
+            )
+            responses.extend(document_attach_responses)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra == "contract_patch":
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_patch_data = json.loads(content)
+                response = client.patch(
+                    f"contracts/{contract_id}",
+                    json=contract_patch_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=item_patch_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra.startswith("change_") and action_extra.endswith("_document_attach"):
+            change_index = int(action_extra[len("change_") : -len("_document_attach")])
+            change_id = context["contracts"][contract_index]["changes"][change_index]["id"]
+            data_file_prefix = data_file[len(prefix) :]
+            document_attach_responses = upload_contract_change_documents(
+                client,
+                ds_client,
+                args,
+                context,
+                contract_id,
+                contract_token,
+                change_id=change_id,
+                data_file_prefix=data_file_prefix,
+                prefix=prefix,
+            )
+            responses.extend(document_attach_responses)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra.startswith("change_") and action_extra.endswith("_signatories_post"):
+            change_index = int(action_extra[len("change_") : -len("_signatories_post")])
+            change_id = context["contracts"][contract_index]["changes"][change_index]["id"]
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_change_signatories_post_data = json.loads(content)
+                response = client.post(
+                    f"contracts/{contract_id}/changes/{change_id}/signatories",
+                    json=contract_change_signatories_post_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=signatory_post_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra.startswith("change_") and action_extra.endswith("_cancellation_post"):
+            change_index = int(action_extra[len("change_") : -len("_cancellation_post")])
+            change_id = context["contracts"][contract_index]["changes"][change_index]["id"]
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_change_cancellation_post_data = json.loads(content)
+                response = client.post(
+                    f"contracts/{contract_id}/changes/{change_id}/cancellations",
+                    json=contract_change_cancellation_post_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=item_create_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra.startswith("change_") and action_extra.endswith("_post"):
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_change_post_data = json.loads(content)
+                response = client.post(
+                    f"contracts/{contract_id}/changes",
+                    json=contract_change_post_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=item_create_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra.startswith("change_") and action_extra.endswith("_patch"):
+            change_index = int(action_extra[len("change_") : -len("_patch")])
+            change_id = context["contracts"][contract_index]["changes"][change_index]["id"]
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_change_patch_data = json.loads(content)
+                response = client.patch(
+                    f"contracts/{contract_id}/changes/{change_id}",
+                    json=contract_change_patch_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=item_patch_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra == "cancellation_post":
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_cancellation_post_data = json.loads(content)
+                response = client.post(
+                    f"contracts/{contract_id}/cancellations",
+                    json=contract_cancellation_post_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=item_create_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra == "contract_post":
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_post_data = json.loads(content)
+                response = client.post(
+                    f"contracts",
+                    json=contract_post_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=contract_post_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
+        elif action_extra == "signatories_post":
+            path = get_data_file_path(get_data_path(args.data), data_file)
+            with read_file(path, context=context, args=args) as content:
+                contract_signatories_post_data = json.loads(content)
+                response = client.post(
+                    f"contracts/{contract_id}/signatories",
+                    json=contract_signatories_post_data,
+                    acc_token=contract_token,
+                    auth_token=args.token,
+                    success_handler=signatory_post_success_handler,
+                )
+            responses.append(response)
+            context["contracts"][contract_index] = get_contract(client, args, context, contract_id).json()["data"]
     return responses
 
 
@@ -477,6 +692,55 @@ def get_contracts(client: CDBClient, args, context, contracts_ids):
         response = get_contract(client, args, context, contracts_id)
         contracts.append(response.json()["data"])
     return contracts
+
+
+def upload_contract_documents(
+    client: CDBClient,
+    ds_client: DSClient,
+    args,
+    context,
+    contract_id,
+    contract_token,
+    data_file_prefix,
+    prefix="",
+):
+    return upload_documents(
+        ds_client,
+        args,
+        context,
+        data_file_prefix=data_file_prefix,
+        attach_callback=partial(
+            client.post,
+            f"contracts/{contract_id}/documents",
+            acc_token=contract_token,
+        ),
+        prefix=prefix,
+    )
+
+
+def upload_contract_change_documents(
+    client: CDBClient,
+    ds_client: DSClient,
+    args,
+    context,
+    contract_id,
+    contract_token,
+    change_id,
+    data_file_prefix,
+    prefix="",
+):
+    return upload_documents(
+        ds_client,
+        args,
+        context,
+        data_file_prefix=data_file_prefix,
+        attach_callback=partial(
+            client.post,
+            f"contracts/{contract_id}/changes/{change_id}/documents",
+            acc_token=contract_token,
+        ),
+        prefix=prefix,
+    )
 
 
 def patch_tender_qual(
@@ -561,14 +825,14 @@ def patch_award(
     Patch awards by action group index.
 
     Note: Award update filename has the following format:
-        award_update_{action_group_index}_award_{award_index}_action_{action_index}_{action_extra}.json
-        award_update_0_award_0_action_0_award_patch.json
-        award_update_0_award_0_action_1_document_attach.json
+        award_update_{action_group_index}_award_{award_index}_{action_extra}.json
+        award_update_0_award_0_award_patch.json
+        award_update_1_award_0_document_attach.json
     """
     logging.info("Patching awards...\n")
     award_update_data_files = []
     action_name = "award_update"
-    filename_base = f"{prefix}{action_name}_{action_group_index}"
+    filename_base = f"{prefix}{action_name}_{action_group_index}_"
     for data_file in get_data_all_files(get_data_path(args.data)):
         if data_file.startswith(filename_base):
             award_update_data_files.append(data_file)
@@ -577,19 +841,22 @@ def patch_award(
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(
             data_file,
             action_name,
-            middle_parts_count=3,
-            middle_parts_prefixes=("", "award_", "action_"),
+            middle_parts_count=2,
+            middle_parts_prefixes=("", "award_"),
         )
 
-        # action_parts: [action_group_index, award_index, action_index]
+        if extension_parts[0] != "json":
+            continue
+
+        # action_parts: [action_group_index, award_index]
         award_index = int(action_parts[1])
 
         # Get award id by index
         award_id = awards_ids[award_index]
 
         if action_extra == "document_attach":
-            data_file_prefix = data_file.lstrip(prefix)
-            upload_award_documents(
+            data_file_prefix = data_file[len(prefix) :]
+            document_attach_responses = upload_award_documents(
                 client,
                 ds_client,
                 args,
@@ -600,6 +867,7 @@ def patch_award(
                 data_file_prefix=data_file_prefix,
                 prefix=prefix,
             )
+            responses.extend(document_attach_responses)
         elif action_extra == "award_patch":
             path = get_data_file_path(get_data_path(args.data), data_file)
             with read_file(path, context=context, args=args) as content:
@@ -1562,13 +1830,13 @@ def create_complaints(
 
     if obj_type == "award":
         logging.info(f"Creating award {obj_id} complaints...\n")
-        filename_base = f"award_complaint_create_{obj_index}"
+        filename_base = f"award_complaint_create_{obj_index}_"
     elif obj_type == "qualification":
         logging.info(f"Creating qualification {obj_id} complaints...\n")
-        filename_base = f"qualification_complaint_create_{obj_index}"
+        filename_base = f"qualification_complaint_create_{obj_index}_"
     else:
         logging.info("Creating complaints...\n")
-        filename_base = "complaint_create"
+        filename_base = "complaint_create_"
 
     complaints_data_files = []
     data_path = get_data_path(os.path.join(args.data, f"{prefix}{file_subpath}"))
@@ -1654,25 +1922,25 @@ def patch_complaints(
 
     if obj_type == "award":
         logging.info(f"Patching award {obj_id} complaints...\n")
-        filename_base = f"award_complaint_patch_{obj_index}"
+        filename_base = f"award_complaint_patch_{obj_index}_"
     elif obj_type == "qualification":
         logging.info(f"Patching qualification {obj_id} complaints...\n")
-        filename_base = f"qualification_complaint_patch_{obj_index}"
+        filename_base = f"qualification_complaint_patch_{obj_index}_"
     else:
         logging.info("Patching complaints...\n")
-        filename_base = "complaint_patch"
+        filename_base = "complaint_patch_"
 
     for complaint_index, complaint_id in enumerate(complaints_ids):
         complaints_data_files = []
         data_path = get_data_path(os.path.join(args.data, f"{prefix}{file_subpath}"))
         for data_file in get_data_all_files(data_path):
-            if data_file.startswith(f"{filename_base}_{complaint_index}_"):
+            if data_file.startswith(f"{filename_base}{complaint_index}_"):
                 complaints_data_files.append(data_file)
         actions_count = len(complaints_data_files)
         for action_index in range(actions_count):
             complaints_action_data_files = []
             for data_file in get_data_all_files(data_path):
-                if data_file.startswith(f"{filename_base}_{complaint_index}_{action_index}_"):
+                if data_file.startswith(f"{filename_base}{complaint_index}_{action_index}_"):
                     complaints_action_data_files.append(data_file)
             for data_file in complaints_action_data_files:
                 path = get_data_file_path(data_path, data_file)

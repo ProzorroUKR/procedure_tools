@@ -282,19 +282,6 @@ def framework_get_success_handler(response):
     logging.info(msg)
 
 
-def agreement_get_success_handler(response):
-    msg = "Agreement found:\n"
-    msg += format_log_fields(
-        response.json(),
-        [
-            "data.id",
-            "data.status",
-        ],
-    )
-
-    logging.info(msg)
-
-
 def plan_create_success_handler(response):
     """Handle successful plan creation response."""
     msg = "Plan created:\n"
@@ -331,6 +318,19 @@ def contract_credentials_success_handler(response):
         [
             "data.id",
             "access.token",
+        ],
+    )
+
+    logging.info(msg)
+
+
+def contract_post_success_handler(response):
+    msg = "Contract created:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.id",
+            "data.status",
         ],
     )
 
@@ -417,6 +417,18 @@ def item_patch_success_handler(response):
         [
             "data.id",
             "data.status",
+        ],
+    )
+
+    logging.info(msg)
+
+
+def signatory_post_success_handler(response):
+    msg = "Signatory created:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.role",
         ],
     )
 

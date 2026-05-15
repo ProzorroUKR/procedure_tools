@@ -1,0 +1,194 @@
+{
+  "data": {
+    "awardID": "{{ contracts[0].awardID }}",
+    "title": "Лот №1",
+    "description": "Версія договору №2 (знижено ціну)",
+    "period": {
+      "startDate": "{{ contracts[0].dateModified }}",
+      "endDate": "{{ from_date_iso(contracts[0].dateModified, days=365) }}"
+    },
+    "value": {
+      "amount": 1660.208333,
+      "currency": "UAH",
+      "valueAddedTaxIncluded": true,
+      "amountNet": 1660.208333
+    },
+    "items": [
+      {
+        "id": "{{ contracts[0]['items'][0].id }}",
+        "description": "{{ contracts[0]['items'][0].description }}",
+        "description_en": "{{ contracts[0]['items'][0].description_en }}",
+        "quantity": 1,
+        "classification": {
+          "description": "{{ contracts[0]['items'][0].classification.description }}",
+          "scheme": "{{ contracts[0]['items'][0].classification.scheme }}",
+          "id": "{{ contracts[0]['items'][0].classification.id }}"
+        },
+        "additionalClassifications": [
+          {
+            "scheme": "{{ contracts[0]['items'][0].additionalClassifications[0].scheme }}",
+            "id": "{{ contracts[0]['items'][0].additionalClassifications[0].id }}",
+            "description": "{{ contracts[0]['items'][0].additionalClassifications[0].description }}"
+          }
+        ],
+        "unit": {
+          "name": "{{ contracts[0]['items'][0].unit.name }}",
+          "value": {
+            "amount": 116.22222,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          },
+          "code": "{{ contracts[0]['items'][0].unit.code }}"
+        },
+        "deliveryAddress": {
+          "streetAddress": "{{ contracts[0]['items'][0].deliveryAddress.streetAddress }}",
+          "locality": "{{ contracts[0]['items'][0].deliveryAddress.locality }}",
+          "region": "{{ contracts[0]['items'][0].deliveryAddress.region }}",
+          "postalCode": "{{ contracts[0]['items'][0].deliveryAddress.postalCode }}",
+          "countryName": "{{ contracts[0]['items'][0].deliveryAddress.countryName }}"
+        },
+        "deliveryDate": {
+          "startDate": "{{ contracts[0]['items'][0].deliveryDate.startDate }}",
+          "endDate": "{{ contracts[0]['items'][0].deliveryDate.endDate }}"
+        },
+        "relatedLot": "{{ contracts[0]['items'][0].relatedLot }}"
+      },
+      {
+        "id": "{{ contracts[0]['items'][1].id }}",
+        "description": "{{ contracts[0]['items'][1].description }}",
+        "description_en": "{{ contracts[0]['items'][1].description_en }}",
+        "quantity": 3,
+        "classification": {
+          "description": "{{ contracts[0]['items'][1].classification.description }}",
+          "scheme": "{{ contracts[0]['items'][1].classification.scheme }}",
+          "id": "{{ contracts[0]['items'][1].classification.id }}"
+        },
+        "additionalClassifications": [
+          {
+            "scheme": "{{ contracts[0]['items'][1].additionalClassifications[0].scheme }}",
+            "id": "{{ contracts[0]['items'][1].additionalClassifications[0].id }}",
+            "description": "{{ contracts[0]['items'][1].additionalClassifications[0].description }}"
+          }
+        ],
+        "unit": {
+          "name": "{{ contracts[0]['items'][1].unit.name }}",
+          "value": {
+            "amount": 23,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          },
+          "code": "{{ contracts[0]['items'][1].unit.code }}"
+        },
+        "deliveryAddress": {
+          "streetAddress": "{{ contracts[0]['items'][1].deliveryAddress.streetAddress }}",
+          "locality": "{{ contracts[0]['items'][1].deliveryAddress.locality }}",
+          "region": "{{ contracts[0]['items'][1].deliveryAddress.region }}",
+          "postalCode": "{{ contracts[0]['items'][1].deliveryAddress.postalCode }}",
+          "countryName": "{{ contracts[0]['items'][1].deliveryAddress.countryName }}"
+        },
+        "deliveryDate": {
+          "startDate": "{{ contracts[0]['items'][1].deliveryDate.startDate }}",
+          "endDate": "{{ contracts[0]['items'][1].deliveryDate.endDate }}"
+        },
+        "relatedLot": "{{ contracts[0]['items'][1].relatedLot }}"
+      },
+      {
+        "id": "{{ contracts[0]['items'][2].id }}",
+        "description": "{{ contracts[0]['items'][2].description }}",
+        "description_en": "{{ contracts[0]['items'][2].description_en }}",
+        "quantity": 25,
+        "classification": {
+          "description": "{{ contracts[0]['items'][2].classification.description }}",
+          "scheme": "{{ contracts[0]['items'][2].classification.scheme }}",
+          "id": "{{ contracts[0]['items'][2].classification.id }}"
+        },
+        "additionalClassifications": [
+          {
+            "scheme": "{{ contracts[0]['items'][2].additionalClassifications[0].scheme }}",
+            "id": "{{ contracts[0]['items'][2].additionalClassifications[0].id }}",
+            "description": "{{ contracts[0]['items'][2].additionalClassifications[0].description }}"
+          }
+        ],
+        "unit": {
+          "name": "{{ contracts[0]['items'][2].unit.name }}",
+          "value": {
+            "amount": 59,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          },
+          "code": "{{ contracts[0]['items'][2].unit.code }}"
+        },
+        "deliveryAddress": {
+          "streetAddress": "{{ contracts[0]['items'][2].deliveryAddress.streetAddress }}",
+          "locality": "{{ contracts[0]['items'][2].deliveryAddress.locality }}",
+          "region": "{{ contracts[0]['items'][2].deliveryAddress.region }}",
+          "postalCode": "{{ contracts[0]['items'][2].deliveryAddress.postalCode }}",
+          "countryName": "{{ contracts[0]['items'][2].deliveryAddress.countryName }}"
+        },
+        "deliveryDate": {
+          "startDate": "{{ contracts[0]['items'][2].deliveryDate.startDate }}",
+          "endDate": "{{ contracts[0]['items'][2].deliveryDate.endDate }}"
+        },
+        "relatedLot": "{{ contracts[0]['items'][2].relatedLot }}"
+      }
+    ],
+    "buyer": {
+      "name": "{{ contracts[0].buyer.name }}",
+      "name_en": "{{ contracts[0].buyer.name_en }}",
+      "identifier": {
+        "scheme": "{{ contracts[0].buyer.identifier.scheme }}",
+        "id": "{{ contracts[0].buyer.identifier.id }}",
+        "legalName": "{{ contracts[0].buyer.identifier.legalName }}",
+        "legalName_en": "{{ contracts[0].buyer.identifier.legalName_en }}"
+      },
+      "address": {
+        "streetAddress": "{{ contracts[0].buyer.address.streetAddress }}",
+        "locality": "{{ contracts[0].buyer.address.locality }}",
+        "region": "{{ contracts[0].buyer.address.region }}",
+        "postalCode": "{{ contracts[0].buyer.address.postalCode }}",
+        "countryName": "{{ contracts[0].buyer.address.countryName }}"
+      },
+      "contract_owner": "{{ contracts[0].buyer.contract_owner }}",
+      "kind": "{{ contracts[0].buyer.kind }}",
+      "signerInfo": {
+        "name": "{{ contracts[0].buyer.signerInfo.name }}",
+        "email": "{{ contracts[0].buyer.signerInfo.email }}",
+        "telephone": "{{ contracts[0].buyer.signerInfo.telephone }}",
+        "iban": "{{ contracts[0].buyer.signerInfo.iban }}",
+        "position": "{{ contracts[0].buyer.signerInfo.position }}",
+        "authorizedBy": "{{ contracts[0].buyer.signerInfo.authorizedBy }}"
+      }
+    },
+    "suppliers": [
+      {
+        "name": "{{ contracts[0].suppliers[0].name }}",
+        "identifier": {
+          "scheme": "{{ contracts[0].suppliers[0].identifier.scheme }}",
+          "id": "{{ contracts[0].suppliers[0].identifier.id }}",
+          "uri": "{{ contracts[0].suppliers[0].identifier.uri }}"
+        },
+        "address": {
+          "streetAddress": "{{ contracts[0].suppliers[0].address.streetAddress }}",
+          "locality": "{{ contracts[0].suppliers[0].address.locality }}",
+          "region": "{{ contracts[0].suppliers[0].address.region }}",
+          "postalCode": "{{ contracts[0].suppliers[0].address.postalCode }}",
+          "countryName": "{{ contracts[0].suppliers[0].address.countryName }}"
+        },
+        "contract_owner": "{{ contracts[0].suppliers[0].contract_owner }}",
+        "scale": "{{ contracts[0].suppliers[0].scale }}",
+        "signerInfo": {
+          "name": "{{ contracts[0].suppliers[0].signerInfo.name }}",
+          "email": "{{ contracts[0].suppliers[0].signerInfo.email }}",
+          "telephone": "{{ contracts[0].suppliers[0].signerInfo.telephone }}",
+          "iban": "{{ contracts[0].suppliers[0].signerInfo.iban }}",
+          "position": "{{ contracts[0].suppliers[0].signerInfo.position }}",
+          "authorizedBy": "{{ contracts[0].suppliers[0].signerInfo.authorizedBy }}"
+        }
+      }
+    ],
+    "owner": "broker",
+    "tender_id": "{{ contracts[0].tender_id }}",
+    "contractTemplateName": "{{ contracts[0].contractTemplateName }}",
+    "status": "pending"
+  }
+}

@@ -6,6 +6,7 @@ from faker import Faker
 
 from procedure_tools.actions import (
     change_contracts,
+    change_econtract_contracts,
     create_awards,
     create_bids,
     create_complaints,
@@ -17,6 +18,7 @@ from procedure_tools.actions import (
     get_agreement,
     get_agreements,
     get_awards,
+    get_constants,
     get_contract,
     get_contracts,
     get_framework,
@@ -146,6 +148,7 @@ def process_procedure(
     context["acceleration"] = args.acceleration
     context["submission"] = args.submission
     context["client_timedelta"] = client.client_timedelta
+    context["constants"] = get_constants(client, args, context).json()
 
     process_framework(client, ds_client, args, context, prefix, session=session)
     process_plan(client, ds_client, args, context, prefix, session=session)
@@ -753,10 +756,10 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
         "competitiveDialogueEU",
         "competitiveDialogueUA",
     ):
-        response = get_awards(client, args, context, tender_id)
-        awards_ids = get_ids(response)
         award_action_group_index = 0
         while True:
+            response = get_awards(client, args, context, tender_id)
+            awards_ids = get_ids(response)
             responses = patch_award(
                 client,
                 ds_client,
@@ -773,8 +776,6 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
                 # that means we have reached the end of actions
                 break
             award_action_group_index += 1
-            response = get_awards(client, args, context, tender_id)
-            awards_ids = get_ids(response)
 
     if method_type in ("closeFrameworkAgreementUA",):
         patch_tender_qual(client, args, context, tender_id, tender_token)
@@ -873,50 +874,93 @@ def process_contracts_econtract(client, ds_client, args, context, prefix, sessio
     tender_id = tender["id"]
     tender_token = tender_access["token"]
 
-    contracts_ids = []
+    constants = context["constants"]
+    signature_verification_enabled = constants["SIGNATURE_VERIFICATION_ENABLED"]
 
-    response = get_tender_contracts(client, args, context, tender_id)
-    contracts_ids = get_ids(response, status_exclude="cancelled")
+    contracts = []
+    contracts_ids = []
 
     contracts_buyers_tokens = []
     contracts_suppliers_tokens = []
 
-    contracts = get_contracts(client, args, context, contracts_ids)
-    context["contracts"] = contracts
+    contract_update_action_group_index = 0
+    contract_update_actions_completed = False
 
-    for contract in contracts:
-        contract_id = contract["id"]
+    while True:
+        response = get_tender_contracts(client, args, context, tender_id)
+        contracts_ids = get_ids(response)
 
-        # Get buyer access
-        identifier = contract["buyer"]["identifier"]
-        response = post_contract_access(
+        # Get new contracts
+        for contract_id in contracts_ids[len(contracts) :]:
+            response = get_contract(client, args, context, contract_id)
+            contracts.append(response.json()["data"])
+
+        context["contracts"] = contracts
+
+        # Get buyer access for new contracts (if not already done)
+        for contract in contracts[len(contracts_buyers_tokens) :]:
+            if contract["status"] == "cancelled":
+                contracts_buyers_tokens.append(None)
+                continue
+            contract_id = contract["id"]
+            identifier = contract["buyer"]["identifier"]
+            response = post_contract_access(
+                client,
+                args,
+                context,
+                contract_id,
+                role="buyer",
+                identifier=identifier,
+                tender_token=tender_token,
+            )
+            contracts_buyers_tokens.append(get_token(response))
+
+        # Get supplier access for new contracts (if not already done)
+        for contract in contracts[len(contracts_suppliers_tokens) :]:
+            if contract["status"] == "cancelled":
+                contracts_suppliers_tokens.append(None)
+                continue
+            contract_id = contract["id"]
+            identifier = contract["suppliers"][0]["identifier"]
+            response = post_contract_access(
+                client,
+                args,
+                context,
+                contract_id,
+                role="supplier",
+                identifier=identifier,
+                tender_token=tender_token,
+            )
+            contracts_suppliers_tokens.append(get_token(response))
+
+        if signature_verification_enabled:
+            # Signature verification is enabled
+            # Stop the execution
+            logging.info("Signature verification is enabled on current environment, cannot continue...\n")
+            raise SystemExit(EX_OK)
+
+        if contract_update_actions_completed:
+            # All updates are completed
+            # Stop the loop
+            break
+
+        # Update contracts by action group index
+        responses = change_econtract_contracts(
             client,
+            ds_client,
             args,
             context,
-            contract_id,
-            role="buyer",
-            identifier=identifier,
-            tender_token=tender_token,
+            contracts_ids,
+            contracts_buyers_tokens,
+            contracts_suppliers_tokens,
+            action_group_index=contract_update_action_group_index,
+            prefix=prefix,
         )
-        contracts_buyers_tokens.append(get_token(response))
-
-        # Get supplier access
-        identifier = contract["suppliers"][0]["identifier"]
-        response = post_contract_access(
-            client,
-            args,
-            context,
-            contract_id,
-            role="supplier",
-            identifier=identifier,
-            tender_token=tender_token,
-        )
-        contracts_suppliers_tokens.append(get_token(response))
-
-    logging.info("Contracts access retrieved.\n")
-
-    logging.info("Coming soon...\n")
-    raise SystemExit(EX_OK)
+        if not responses:
+            # There were no files for this action group index,
+            # that means we have reached the end of actions
+            contract_update_actions_completed = True
+        contract_update_action_group_index += 1
 
 
 def process_contracts_legacy(client, ds_client, args, context, prefix, session=None):
@@ -932,14 +976,18 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
     contracts_ids = []
 
     response = get_tender_contracts(client, args, context, tender_id)
-    contracts_ids = get_ids(response, status_exclude="cancelled")
+    contracts_ids = get_ids(response)
 
     contracts_tokens = []
     contracts_award_ids = []
 
     context["contracts"] = get_contracts(client, args, context, contracts_ids)
 
-    for contracts_id in contracts_ids:
+    for contract_index, contracts_id in enumerate(contracts_ids):
+        if context["contracts"][contract_index]["status"] == "cancelled":
+            contracts_tokens.append(None)
+            contracts_award_ids.append(None)
+            continue
         response = patch_contract_credentials(
             client,
             args,
@@ -991,9 +1039,11 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
     context["contracts"] = get_contracts(client, args, context, contracts_ids)
 
     contract_update_action_group_index = 0
+
     while True:
         responses = change_contracts(
             client,
+            ds_client,
             args,
             context,
             contracts_ids,
@@ -1006,8 +1056,6 @@ def process_contracts_legacy(client, ds_client, args, context, prefix, session=N
             # that means we have reached the end of actions
             break
         contract_update_action_group_index += 1
-
-    context["contracts"] = get_contracts(client, args, context, contracts_ids)
 
 
 def process_agreements(client, ds_client, args, context, prefix, session=None):

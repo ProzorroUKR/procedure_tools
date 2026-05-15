@@ -1,0 +1,57 @@
+{
+  "data": {
+    "contractNumber": 2,
+    "dateSigned": "{{ contracts[7].dateModified }}",
+    "items": [
+      {
+        "additionalClassifications": [
+          {
+            "description": "{{ contracts[7]['items'][0].additionalClassifications[0].description }}",
+            "id": "{{ contracts[7]['items'][0].additionalClassifications[0].id }}",
+            "scheme": "{{ contracts[7]['items'][0].additionalClassifications[0].scheme }}"
+          }
+        ],
+        "classification": {
+          "description": "{{ contracts[7]['items'][0].classification.description }}",
+          "id": "{{ contracts[7]['items'][0].classification.id }}",
+          "scheme": "{{ contracts[7]['items'][0].classification.scheme }}"
+        },
+        "deliveryAddress": {
+          "countryName": "{{ contracts[7]['items'][0].deliveryAddress.countryName }}",
+          "locality": "{{ contracts[7]['items'][0].deliveryAddress.locality }}",
+          "postalCode": "{{ contracts[7]['items'][0].deliveryAddress.postalCode }}",
+          "region": "{{ contracts[7]['items'][0].deliveryAddress.region }}",
+          "streetAddress": "{{ contracts[7]['items'][0].deliveryAddress.streetAddress }}"
+        },
+        "deliveryDate": {
+          "endDate": "{{ contracts[7]['items'][0].deliveryDate.endDate }}",
+          "startDate": "{{ contracts[7]['items'][0].deliveryDate.startDate }}"
+        },
+        "description": "{{ contracts[7]['items'][0].description }}",
+        "description_en": "{{ contracts[7]['items'][0].description_en }}",
+        "id": "{{ contracts[7]['items'][0].id }}",
+        "quantity": 1,
+        "relatedBuyer": "{{ contracts[7]['items'][0].relatedBuyer }}",
+        "relatedLot": "{{ contracts[7]['items'][0].relatedLot }}",
+        "unit": {
+          "code": "{{ contracts[7]['items'][0].unit.code }}",
+          "name": "{{ contracts[7]['items'][0].unit.name }}",
+          "value": {
+            "amount": 100.99,
+            "valueAddedTaxIncluded": false
+          }
+        }
+      }
+    ],
+    "period": {
+      "startDate": "{{ contracts[7].dateModified }}",
+      "endDate": "{{ from_date_iso(contracts[7].dateModified, days=365) }}"
+    },
+    "status": "active",
+    "value": {
+      "amount": 100,
+      "amountNet": 100,
+      "valueAddedTaxIncluded": false
+    }
+  }
+}

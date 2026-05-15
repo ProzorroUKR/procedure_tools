@@ -1,0 +1,249 @@
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_4_buyer_document_attach.json b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_4_buyer_document_attach.json[m
+[1mindex e69de29..9443b60 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_4_buyer_document_attach.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_4_buyer_document_attach.json[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {[m
+[32m+[m[32m    "documentType": "contractSignature",[m
+[32m+[m[32m    "title": "sign.p7s"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_5_buyer_document_attach.json b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_5_buyer_document_attach.json[m
+[1mindex e69de29..9443b60 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_5_buyer_document_attach.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_5_buyer_document_attach.json[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {[m
+[32m+[m[32m    "documentType": "contractSignature",[m
+[32m+[m[32m    "title": "sign.p7s"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_6_suppliers_signatories.json b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_6_suppliers_signatories.json[m
+[1mindex e69de29..bd77024 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_6_suppliers_signatories.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_6_suppliers_signatories.json[m
+[36m@@ -0,0 +1,3 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_7_buyer_signatories.json b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_7_buyer_signatories.json[m
+[1mindex e69de29..bd77024 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_7_buyer_signatories.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_0_0_7_buyer_signatories.json[m
+[36m@@ -0,0 +1,3 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_1_0_0_buyer_document_attach.json b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_1_0_0_buyer_document_attach.json[m
+[1mindex e69de29..9443b60 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_1_0_0_buyer_document_attach.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_1_0_0_buyer_document_attach.json[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {[m
+[32m+[m[32m    "documentType": "contractSignature",[m
+[32m+[m[32m    "title": "sign.p7s"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_1_0_1_suppliers_cancellation.json b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_1_0_1_suppliers_cancellation.json[m
+[1mindex e69de29..664550f 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_1_0_1_suppliers_cancellation.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2400_contract_post_1_0_1_suppliers_cancellation.json[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {[m
+[32m+[m[32m    "reasonType": "signingRefusal",[m
+[32m+[m[32m    "reason": "don't want to sign"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_0_buyer_new_change.json b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_0_buyer_new_change.json[m
+[1mindex e69de29..17c5758 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_0_buyer_new_change.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_0_buyer_new_change.json[m
+[36m@@ -0,0 +1,136 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {[m
+[32m+[m[32m    "rationale": "Погодження зміни ціни в договорі про закупівлю в бік зменшення (без зміни кількості (обсягу) та якості товарів, робіт і послуг), у тому числі у разі коливання ціни товару на ринку",[m
+[32m+[m[32m    "rationale_en": "Approval of a price change in a procurement contract in a downward direction (without changing the quantity (volume) and quality of goods, works and services), including in the event of fluctuations in the price of goods on the market",[m
+[32m+[m[32m    "rationaleTypes": [[m
+[32m+[m[32m      "priceReductionWithoutQuantity"[m
+[32m+[m[32m    ],[m
+[32m+[m[32m    "modifications": {[m
+[32m+[m[32m      "items": [[m
+[32m+[m[32m        {[m
+[32m+[m[32m          "id": "{{ contracts[0]['items'][0].id }}",[m
+[32m+[m[32m          "description": "{{ contracts[0]['items'][0].description }}",[m
+[32m+[m[32m          "description_en": "{{ contracts[0]['items'][0].description_en }}",[m
+[32m+[m[32m          "quantity": 1,[m
+[32m+[m[32m          "classification": {[m
+[32m+[m[32m            "description": "{{ contracts[0]['items'][0].classification.description }}",[m
+[32m+[m[32m            "scheme": "{{ contracts[0]['items'][0].classification.scheme }}",[m
+[32m+[m[32m            "id": "{{ contracts[0]['items'][0].classification.id }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "additionalClassifications": [[m
+[32m+[m[32m            {[m
+[32m+[m[32m              "scheme": "{{ contracts[0]['items'][0].additionalClassifications[0].scheme }}",[m
+[32m+[m[32m              "id": "{{ contracts[0]['items'][0].additionalClassifications[0].id }}",[m
+[32m+[m[32m              "description": "{{ contracts[0]['items'][0].additionalClassifications[0].description }}"[m
+[32m+[m[32m            }[m
+[32m+[m[32m          ],[m
+[32m+[m[32m          "unit": {[m
+[32m+[m[32m            "name": "{{ contracts[0]['items'][0].unit.name }}",[m
+[32m+[m[32m            "value": {[m
+[32m+[m[32m              "amount": 116.22222,[m
+[32m+[m[32m              "currency": "UAH",[m
+[32m+[m[32m              "valueAddedTaxIncluded": false[m
+[32m+[m[32m            },[m
+[32m+[m[32m            "code": "{{ contracts[0]['items'][0].unit.code }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "deliveryAddress": {[m
+[32m+[m[32m            "streetAddress": "{{ contracts[0]['items'][0].deliveryAddress.streetAddress }}",[m
+[32m+[m[32m            "locality": "{{ contracts[0]['items'][0].deliveryAddress.locality }}",[m
+[32m+[m[32m            "region": "{{ contracts[0]['items'][0].deliveryAddress.region }}",[m
+[32m+[m[32m            "postalCode": "{{ contracts[0]['items'][0].deliveryAddress.postalCode }}",[m
+[32m+[m[32m            "countryName": "{{ contracts[0]['items'][0].deliveryAddress.countryName }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "deliveryDate": {[m
+[32m+[m[32m            "startDate": "{{ contracts[0]['items'][0].deliveryDate.startDate }}",[m
+[32m+[m[32m            "endDate": "{{ contracts[0]['items'][0].deliveryDate.endDate }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "relatedLot": "{{ contracts[0]['items'][0].relatedLot }}"[m
+[32m+[m[32m        },[m
+[32m+[m[32m        {[m
+[32m+[m[32m          "id": "{{ contracts[0]['items'][1].id }}",[m
+[32m+[m[32m          "description": "{{ contracts[0]['items'][1].description }}",[m
+[32m+[m[32m          "description_en": "{{ contracts[0]['items'][1].description_en }}",[m
+[32m+[m[32m          "quantity": 3,[m
+[32m+[m[32m          "classification": {[m
+[32m+[m[32m            "description": "{{ contracts[0]['items'][1].classification.description }}",[m
+[32m+[m[32m            "scheme": "{{ contracts[0]['items'][1].classification.scheme }}",[m
+[32m+[m[32m            "id": "{{ contracts[0]['items'][1].classification.id }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "additionalClassifications": [[m
+[32m+[m[32m            {[m
+[32m+[m[32m              "scheme": "{{ contracts[0]['items'][1].additionalClassifications[0].scheme }}",[m
+[32m+[m[32m              "id": "{{ contracts[0]['items'][1].additionalClassifications[0].id }}",[m
+[32m+[m[32m              "description": "{{ contracts[0]['items'][1].additionalClassifications[0].description }}"[m
+[32m+[m[32m            }[m
+[32m+[m[32m          ],[m
+[32m+[m[32m          "unit": {[m
+[32m+[m[32m            "name": "{{ contracts[0]['items'][1].unit.name }}",[m
+[32m+[m[32m            "value": {[m
+[32m+[m[32m              "amount": 20,[m
+[32m+[m[32m              "currency": "UAH",[m
+[32m+[m[32m              "valueAddedTaxIncluded": false[m
+[32m+[m[32m            },[m
+[32m+[m[32m            "code": "{{ contracts[0]['items'][1].unit.code }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "deliveryAddress": {[m
+[32m+[m[32m            "streetAddress": "{{ contracts[0]['items'][1].deliveryAddress.streetAddress }}",[m
+[32m+[m[32m            "locality": "{{ contracts[0]['items'][1].deliveryAddress.locality }}",[m
+[32m+[m[32m            "region": "{{ contracts[0]['items'][1].deliveryAddress.region }}",[m
+[32m+[m[32m            "postalCode": "{{ contracts[0]['items'][1].deliveryAddress.postalCode }}",[m
+[32m+[m[32m            "countryName": "{{ contracts[0]['items'][1].deliveryAddress.countryName }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "deliveryDate": {[m
+[32m+[m[32m            "startDate": "{{ contracts[0]['items'][1].deliveryDate.startDate }}",[m
+[32m+[m[32m            "endDate": "{{ contracts[0]['items'][1].deliveryDate.endDate }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "relatedLot": "{{ contracts[0]['items'][1].relatedLot }}"[m
+[32m+[m[32m        },[m
+[32m+[m[32m        {[m
+[32m+[m[32m          "id": "{{ contracts[0]['items'][2].id }}",[m
+[32m+[m[32m          "description": "{{ contracts[0]['items'][2].description }}",[m
+[32m+[m[32m          "description_en": "{{ contracts[0]['items'][2].description_en }}",[m
+[32m+[m[32m          "quantity": 25,[m
+[32m+[m[32m          "classification": {[m
+[32m+[m[32m            "description": "{{ contracts[0]['items'][2].classification.description }}",[m
+[32m+[m[32m            "scheme": "{{ contracts[0]['items'][2].classification.scheme }}",[m
+[32m+[m[32m            "id": "{{ contracts[0]['items'][2].classification.id }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "additionalClassifications": [[m
+[32m+[m[32m            {[m
+[32m+[m[32m              "scheme": "{{ contracts[0]['items'][2].additionalClassifications[0].scheme }}",[m
+[32m+[m[32m              "id": "{{ contracts[0]['items'][2].additionalClassifications[0].id }}",[m
+[32m+[m[32m              "description": "{{ contracts[0]['items'][2].additionalClassifications[0].description }}"[m
+[32m+[m[32m            }[m
+[32m+[m[32m          ],[m
+[32m+[m[32m          "unit": {[m
+[32m+[m[32m            "name": "{{ contracts[0]['items'][2].unit.name }}",[m
+[32m+[m[32m            "value": {[m
+[32m+[m[32m              "amount": 50,[m
+[32m+[m[32m              "currency": "UAH",[m
+[32m+[m[32m              "valueAddedTaxIncluded": false[m
+[32m+[m[32m            },[m
+[32m+[m[32m            "code": "{{ contracts[0]['items'][2].unit.code }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "deliveryAddress": {[m
+[32m+[m[32m            "streetAddress": "{{ contracts[0]['items'][2].deliveryAddress.streetAddress }}",[m
+[32m+[m[32m            "locality": "{{ contracts[0]['items'][2].deliveryAddress.locality }}",[m
+[32m+[m[32m            "region": "{{ contracts[0]['items'][2].deliveryAddress.region }}",[m
+[32m+[m[32m            "postalCode": "{{ contracts[0]['items'][2].deliveryAddress.postalCode }}",[m
+[32m+[m[32m            "countryName": "{{ contracts[0]['items'][2].deliveryAddress.countryName }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "deliveryDate": {[m
+[32m+[m[32m            "startDate": "{{ contracts[0]['items'][2].deliveryDate.startDate }}",[m
+[32m+[m[32m            "endDate": "{{ contracts[0]['items'][2].deliveryDate.endDate }}"[m
+[32m+[m[32m          },[m
+[32m+[m[32m          "relatedLot": "{{ contracts[0]['items'][2].relatedLot }}"[m
+[32m+[m[32m        }[m
+[32m+[m[32m      ],[m
+[32m+[m[32m      "value": {[m
+[32m+[m[32m        "amount": 1426.208333,[m
+[32m+[m[32m        "currency": "UAH",[m
+[32m+[m[32m        "valueAddedTaxIncluded": true,[m
+[32m+[m[32m        "amountNet": 1426.208333[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_1_buyer_document_attach.json b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_1_buyer_document_attach.json[m
+[1mindex e69de29..9443b60 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_1_buyer_document_attach.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_1_buyer_document_attach.json[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {[m
+[32m+[m[32m    "documentType": "contractSignature",[m
+[32m+[m[32m    "title": "sign.p7s"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_2_buyer_signatories.json b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_2_buyer_signatories.json[m
+[1mindex e69de29..bd77024 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_2_buyer_signatories.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_2_buyer_signatories.json[m
+[36m@@ -0,0 +1,3 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_3_suppliers_cancellation.json b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_3_suppliers_cancellation.json[m
+[1mindex e69de29..419b9f7 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_3_suppliers_cancellation.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_3_suppliers_cancellation.json[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {[m
+[32m+[m[32m    "reasonType": "requiresChanges",[m
+[32m+[m[32m    "reason": "not actual change"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_4_suppliers_new_change.json b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_4_suppliers_new_change.json[m
+[1mindex e69de29..263e6ee 100644[m
+[1m--- a/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_4_suppliers_new_change.json[m
+[1m+++ b/procedure_tools/data/aboveThreshold.econtract/2430_contract_change_post_0_0_4_suppliers_new_change.json[m
+[36m@@ -0,0 +1,136 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "data": {[m
+[32m+[m[32m    "rationale": "Погодження 
