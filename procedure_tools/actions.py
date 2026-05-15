@@ -400,8 +400,8 @@ def change_contracts(
     Patch contracts by action group index.
 
     Note: Contract update filename has the following format:
-        contract_update_{action_group_index}_contract_{contract_index}_action_{action_index}_{action_extra}.json
-        contract_update_0_contract_0_action_0_contract_patch.json
+        contract_update_{action_group_index}_contract_{contract_index}_{action_extra}.json
+        contract_update_0_contract_0_contract_patch.json
     """
     logging.info("Patching contracts...\n")
 
@@ -416,16 +416,16 @@ def change_contracts(
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(
             data_file,
             action_name,
-            middle_parts_count=3,
-            middle_parts_prefixes=("", "contract_", "action_"),
+            middle_parts_count=2,
+            middle_parts_prefixes=("", "contract_"),
         )
 
         if extension_parts[0] != "json":
             continue
 
-        # action_parts: [action_group_index, contract_index, action_index]
+        # action_parts: [action_group_index, contract_index]
         contract_index = int(action_parts[1])
-        
+
         if action_extra == "contract_patch":
             contract_id = contracts_ids[contract_index]
             contract_token = contracts_tokens[contract_index]
@@ -491,8 +491,8 @@ def change_econtract_contracts(
     Patch contracts by action group index.
 
     Note: Contract update filename has the following format:
-        contract_update_{action_group_index}_contract_{contract_index}_action_{action_index}_{role_prefix}_{action_extra}.json
-        contract_update_0_contract_0_action_0_buyer_document_attach.json
+        contract_update_{action_group_index}_contract_{contract_index}_{role_prefix}_{action_extra}.json
+        contract_update_0_contract_0_buyer_document_attach.json
     """
     logging.info("Patching contracts...\n")
 
@@ -507,14 +507,14 @@ def change_econtract_contracts(
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(
             data_file,
             action_name,
-            middle_parts_count=3,
-            middle_parts_prefixes=("", "contract_", "action_"),
+            middle_parts_count=2,
+            middle_parts_prefixes=("", "contract_"),
         )
 
         if extension_parts[0] != "json":
             continue
 
-        # action_parts: [action_group_index, contract_index, action_index]
+        # action_parts: [action_group_index, contract_index]
         contract_index = int(action_parts[1])
 
         # Get contract tokens by role prefix
@@ -812,9 +812,9 @@ def patch_award(
     Patch awards by action group index.
 
     Note: Award update filename has the following format:
-        award_update_{action_group_index}_award_{award_index}_action_{action_index}_{action_extra}.json
-        award_update_0_award_0_action_0_award_patch.json
-        award_update_0_award_0_action_1_document_attach.json
+        award_update_{action_group_index}_award_{award_index}_{action_extra}.json
+        award_update_0_award_0_award_patch.json
+        award_update_1_award_0_document_attach.json
     """
     logging.info("Patching awards...\n")
     award_update_data_files = []
@@ -828,14 +828,14 @@ def patch_award(
         action_name, action_parts, action_extra, extension_parts = parse_data_file_parts(
             data_file,
             action_name,
-            middle_parts_count=3,
-            middle_parts_prefixes=("", "award_", "action_"),
+            middle_parts_count=2,
+            middle_parts_prefixes=("", "award_"),
         )
 
         if extension_parts[0] != "json":
             continue
 
-        # action_parts: [action_group_index, award_index, action_index]
+        # action_parts: [action_group_index, award_index]
         award_index = int(action_parts[1])
 
         # Get award id by index

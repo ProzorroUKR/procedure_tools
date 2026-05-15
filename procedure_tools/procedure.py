@@ -884,7 +884,6 @@ def process_contracts_econtract(client, ds_client, args, context, prefix, sessio
     while True:
         response = get_tender_contracts(client, args, context, tender_id)
         contracts_ids = get_ids(response)
-        print(f"contracts_ids: {contracts_ids}")
 
         # Get new contracts
         for contract_id in contracts_ids[len(contracts):]:
