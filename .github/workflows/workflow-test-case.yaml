@@ -31,5 +31,7 @@ jobs:
           DS_HOST: ${{ secrets.DS_HOST }}
           DS_USERNAME: ${{ secrets.DS_USERNAME }}
           DS_PASSWORD: ${{ secrets.DS_PASSWORD }}
+          REVIEWER_TOKEN: ${{ secrets.REVIEWER_TOKEN }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           pytest procedure_tools/test.py::test_${{ github.event.inputs.case }}

@@ -10,21 +10,28 @@ API_TOKEN = "API_TOKEN"
 DS_HOST = "DS_HOST"
 DS_USERNAME = "DS_USERNAME"
 DS_PASSWORD = "DS_PASSWORD"
+REVIEWER_TOKEN = "REVIEWER_TOKEN"
+BOT_TOKEN = "BOT_TOKEN"
 
 
-REQUIRED_ENV_VARIABLES = [API_HOST, API_TOKEN, DS_HOST, DS_USERNAME, DS_PASSWORD]
+REQUIRED_ENV_VARIABLES = [API_HOST, API_TOKEN, DS_HOST, DS_USERNAME, DS_PASSWORD, REVIEWER_TOKEN, BOT_TOKEN]
 
 INACTIVE_REASON = "Currently inactive procedure"
 skipinactive = pytest.mark.skip(reason=INACTIVE_REASON)
 
+missing_env = [v for v in REQUIRED_ENV_VARIABLES if not os.environ.get(v)]
 skipifenv = pytest.mark.skipif(
-    any([not os.environ.get(v) for v in REQUIRED_ENV_VARIABLES]),
-    reason=f"One of {', '.join(REQUIRED_ENV_VARIABLES)} env variables not specified",
+    bool(missing_env),
+    reason=f"Env variables not specified: {', '.join(missing_env)}",
 )
 
 
 def run_test(argv):
     default_args = [
+        "--reviewer-token",
+        os.environ.get(REVIEWER_TOKEN),
+        "--bot-token",
+        os.environ.get(BOT_TOKEN),
         "--acceleration",
         "10000",
         "--path",
@@ -32,6 +39,9 @@ def run_test(argv):
         "--submission",
         "quick(mode:no-auction)",
         "--debug",
+        "--debug-request",
+        "--debug-json-level",
+        "2",
     ]
     args = (
         [
