@@ -1,3 +1,4 @@
+import json
 import logging
 
 from procedure_tools.utils.date import client_timedelta_string
@@ -165,6 +166,15 @@ def allow_null_success_handler(handler):
     return wrapper
 
 
+def format_response_text(text):
+    if not text:
+        return text
+    try:
+        return json.dumps(json.loads(text), ensure_ascii=False)
+    except (json.JSONDecodeError, TypeError):
+        return text
+
+
 def error(text, allow_error=False):
     msg = fore_error(text)
     msg += "\n"
@@ -176,13 +186,13 @@ def error(text, allow_error=False):
 def default_error_handler(response):
     msg = "Response text:\n"
     logging.info(msg)
-    error(response.text)
+    error(format_response_text(response.text))
 
 
 def allow_error_handler(response):
     msg = "Response text:\n"
     logging.info(msg)
-    error(response.text, allow_error=True)
+    error(format_response_text(response.text), allow_error=True)
 
 
 def default_success_handler(response):
