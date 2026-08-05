@@ -25,30 +25,45 @@
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][0].id }}",
-        "quantity": 1,
+        "quantity": 12,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 2.037,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][1].id }}",
-        "quantity": 1,
+        "quantity": 632,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 0.04,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][3].id }}",
-        "quantity": 1,
+        "quantity": 15,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 33.34,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       }
     ],
@@ -71,7 +86,7 @@
         "relatedLot": "60441ce87301487c9bf194fbd3a4f7c7",
         "subcontractingDetails": "Тестове підприємство, Україна, м. Київ, вул. Тестова, 33",
         "value": {
-          "amount": 25.36
+          "amount": 500
         }
       }
     ],

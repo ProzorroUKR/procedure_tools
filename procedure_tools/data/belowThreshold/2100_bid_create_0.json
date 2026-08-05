@@ -70,10 +70,15 @@
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][3].id }}",
-        "quantity": 1,
+        "quantity": 333,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 1.502,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       }
     ],

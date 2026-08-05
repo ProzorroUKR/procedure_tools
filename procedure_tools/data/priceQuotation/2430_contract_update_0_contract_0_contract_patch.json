@@ -35,7 +35,7 @@
         "description": "{{ contracts[0]['items'][0].description }}",
         "description_en": "{{ contracts[0]['items'][0].description_en }}",
         "id": "{{ contracts[0]['items'][0].id }}",
-        "quantity": 1,
+        "quantity": 66,
         "unit": {
           "code": "{{ contracts[0]['items'][0].unit.code }}",
           "name": "{{ contracts[0]['items'][0].unit.name }}",
@@ -78,7 +78,7 @@
         "description": "{{ contracts[0]['items'][1].description }}",
         "description_en": "{{ contracts[0]['items'][1].description_en }}",
         "id": "{{ contracts[0]['items'][1].id }}",
-        "quantity": 1,
+        "quantity": 77,
         "unit": {
           "code": "{{ contracts[0]['items'][1].unit.code }}",
           "name": "{{ contracts[0]['items'][1].unit.name }}",
@@ -121,7 +121,7 @@
         "description": "{{ contracts[0]['items'][2].description }}",
         "description_en": "{{ contracts[0]['items'][2].description_en }}",
         "id": "{{ contracts[0]['items'][2].id }}",
-        "quantity": 1,
+        "quantity": 53,
         "unit": {
           "code": "{{ contracts[0]['items'][2].unit.code }}",
           "name": "{{ contracts[0]['items'][2].unit.name }}",

@@ -83,7 +83,7 @@
           "startDate": "2017-07-27T17:36:49.306344"
         },
         "description": "Тестова назва предмета закупівлі",
-        "quantity": 5,
+        "quantity": 55,
         "relatedBuyer": "dd426ce4c76f48849b3d8e8699b0b3ce",
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
         "unit": {
@@ -116,7 +116,7 @@
           "startDate": "2017-07-27T17:36:49.306344"
         },
         "description": "Інша тестова назва предмета закупівлі",
-        "quantity": 5,
+        "quantity": 111,
         "relatedBuyer": "881d1efa739e4cceb24e45075996bbfb",
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
         "unit": {
@@ -149,7 +149,7 @@
           "startDate": "2017-07-27T17:36:49.306344"
         },
         "description": "Зовсім інша тестова назва предмета закупівлі",
-        "quantity": 5,
+        "quantity": 19,
         "relatedBuyer": "bf08d7d965c24296a195445200785bae",
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
         "unit": {
@@ -182,7 +182,7 @@
           "startDate": "2017-07-27T17:36:49.306344"
         },
         "description": "Тестова назва предмета закупівлі",
-        "quantity": 5,
+        "quantity": 66,
         "relatedBuyer": "dd426ce4c76f48849b3d8e8699b0b3ce",
         "relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f",
         "unit": {
@@ -215,7 +215,7 @@
           "startDate": "2017-07-27T17:36:49.306344"
         },
         "description": "Інша тестова назва предмета закупівлі",
-        "quantity": 5,
+        "quantity": 77,
         "relatedBuyer": "881d1efa739e4cceb24e45075996bbfb",
         "relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f",
         "unit": {
@@ -248,7 +248,7 @@
           "startDate": "2017-07-27T17:36:49.306344"
         },
         "description": "Зовсім інша тестова назва предмета закупівлі",
-        "quantity": 5,
+        "quantity": 53,
         "relatedBuyer": "bf08d7d965c24296a195445200785bae",
         "relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f",
         "unit": {
@@ -282,7 +282,7 @@
         },
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "quantity": 1,
+        "quantity": 7,
         "relatedBuyer": "bf08d7d965c24296a195445200785bae",
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",
         "unit": {

@@ -25,12 +25,12 @@
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][2].id }}",
-        "quantity": 1,
+        "quantity": 52,
         "unit": {
           "code": "KGM",
           "name": "кг",
           "value": {
-            "amount": 365.6545,
+            "amount": 7.019,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
@@ -42,7 +42,7 @@
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",
         "subcontractingDetails": "ДКП «Орфей», Україна",
         "value": {
-          "amount": 365.6545
+          "amount": 364.99
         }
       }
     ],

@@ -103,7 +103,7 @@
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "d8eef80b5a0a4a7fb7c9512ca1db5b93",
-        "quantity": 5,
+        "quantity": 11,
         "relatedBuyer": "dd426ce4c76f48849b3d8e8699b0b3ce",
         "relatedLot": "ddb35dd0e9904726aafd18baed24863a",
         "unit": {
@@ -138,7 +138,7 @@
         "description": "Інша тестова назва предмета закупівлі",
         "description_en": "Procurement item another test name",
         "id": "483ea8f464cc44769cf1b62c19d40baf",
-        "quantity": 5,
+        "quantity": 49,
         "relatedBuyer": "881d1efa739e4cceb24e45075996bbfb",
         "relatedLot": "ddb35dd0e9904726aafd18baed24863a",
         "unit": {
@@ -173,7 +173,7 @@
         "description": "Зовсім інша тестова назва предмета закупівлі",
         "description_en": "Procurement item completely another test name",
         "id": "f3bb176406c244d8a9444f901926065a",
-        "quantity": 5,
+        "quantity": 23,
         "relatedBuyer": "bf08d7d965c24296a195445200785bae",
         "relatedLot": "ddb35dd0e9904726aafd18baed24863a",
         "unit": {

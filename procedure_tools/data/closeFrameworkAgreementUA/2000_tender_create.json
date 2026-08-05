@@ -74,7 +74,7 @@
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "7fa0fbf85aab4f48a43afb8ccbc944e4",
-        "quantity": 5,
+        "quantity": 49,
         "relatedLot": "ddb35dd0e9904726aafd18baed24863a",
         "unit": {
           "code": "KGM",
@@ -108,7 +108,7 @@
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "e30bb60e8df74b85b1da9a4b999654ca",
-        "quantity": 5,
+        "quantity": 23,
         "relatedLot": "ddb35dd0e9904726aafd18baed24863a",
         "unit": {
           "code": "KGM",

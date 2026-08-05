@@ -53,7 +53,7 @@
         },
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "quantity": 1,
+        "quantity": 23,
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
         "unit": {
           "code": "KGM",
@@ -86,7 +86,7 @@
         },
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "quantity": 1,
+        "quantity": 67,
         "relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f",
         "unit": {
           "code": "KGM",
@@ -119,7 +119,7 @@
         },
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
-        "quantity": 1,
+        "quantity": 43,
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",
         "unit": {
           "code": "KGM",
@@ -136,13 +136,13 @@
         },
         "id": "dd22c9c085f64e019f943999b5b41fe5",
         "minimalStep": {
-          "amount": 10,
+          "amount": 5.79,
           "currency": "UAH",
           "valueAddedTaxIncluded": false
         },
         "title": "Лот №1",
         "value": {
-          "amount": 500,
+          "amount": 289.57,
           "currency": "UAH",
           "valueAddedTaxIncluded": false
         }
@@ -155,13 +155,13 @@
         },
         "id": "9d4fc4783ebb4a99b10cc9a2f7d7552f",
         "minimalStep": {
-          "amount": 10,
+          "amount": 166.38,
           "currency": "UAH",
           "valueAddedTaxIncluded": false
         },
         "title": "Лот №2",
         "value": {
-          "amount": 500,
+          "amount": 6655.11,
           "currency": "UAH",
           "valueAddedTaxIncluded": false
         }
@@ -174,13 +174,13 @@
         },
         "id": "5f58e4e21baf4696bb1cfd67c4f86f73",
         "minimalStep": {
-          "amount": 10,
+          "amount": 8.39,
           "currency": "UAH",
           "valueAddedTaxIncluded": false
         },
         "title": "Лот №3",
         "value": {
-          "amount": 500,
+          "amount": 1677,
           "currency": "UAH",
           "valueAddedTaxIncluded": false
         }
