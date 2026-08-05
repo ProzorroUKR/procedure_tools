@@ -25,60 +25,90 @@
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][0].id }}",
-        "quantity": 5,
+        "quantity": 55,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 4.49,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][1].id }}",
-        "quantity": 5,
+        "quantity": 111,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 1.11,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][2].id }}",
-        "quantity": 5,
+        "quantity": 19,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 6.79,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][3].id }}",
-        "quantity": 5,
+        "quantity": 66,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 2.96,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][4].id }}",
-        "quantity": 5,
+        "quantity": 77,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 0.99,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       },
       {
         "description": "Тестова назва предмета закупівлі",
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][5].id }}",
-        "quantity": 5,
+        "quantity": 53,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 4.31,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         }
       }
     ],
@@ -86,7 +116,7 @@
       {
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
         "value": {
-          "amount": 500,
+          "amount": 499,
           "currency": "UAH",
           "valueAddedTaxIncluded": true
         }

@@ -461,7 +461,7 @@
         "description_en": "Procurement item test name",
         "id": "271693efb03704c0638da4baeee94a5b",
         "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
-        "quantity": 1,
+        "quantity": 66,
         "unit": {
           "code": "DMQ",
           "name": "кубічний дециметр"
@@ -501,7 +501,7 @@
         "description_en": "Procurement item test name",
         "id": "991693efb03704c0638da4baeee94a5b",
         "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
-        "quantity": 1,
+        "quantity": 77,
         "unit": {
           "code": "DMQ",
           "name": "кубічний дециметр"
@@ -541,7 +541,7 @@
         "description_en": "Procurement item test name",
         "id": "5693ce27fe454c6badc428088688f31c",
         "profile": "01c07d6f048a4211b7050c9597ad3aed",
-        "quantity": 1,
+        "quantity": 53,
         "unit": {
           "code": "DMQ",
           "name": "кубічний дециметр"

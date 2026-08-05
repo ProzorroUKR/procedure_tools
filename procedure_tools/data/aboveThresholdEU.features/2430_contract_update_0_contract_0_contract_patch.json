@@ -30,13 +30,13 @@
         "description": "{{ contracts[0]['items'][0].description }}",
         "description_en": "{{ contracts[0]['items'][0].description_en }}",
         "id": "{{ contracts[0]['items'][0].id }}",
-        "quantity": 4,
+        "quantity": 12,
         "relatedLot": "{{ contracts[0]['items'][0].relatedLot }}",
         "unit": {
           "code": "{{ contracts[0]['items'][0].unit.code }}",
           "name": "{{ contracts[0]['items'][0].unit.name }}",
           "value": {
-            "amount": 125,
+            "amount": 39,
             "valueAddedTaxIncluded": false
           }
         }
@@ -48,8 +48,8 @@
     },
     "status": "active",
     "value": {
-      "amount": 500,
-      "amountNet": 500,
+      "amount": 468,
+      "amountNet": 468,
       "valueAddedTaxIncluded": false
     }
   }

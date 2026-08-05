@@ -26,12 +26,12 @@
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][0].id }}",
         "product": "3d54653e06314d8dab24b615daa4891f",
-        "quantity": 1,
+        "quantity": 66,
         "unit": {
           "code": "DMQ",
           "name": "кубічний дециметр",
           "value": {
-            "amount": 89.0,
+            "amount": 2.96,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
@@ -42,12 +42,12 @@
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][1].id }}",
         "product": "3d54653e06314d8dab24b615daa4891f",
-        "quantity": 1,
+        "quantity": 77,
         "unit": {
           "code": "DMQ",
           "name": "кубічний дециметр",
           "value": {
-            "amount": 133.0,
+            "amount": 2.3695,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
@@ -58,12 +58,12 @@
         "description_en": "Procurement item test name",
         "id": "{{ tender['items'][2].id }}",
         "product": "44b4fd92010445c49d13037ef61f198e",
-        "quantity": 1,
+        "quantity": 53,
         "unit": {
           "code": "DMQ",
           "name": "кубічний дециметр",
           "value": {
-            "amount": 428.9966542,
+            "amount": 5.144,
             "currency": "UAH",
             "valueAddedTaxIncluded": false
           }
