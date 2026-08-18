@@ -36,6 +36,7 @@ from procedure_tools.actions import (
     patch_contracts_buyer_signer_info,
     patch_contracts_suppliers_signer_info,
     patch_framework_active,
+    post_framework_criteria,
     patch_framework_qualifications,
     patch_plan,
     patch_qualifications,
@@ -170,6 +171,14 @@ def process_framework(client, ds_client, args, context, prefix, session=None):
     if response:
         framework_id = get_id(response)
         framework_token = get_token(response)
+        post_framework_criteria(
+            client,
+            args,
+            context,
+            framework_id,
+            framework_token,
+            prefix=prefix,
+        )
         response = patch_framework_active(
             client,
             args,

@@ -563,3 +563,15 @@ def document_attach_success_handler(response):
     )
 
     logging.info(msg)
+
+
+def framework_post_criteria_success_handler(response):
+    msg = "Framework criteria created:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data[*].classification.id",
+        ],
+    )
+
+    logging.info(msg)
