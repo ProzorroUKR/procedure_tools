@@ -169,6 +169,11 @@
         "title": "Лот №1",
         "value": {
           "amountPercentage": 50
+        },
+        "minExpectedIncome": {
+          "amount": 990008.99,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
         }
       },
       {
@@ -180,6 +185,11 @@
         "title": "Лот №2",
         "value": {
           "amountPercentage": 40
+        },
+        "minExpectedIncome": {
+          "amount": 990008.99,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
         }
       },
       {
@@ -191,6 +201,11 @@
         "title": "Лот №3",
         "value": {
           "amountPercentage": 55
+        },
+        "minExpectedIncome": {
+          "amount": 990008.99,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
         }
       },
       {
@@ -202,6 +217,11 @@
         "title": "Лот №4",
         "value": {
           "amountPercentage": 80
+        },
+        "minExpectedIncome": {
+          "amount": 990008.99,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
         }
       }
     ],
