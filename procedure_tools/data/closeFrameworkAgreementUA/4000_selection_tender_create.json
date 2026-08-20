@@ -55,8 +55,8 @@
           "endDate": "2019-01-30T15:48:03.841685+02:00",
           "startDate": "2019-01-27T15:48:03.841685+02:00"
         },
-        "description": "{{ fake.sentence(nb_words=8) }}",
-        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "description": "{{ agreement['items'][0].description }}",
+        "description_en": "{{ agreement['items'][0].description_en }}",
         "id": "7fa0fbf85aab4f48a43afb8ccbc944e4",
         "quantity": 5,
         "relatedLot": "ddb35dd0e9904726aafd18baed24863a",

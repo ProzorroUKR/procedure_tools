@@ -75,8 +75,8 @@
           "endDate": "2017-07-30T17:36:49.306344",
           "startDate": "2017-07-27T17:36:49.306344"
         },
-        "description": "{{ fake.sentence(nb_words=8) }}",
-        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "description": "{{ agreement['items'][0].description }}",
+        "description_en": "{{ agreement['items'][0].description_en }}",
         "id": "d8eef80b5a0a4a7fb7c9512ca1db5b93",
         "quantity": 5,
         "relatedBuyer": "dd426ce4c76f48849b3d8e8699b0b3ce",
@@ -110,8 +110,8 @@
           "endDate": "2017-07-30T17:36:49.306344",
           "startDate": "2017-07-27T17:36:49.306344"
         },
-        "description": "{{ fake.sentence(nb_words=8) }}",
-        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "description": "{{ agreement['items'][1].description }}",
+        "description_en": "{{ agreement['items'][1].description_en }}",
         "id": "483ea8f464cc44769cf1b62c19d40baf",
         "quantity": 5,
         "relatedBuyer": "881d1efa739e4cceb24e45075996bbfb",
