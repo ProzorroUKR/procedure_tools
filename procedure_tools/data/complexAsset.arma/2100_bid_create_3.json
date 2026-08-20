@@ -6,7 +6,7 @@
       },
       {
         "confidentiality": "buyerOnly",
-        "confidentialityRationale": "Доступ до цього документу має бути обмежений лише для замовника",
+        "confidentialityRationale": "{{ fake.sentence(nb_words=10) }}",
         "title": "bid_confidential_document_file.txt"
       }
     ],
@@ -22,8 +22,8 @@
     ],
     "items": [
       {
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ tender['items'][2].description }}",
+        "description_en": "{{ tender['items'][2].description_en }}",
         "id": "{{ tender['items'][2].id }}",
         "quantity": 1,
         "unit": {
@@ -35,7 +35,7 @@
     "lotValues": [
       {
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",
-        "subcontractingDetails": "ДКП «Орфей», Україна",
+        "subcontractingDetails": "{{ fake.company() }}, Україна",
         "value": {
           "amountPercentage": 55
         }
@@ -54,19 +54,19 @@
           "locality": "м. Київ",
           "postalCode": "21100",
           "region": "м. Київ",
-          "streetAddress": "вул. Польова, 33"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "contactPoint": {
-          "email": "moleksuk@gmail.com",
-          "name": "Микола Олексюк",
-          "telephone": "+380000000000"
+          "email": "{{ fake.email() }}",
+          "name": "{{ fake.name() }}",
+          "telephone": "{{ fake.prozorro_phone_number() }}"
         },
         "identifier": {
           "id": "00137200",
           "scheme": "UA-EDR",
-          "uri": "http://factory.example.com"
+          "uri": "{{ fake.url() }}"
         },
-        "name": "ДКП «Орфей»",
+        "name": "{{ fake.company() }}",
         "scale": "micro"
       }
     ]

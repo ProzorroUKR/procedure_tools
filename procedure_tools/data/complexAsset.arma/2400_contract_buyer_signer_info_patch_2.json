@@ -1,10 +1,10 @@
 {
   "data": {
     "authorizedBy": "Статут компанії",
-    "email": "example@email.com",
+    "email": "{{ fake.email() }}",
     "iban": "111111111111111",
-    "name": "Test Testovich",
+    "name": "{{ fake_en.name() }}",
     "position": "Генеральний директор",
-    "telephone": "+380950000000"
+    "telephone": "{{ fake.prozorro_phone_number() }}"
   }
 }

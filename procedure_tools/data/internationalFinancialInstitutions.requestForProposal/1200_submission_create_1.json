@@ -11,20 +11,20 @@
           "locality": "м. Львів",
           "postalCode": "79013",
           "region": "Львівська область",
-          "streetAddress": "вул. Тестова 34"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "contactPoint": {
-          "email": "business@example.com",
-          "name": "Контактенко Контакт Контактович",
-          "telephone": "+380111111111"
+          "email": "{{ fake.email() }}",
+          "name": "{{ fake.name() }}",
+          "telephone": "{{ fake.prozorro_phone_number() }}"
         },
         "identifier": {
           "id": "00137226",
-          "legalName": "Тестове державне комунальне підприємство",
+          "legalName": "{{ fake.company() }}",
           "scheme": "UA-EDR",
-          "uri": "http://factory.example.com"
+          "uri": "{{ fake.url() }}"
         },
-        "name": "Тестове державне комунальне підприємство",
+        "name": "{{ fake.company() }}",
         "scale": "micro"
       }
     ]

@@ -6,7 +6,7 @@
       },
       {
         "confidentiality": "buyerOnly",
-        "confidentialityRationale": "Доступ до цього документу має бути обмежений лише для замовника",
+        "confidentialityRationale": "{{ fake.sentence(nb_words=10) }}",
         "title": "bid_confidential_document_file.txt"
       }
     ],
@@ -22,8 +22,8 @@
     ],
     "items": [
       {
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ tender['items'][0].description }}",
+        "description_en": "{{ tender['items'][0].description_en }}",
         "id": "{{ tender['items'][0].id }}",
         "quantity": 55,
         "unit": {
@@ -37,8 +37,8 @@
         }
       },
       {
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ tender['items'][1].description }}",
+        "description_en": "{{ tender['items'][1].description_en }}",
         "id": "{{ tender['items'][1].id }}",
         "quantity": 111,
         "unit": {
@@ -79,19 +79,19 @@
           "locality": "м. Київ",
           "postalCode": "21100",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова, 33"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "contactPoint": {
-          "email": "factory@example.com",
-          "name": "Нейменко Нейм Неймович",
-          "telephone": "+380000000000"
+          "email": "{{ fake.email() }}",
+          "name": "{{ fake.name() }}",
+          "telephone": "{{ fake.prozorro_phone_number() }}"
         },
         "identifier": {
           "id": "00137256",
           "scheme": "UA-EDR",
-          "uri": "http://factory.example.com"
+          "uri": "{{ fake.url() }}"
         },
-        "name": "Тестове підприємство",
+        "name": "{{ fake.company() }}",
         "scale": "micro"
       }
     ]

@@ -7,7 +7,7 @@ fake_en = Faker("en_US")
 
 class ProzorroPhoneNumberProvider(PhoneNumberProvider):
     def prozorro_phone_number(self):
-        return f"+{self.msisdn()[1:]}"
+        return f"+380{self.random_number(digits=9, fix_len=True)}"
 
 
 fake.add_provider(ProzorroPhoneNumberProvider)

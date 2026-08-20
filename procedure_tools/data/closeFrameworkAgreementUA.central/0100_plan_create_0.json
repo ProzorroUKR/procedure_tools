@@ -5,7 +5,7 @@
       "amountNet": 12222,
       "breakdown": [
         {
-          "description": "Детальний опис джерел фінансування закупівлі.",
+          "description": "{{ fake.sentence(nb_words=10) }}",
           "title": "other",
           "value": {
             "amount": 1500,
@@ -14,7 +14,7 @@
         }
       ],
       "currency": "UAH",
-      "description": "Загальний опис джерел фінансування закупівлі.",
+      "description": "{{ fake.sentence(nb_words=10) }}",
       "id": "12303111000-2",
       "period": {
         "endDate": "2019-12-31T00:00:00",
@@ -22,7 +22,7 @@
       },
       "project": {
         "id": "123",
-        "name": "Тестова назва проєкту"
+        "name": "{{ fake.sentence(nb_words=5) }}"
       }
     },
     "buyers": [
@@ -32,15 +32,15 @@
           "locality": "м. Київ",
           "postalCode": "01220",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова, 11, корпус 1"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "identifier": {
           "id": "111983",
-          "legalName": "Державне тестове підприемство",
+          "legalName": "{{ fake.company() }}",
           "scheme": "UA-EDR"
         },
         "kind": "general",
-        "name": "ДТП"
+        "name": "{{ fake.company() }}"
       }
     ],
     "classification": {
@@ -58,7 +58,7 @@
         "deliveryDate": {
           "endDate": "2019-10-16T01:00:00+03:00"
         },
-        "description": "Тестова назва предмета закупівлі",
+        "description": "{{ fake.sentence(nb_words=8) }}",
         "quantity": 1000,
         "unit": {
           "code": "KGM",
@@ -73,15 +73,15 @@
         "locality": "м. Київ",
         "postalCode": "01220",
         "region": "м. Київ",
-        "streetAddress": "вул. Тестова, 11, корпус 1"
+        "streetAddress": "{{ fake.street_address() }}"
       },
       "identifier": {
         "id": "00037256",
-        "legalName": "Державне тестове підприемство",
+        "legalName": "{{ fake.company() }}",
         "scheme": "UA-EDR"
       },
       "kind": "general",
-      "name": "ДТП"
+      "name": "{{ fake.company() }}"
     },
     "status": "draft",
     "tender": {

@@ -17,7 +17,7 @@
       "id": "42000000-6",
       "scheme": "ДК021"
     },
-    "description": "Назва предмета закупівлі",
+    "description": "{{ fake.sentence(nb_words=8) }}",
     "frameworkDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "frameworkType": "internationalFinancialInstitutions",
     "procuringEntity": {
@@ -26,26 +26,26 @@
         "locality": "м. Київ",
         "postalCode": "01220",
         "region": "м. Київ",
-        "streetAddress": "вул. Тестова, 11, корпус 1"
+        "streetAddress": "{{ fake.street_address() }}"
       },
       "contactPoint": {
-        "email": "test@test.com",
-        "name": "Державне управління справами",
-        "telephone": "+380440000000",
-        "url": "https://example.com"
+        "email": "{{ fake.email() }}",
+        "name": "{{ fake.company() }}",
+        "telephone": "{{ fake.prozorro_phone_number() }}",
+        "url": "{{ fake.url() }}"
       },
       "identifier": {
         "id": "00037256",
-        "legalName": "Тестовий заклад",
+        "legalName": "{{ fake.company() }}",
         "scheme": "UA-EDR",
         "uri": "http://www.dus.gov.ua/"
       },
       "kind": "other",
-      "name": "Державне управління справами"
+      "name": "{{ fake.company() }}"
     },
     "qualificationPeriod": {
       "endDate": "{{ from_now_iso(days=366*2) }}"
     },
-    "title": "Узагальнена назва закупівлі"
+    "title": "{{ fake.sentence(nb_words=6) }}"
   }
 }

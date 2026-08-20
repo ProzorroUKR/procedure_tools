@@ -6,7 +6,7 @@
       },
       {
         "confidentiality": "buyerOnly",
-        "confidentialityRationale": "Доступ до цього документу має бути обмежений лише для замовника",
+        "confidentialityRationale": "{{ fake.sentence(nb_words=10) }}",
         "title": "bid_confidential_document_file.txt"
       }
     ],
@@ -22,8 +22,8 @@
     ],
     "items": [
       {
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ tender['items'][0].description }}",
+        "description_en": "{{ tender['items'][0].description_en }}",
         "id": "{{ tender['items'][0].id }}",
         "quantity": 1,
         "unit": {
@@ -32,8 +32,8 @@
         }
       },
       {
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ tender['items'][1].description }}",
+        "description_en": "{{ tender['items'][1].description_en }}",
         "id": "{{ tender['items'][1].id }}",
         "quantity": 1,
         "unit": {
@@ -133,19 +133,19 @@
           "locality": "м. Львів",
           "postalCode": "79013",
           "region": "Львівська область",
-          "streetAddress": "вул. Островського, 35"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "contactPoint": {
-          "email": "fake@mail.com",
-          "name": "Іван Іваненко",
-          "telephone": "+380322123456"
+          "email": "{{ fake.email() }}",
+          "name": "{{ fake.name() }}",
+          "telephone": "{{ fake.prozorro_phone_number() }}"
         },
         "identifier": {
           "id": "00137226",
           "scheme": "UA-EDR",
-          "uri": "http://factory.example.com"
+          "uri": "{{ fake.url() }}"
         },
-        "name": "«Снігур»",
+        "name": "{{ fake.company() }}",
         "scale": "micro"
       }
     ]

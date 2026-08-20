@@ -452,14 +452,14 @@
           "locality": "м. Київ",
           "postalCode": "79000",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова 1"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "deliveryDate": {
           "endDate": "2027-08-10T16:02:36.221295+03:00",
           "startDate": "2027-07-11T16:02:36.221241+03:00"
         },
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
         "id": "271693efb03704c0638da4baeee94a5b",
         "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
         "quantity": 66,
@@ -492,14 +492,14 @@
           "locality": "м. Київ",
           "postalCode": "79000",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова 1"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "deliveryDate": {
           "endDate": "2027-08-10T16:02:36.221351+03:00",
           "startDate": "2027-07-11T16:02:36.221327+03:00"
         },
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
         "id": "991693efb03704c0638da4baeee94a5b",
         "profile": "1c824b5d69c24f6ca8e6e9a11e7bf5f5",
         "quantity": 77,
@@ -532,14 +532,14 @@
           "locality": "м. Київ",
           "postalCode": "79000",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова 1"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "deliveryDate": {
           "endDate": "2027-08-10T16:02:36.221351+03:00",
           "startDate": "2027-07-11T16:02:36.221327+03:00"
         },
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
         "id": "5693ce27fe454c6badc428088688f31c",
         "profile": "01c07d6f048a4211b7050c9597ad3aed",
         "quantity": 53,
@@ -583,28 +583,28 @@
         "locality": "м. Київ",
         "postalCode": "42000",
         "region": "м. Київ",
-        "streetAddress": "вул. Тестова 22"
+        "streetAddress": "{{ fake.street_address() }}"
       },
       "contactPoint": {
-        "name": "Тестовенко Тест Тестович",
-        "telephone": "+380424424242",
-        "url": "https://example.com"
+        "name": "{{ fake.name() }}",
+        "telephone": "{{ fake.prozorro_phone_number() }}",
+        "url": "{{ fake.url() }}"
       },
       "identifier": {
         "id": "21725150",
-        "legalName": "Тестовий заклад",
+        "legalName": "{{ fake.company() }}",
         "scheme": "UA-EDR"
       },
       "kind": "special",
-      "name": "Тестовий заклад #1 м.Київ"
+      "name": "{{ fake.company() }}"
     },
     "status": "draft",
     "tenderPeriod": {
       "endDate": "{{ from_now_iso(days=40) }}",
       "startDate": "{{ from_now_iso() }}"
     },
-    "title": "Тестовий опис предмету закупівлі у заголовку тендеру (created with procedure_tools)",
-    "title_en": "Procurement item test description in procedure title (created with procedure_tools)",
+    "title": "{{ fake.sentence(nb_words=10) }} (created with procedure_tools)",
+    "title_en": "{{ fake_en.sentence(nb_words=10) }} (created with procedure_tools)",
     "value": {
       "amount": 1000,
       "currency": "UAH",

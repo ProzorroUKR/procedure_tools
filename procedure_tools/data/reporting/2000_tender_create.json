@@ -32,8 +32,8 @@
       "scheme": "DECREE1275",
       "title": "Підпункт 8 пункту 9"
     },
-    "description": "Тестова назва предмета закупівлі",
-    "description_en": "Procurement item test name",
+    "description": "{{ fake.sentence(nb_words=8) }}",
+    "description_en": "{{ fake_en.sentence(nb_words=8) }}",
     "items": [
       {
         "additionalClassifications": [
@@ -53,14 +53,14 @@
           "locality": "м. Київ",
           "postalCode": "79000",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова 1"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "deliveryDate": {
           "endDate": "2017-09-19T19:39:39.580353",
           "startDate": "2017-09-16T19:39:39.580353"
         },
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
         "id": "2dc54675d6364e2baffbc0f8e74432ac",
         "quantity": 1,
         "unit": {
@@ -115,24 +115,24 @@
         "locality": "м. Київ",
         "postalCode": "42000",
         "region": "м. Київ",
-        "streetAddress": "вул. Тестова 22"
+        "streetAddress": "{{ fake.street_address() }}"
       },
       "contactPoint": {
-        "name": "Тестовенко Тест Тестович",
-        "telephone": "+380424424242",
-        "url": "https://example.com"
+        "name": "{{ fake.name() }}",
+        "telephone": "{{ fake.prozorro_phone_number() }}",
+        "url": "{{ fake.url() }}"
       },
       "identifier": {
         "id": "21725150",
-        "legalName": "Тестовий заклад",
+        "legalName": "{{ fake.company() }}",
         "scheme": "UA-EDR"
       },
       "kind": "other",
-      "name": "Тестовий заклад #1 м.Київ"
+      "name": "{{ fake.company() }}"
     },
     "status": "draft",
-    "title": "Тестовий опис предмету закупівлі у заголовку тендеру (created with procedure_tools)",
-    "title_en": "Procurement item test description in procedure title (created with procedure_tools)",
+    "title": "{{ fake.sentence(nb_words=10) }} (created with procedure_tools)",
+    "title_en": "{{ fake_en.sentence(nb_words=10) }} (created with procedure_tools)",
     "value": {
       "amount": 500000,
       "currency": "UAH",

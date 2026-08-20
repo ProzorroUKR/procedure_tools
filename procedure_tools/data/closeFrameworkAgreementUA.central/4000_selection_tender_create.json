@@ -35,19 +35,19 @@
         "id": "dd426ce4c76f48849b3d8e8699b0b3ce",
         "identifier": {
           "id": "111983",
-          "legalName": "Державне тестове підприемство",
+          "legalName": "{{ fake.company() }}",
           "scheme": "UA-EDR"
         },
-        "name": "ДТП"
+        "name": "{{ fake.company() }}"
       },
       {
         "id": "881d1efa739e4cceb24e45075996bbfb",
         "identifier": {
           "id": "111983",
-          "legalName": "Інше тестове підприемство",
+          "legalName": "{{ fake.company() }}",
           "scheme": "UA-EDR"
         },
-        "name": "ІТП"
+        "name": "{{ fake.company() }}"
       }
     ],
     "items": [
@@ -69,14 +69,14 @@
           "locality": "м. Київ",
           "postalCode": "79000",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова 1"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "deliveryDate": {
           "endDate": "2017-07-30T17:36:49.306344",
           "startDate": "2017-07-27T17:36:49.306344"
         },
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
         "id": "d8eef80b5a0a4a7fb7c9512ca1db5b93",
         "quantity": 5,
         "relatedBuyer": "dd426ce4c76f48849b3d8e8699b0b3ce",
@@ -104,14 +104,14 @@
           "locality": "м. Київ",
           "postalCode": "79000",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова 1"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "deliveryDate": {
           "endDate": "2017-07-30T17:36:49.306344",
           "startDate": "2017-07-27T17:36:49.306344"
         },
-        "description": "Інша тестова назва предмета закупівлі",
-        "description_en": "Procurement item another test name",
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
         "id": "483ea8f464cc44769cf1b62c19d40baf",
         "quantity": 5,
         "relatedBuyer": "881d1efa739e4cceb24e45075996bbfb",
@@ -124,9 +124,9 @@
     ],
     "lots": [
       {
-        "description": "Тестовий опис лоту",
+        "description": "{{ fake.sentence(nb_words=6) }}",
         "id": "ddb35dd0e9904726aafd18baed24863a",
-        "title": "Тестова назва лоту"
+        "title": "{{ fake.sentence(nb_words=4) }}"
       }
     ],
     "milestones": [
@@ -184,11 +184,11 @@
         "locality": "м. Київ",
         "postalCode": "01220",
         "region": "м. Київ",
-        "streetAddress": "вул. Тестова, 11, корпус 1"
+        "streetAddress": "{{ fake.street_address() }}"
       },
       "contactPoint": {
-        "name": "Державне управління справами",
-        "telephone": "+380440000000"
+        "name": "{{ fake.company() }}",
+        "telephone": "{{ fake.prozorro_phone_number() }}"
       },
       "identifier": {
         "id": "00037256",
@@ -196,9 +196,9 @@
         "uri": "http://www.dus.gov.ua/"
       },
       "kind": "central",
-      "name": "Державне управління справами"
+      "name": "{{ fake.company() }}"
     },
     "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",
-    "title": "Тестовий опис предмету закупівлі у заголовку тендеру (created with procedure_tools)"
+    "title": "{{ fake.sentence(nb_words=10) }} (created with procedure_tools)"
   }
 }
