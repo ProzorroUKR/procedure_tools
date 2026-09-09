@@ -1,0 +1,32 @@
+{
+  "config": {
+    "restricted": false
+  },
+  "data": {
+    "frameworkID": "{{ framework.id }}",
+    "tenderers": [
+      {
+        "address": {
+          "countryName": "Україна",
+          "locality": "м. Вінниця",
+          "postalCode": "21100",
+          "region": "Вінницька область",
+          "streetAddress": "вул. Островського, 33"
+        },
+        "contactPoint": {
+          "email": "soleksuk@gmail.com",
+          "name": "Сергій Олексюк",
+          "telephone": "+380432216930"
+        },
+        "identifier": {
+          "id": "00137256",
+          "legalName": "Державне комунальне підприємство громадського харчування «Школяр»",
+          "scheme": "UA-EDR",
+          "uri": "http://www.sc.gov.ua/"
+        },
+        "name": "ДКП «Школяр»",
+        "scale": "micro"
+      }
+    ]
+  }
+}

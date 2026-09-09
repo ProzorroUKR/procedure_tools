@@ -1,5 +1,6 @@
 {
   "config": {
+    "hasMultiSourcing": false,
     "awardComplainDuration": 10,
     "cancellationComplainDuration": 10,
     "clarificationUntilDuration": 3,
