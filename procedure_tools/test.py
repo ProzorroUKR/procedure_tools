@@ -302,6 +302,14 @@ def test_dynamic_purchasing_system_competitive_ordering_long():
 
 
 @skipifenv
+def test_dynamic_purchasing_system_competitive_ordering_long_multi_sourcing():
+    argv = ["--data", "dynamicPurchasingSystem.competitiveOrdering.long.MultiSourcing"]
+    if os.environ.get("FAST_RUN"):
+        argv += ["--stop", "bid_patch_1.json"]
+    run_test(argv)
+
+
+@skipifenv
 def test_request_for_proposal():
     argv = ["--data", "requestForProposal"]
     if os.environ.get("FAST_RUN"):
