@@ -31,6 +31,7 @@ from procedure_tools.utils.handlers import (
     framework_create_success_handler,
     framework_get_success_handler,
     framework_patch_success_handler,
+    framework_post_criteria_success_handler,
     item_create_success_handler,
     item_patch_success_handler,
     plan_create_success_handler,
@@ -1145,6 +1146,28 @@ def create_framework(
             success_handler=framework_create_success_handler,
         )
         return response
+
+
+def post_framework_criteria(
+    client: CDBClient,
+    args,
+    context,
+    framework_id,
+    framework_token,
+    prefix="",
+):
+    logging.info("Create framework criteria...\n")
+    data_file = f"{prefix}framework_criteria_create.json"
+    path = get_data_file_path(get_data_path(args.data), data_file)
+    with read_file(path, context=context, args=args, silent_io_error=True) as content:
+        criteria_data = json.loads(content)
+        return client.post(
+            f"frameworks/{framework_id}/criteria",
+            json=criteria_data,
+            acc_token=framework_token,
+            auth_token=args.token,
+            success_handler=framework_post_criteria_success_handler,
+        )
 
 
 def patch_framework_active(

@@ -1,0 +1,82 @@
+{
+  "data": [
+    {
+      "title": "Наявність обладнання, матеріально-технічної бази та технологій",
+      "description": "Наявність в учасника процедури закупівлі обладнання, матеріально-технічної бази та технологій.",
+      "source": "tenderer",
+      "relatesTo": "tenderer",
+      "classification": {
+        "scheme": "LAW922",
+        "id": "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.TECHNICAL.EQUIPMENT"
+      },
+      "legislation": [
+        {
+          "version": "2025-10-31",
+          "identifier": {
+            "id": "922-VIII",
+            "legalName": "Закон України \"Про публічні закупівлі\"",
+            "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1250"
+          },
+          "type": "NATIONAL_LEGISLATION",
+          "article": "16.2.1"
+        }
+      ],
+      "requirementGroups": [
+        {
+          "description": "Підтверджується, що",
+          "requirements": [
+            {
+              "id": "c5000000000000000000000000000001",
+              "title": "Учасник має необхідне обладнання та матеріально-технічну базу",
+              "dataType": "boolean",
+              "expectedValue": true,
+              "eligibleEvidences": [
+                {
+                  "title": "Довідка про наявність обладнання",
+                  "type": "document"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Мова (мови) тендерної пропозиції",
+      "description": "Пропозиція та документи складаються українською мовою",
+      "source": "tenderer",
+      "relatesTo": "tender",
+      "classification": {
+        "scheme": "LAW922",
+        "id": "CRITERION.OTHER.BID.LANGUAGE"
+      },
+      "legislation": [
+        {
+          "version": "2025-10-31",
+          "identifier": {
+            "id": "922-VIII",
+            "legalName": "Закон України \"Про публічні закупівлі\"",
+            "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398"
+          },
+          "type": "NATIONAL_LEGISLATION",
+          "article": "22.2.13"
+        }
+      ],
+      "requirementGroups": [
+        {
+          "description": "Підтверджується, що",
+          "requirements": [
+            {
+              "id": "c5000000000000000000000000000002",
+              "title": "Мова тендерної пропозиції",
+              "dataType": "string",
+              "dataSchema": "ISO 639-3",
+              "expectedMinItems": 1,
+              "expectedValues": ["ukr", "eng", "fra", "spa"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
