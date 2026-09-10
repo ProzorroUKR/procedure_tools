@@ -18,7 +18,7 @@
       "id": "42000000-6",
       "scheme": "ДК021"
     },
-    "description": "Назва предмета закупівлі",
+    "description": "{{ fake.sentence(nb_words=8) }}",
     "frameworkDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
     "frameworkType": "dynamicPurchasingSystem",
     "procuringEntity": {
@@ -27,25 +27,25 @@
         "locality": "м. Київ",
         "postalCode": "42000",
         "region": "м. Київ",
-        "streetAddress": "вул. Тестова 22"
+        "streetAddress": "{{ fake.street_address() }}"
       },
       "contactPoint": {
-        "email": "test@test.com",
-        "name": "Тестовенко Тест Тестович",
-        "telephone": "+380424424242",
-        "url": "https://example.com"
+        "email": "{{ fake.email() }}",
+        "name": "{{ fake.name() }}",
+        "telephone": "{{ fake.prozorro_phone_number() }}",
+        "url": "{{ fake.url() }}"
       },
       "identifier": {
         "id": "21725150",
-        "legalName": "Тестовий заклад",
+        "legalName": "{{ fake.company() }}",
         "scheme": "UA-EDR"
       },
       "kind": "special",
-      "name": "Тестовий заклад #1 м.Київ"
+      "name": "{{ fake.company() }}"
     },
     "qualificationPeriod": {
       "endDate": "{{ from_now_iso(days=366*2) }}"
     },
-    "title": "Узагальнена назва закупівлі"
+    "title": "{{ fake.sentence(nb_words=6) }}"
   }
 }
