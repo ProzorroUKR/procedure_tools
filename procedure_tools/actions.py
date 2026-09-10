@@ -36,6 +36,7 @@ from procedure_tools.utils.handlers import (
     plan_create_success_handler,
     plan_patch_success_handler,
     response_handler,
+    signatory_post_success_handler,
     submission_create_success_handler,
     tender_check_status_invalid_handler,
     tender_check_status_success_handler,
@@ -44,7 +45,6 @@ from procedure_tools.utils.handlers import (
     tender_post_complaint_success_handler,
     tender_post_criteria_success_handler,
     tender_post_plan_success_handler,
-    signatory_post_success_handler,
 )
 
 EDR_FILENAME = "edr_identification.yaml"

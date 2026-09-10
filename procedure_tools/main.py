@@ -10,14 +10,23 @@ import requests
 
 from procedure_tools.client import API_PATH_PREFIX_DEFAULT
 from procedure_tools.fake import fake, fake_en
-from procedure_tools.procedure import WAIT_EDR_PRE_QUAL, WAIT_EDR_QUAL, process_procedure
+from procedure_tools.procedure import (
+    WAIT_EDR_PRE_QUAL,
+    WAIT_EDR_QUAL,
+    process_procedure,
+)
 from procedure_tools.utils import adapters
 from procedure_tools.utils.data import (
     ACCELERATION_DEFAULT,
     SUBMISSION_QUICK_NO_AUCTION,
     SUBMISSIONS,
 )
-from procedure_tools.utils.file import DATA_DIR_DEFAULT, get_data_path, get_default_data_dirs, get_numberless_filename
+from procedure_tools.utils.file import (
+    DATA_DIR_DEFAULT,
+    get_data_path,
+    get_default_data_dirs,
+    get_numberless_filename,
+)
 from procedure_tools.utils.handlers import EX_DATAERR, EX_OK
 from procedure_tools.utils.style import (
     fore_error,

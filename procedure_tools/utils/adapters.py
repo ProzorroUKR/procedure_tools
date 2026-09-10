@@ -1,11 +1,11 @@
-import logging
 import json
+import logging
 import os
 import sys
+from urllib.parse import urlsplit
 
 from requests import ConnectionError, adapters
 from urllib3 import Retry
-from urllib.parse import urlsplit
 
 from procedure_tools.utils.style import (
     fore_debug,
