@@ -1,9 +1,17 @@
 name: Full Test Workflow
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+concurrency:
+  group: full-test-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   extract-test-cases:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'full-test'
     runs-on: ubuntu-latest
     outputs:
       cases: ${{ steps.get-cases.outputs.cases }}
