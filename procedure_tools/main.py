@@ -101,19 +101,43 @@ def exit_code(value):
 
 
 def log_summary(results):
-    width = max(len(str(data_dir)) for data_dir, _ in results)
+    width = max(len(str(data_dir)) for data_dir, _, _ in results)
     lines = ["Summary"]
-    for data_dir, code in results:
+    errors = []
+    for data_dir, code, error in results:
         if code is None:
             status = fore_warning("aborted")
         elif code == EX_OK:
             status = fore_success("success")
         else:
             status = fore_error("fail")
+            if error:
+                errors.append((data_dir, error))
         lines.append(f" - {data_dir:<{width}} {status}")
+    if errors:
+        lines.append("")
+        lines.append("Errors")
+        for data_dir, error in errors:
+            error_lines = str(error).strip().splitlines() or [str(error).strip()]
+            lines.append(f" - {data_dir}")
+            for error_line in error_lines:
+                lines.append(f"   {fore_error(error_line)}")
     logging.info("\n".join(lines) + "\n")
     for handler in logging.root.handlers:
         handler.flush()
+
+
+def run_result_error(exc):
+    message = getattr(exc, "message", None)
+    if message:
+        return str(message).strip()
+    text = str(exc).strip()
+    name = type(exc).__name__
+    if name in ("ProcedureExit", "SystemExit"):
+        return text or name
+    if not text:
+        return name
+    return f"{name}: {text}"
 
 
 def run_data_dir(args, session=None):
@@ -126,18 +150,19 @@ def run_data_dir(args, session=None):
         data_path = get_data_path(args.data)
         if data_path is None:
             logging.error("Data path not found.\n")
-            return EX_DATAERR
+            return EX_DATAERR, "Data path not found"
         process_procedure(args, session=session)
         logging.info("Completed.\n")
-        return EX_OK
+        return EX_OK, None
     except SystemExit as e:
         code = exit_code(e.code)
         if code == EX_OK:
             logging.info("Completed.\n")
-        return code
-    except Exception:
+            return code, None
+        return code, run_result_error(e)
+    except Exception as e:
         logging.exception("Failed")
-        return 1
+        return 1, run_result_error(e)
     finally:
         if close_session:
             session.close()
@@ -150,9 +175,9 @@ def run_data_dir_parallel(args, data_dir):
     try:
         set_faker_seed(folder_args)
         return run_data_dir(folder_args)
-    except Exception:
+    except Exception as e:
         logging.exception("Failed")
-        return 1
+        return 1, run_result_error(e)
     finally:
         set_log_prefix(None)
 
@@ -177,11 +202,11 @@ def run(args, session=None):
             for future in as_completed(futures):
                 data_dir = futures[future]
                 try:
-                    codes[data_dir] = exit_code(future.result())
+                    codes[data_dir] = future.result()
                 except KeyboardInterrupt:
                     raise
-                except BaseException:
-                    codes[data_dir] = 1
+                except BaseException as e:
+                    codes[data_dir] = (1, run_result_error(e))
         except KeyboardInterrupt:
             executor.shutdown(wait=False, cancel_futures=True)
             interrupted = True
@@ -190,14 +215,14 @@ def run(args, session=None):
                     continue
                 if future.done() and not future.cancelled():
                     try:
-                        codes[data_dir] = exit_code(future.result())
-                    except BaseException:
-                        codes[data_dir] = 1
+                        codes[data_dir] = future.result()
+                    except BaseException as e:
+                        codes[data_dir] = (1, run_result_error(e))
                 else:
-                    codes[data_dir] = None
+                    codes[data_dir] = (None, None)
         else:
             executor.shutdown(wait=True)
-        results = [(data_dir, codes.get(data_dir)) for data_dir in data_dirs]
+        results = [(data_dir, *(codes.get(data_dir) or (None, None))) for data_dir in data_dirs]
     else:
         set_faker_seed(args)
         results = []
@@ -206,10 +231,11 @@ def run(args, session=None):
             if len(data_dirs) > 1:
                 logging.info(f"Starting {data_dir}\n")
             try:
-                results.append((data_dir, run_data_dir(args, session=session)))
+                code, error = run_data_dir(args, session=session)
+                results.append((data_dir, code, error))
             except KeyboardInterrupt:
-                results.append((data_dir, None))
-                results.extend((remaining, None) for remaining in data_dirs[len(results):])
+                results.append((data_dir, None, None))
+                results.extend((remaining, None, None) for remaining in data_dirs[len(results) :])
                 interrupted = True
                 break
 
@@ -217,7 +243,7 @@ def run(args, session=None):
         log_summary(results)
     if interrupted:
         raise KeyboardInterrupt
-    failed = [code for _, code in results if code != EX_OK]
+    failed = [code for _, code, _ in results if code != EX_OK]
     if failed:
         raise SystemExit(failed[0])
 

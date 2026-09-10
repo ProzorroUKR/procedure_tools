@@ -10,6 +10,12 @@ EX_OK = 0
 EX_DATAERR = 65
 
 
+class ProcedureExit(SystemExit):
+    def __init__(self, code, message=None):
+        super().__init__(code)
+        self.message = message
+
+
 def format_log_entry(label: str, value: str) -> str:
     return f" - {label:<{PAD}} {fore_info(value)}\n"
 
@@ -180,7 +186,7 @@ def error(text, allow_error=False):
     msg += "\n"
     logging.info(msg)
     if not allow_error:
-        raise SystemExit(EX_DATAERR)
+        raise ProcedureExit(EX_DATAERR, text)
 
 
 def default_error_handler(response):
