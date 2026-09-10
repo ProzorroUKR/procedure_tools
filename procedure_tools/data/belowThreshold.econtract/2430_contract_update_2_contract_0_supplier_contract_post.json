@@ -1,8 +1,8 @@
 {
   "data": {
     "awardID": "{{ contracts[0].awardID }}",
-    "title": "Лот №1",
-    "description": "Версія договору №2 (знижено ціну)",
+    "title": "Лот №1: {{ fake.word() }}",
+    "description": "{{ fake.sentence(nb_words=8) }}",
     "period": {
       "startDate": "{{ contracts[0].dateModified }}",
       "endDate": "{{ from_date_iso(contracts[0].dateModified, days=365) }}"

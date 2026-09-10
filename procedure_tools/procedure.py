@@ -1,8 +1,5 @@
 import logging
 from os import EX_OK
-import random
-
-from faker import Faker
 
 from procedure_tools.actions import (
     change_contracts,
@@ -30,7 +27,6 @@ from procedure_tools.actions import (
     patch_award,
     patch_bids,
     patch_complaints,
-    post_contract_access,
     patch_contract_credentials,
     patch_contracts,
     patch_contracts_buyer_signer_info,
@@ -48,6 +44,7 @@ from procedure_tools.actions import (
     patch_tender_tendering,
     patch_tender_waiting,
     post_bid_res,
+    post_contract_access,
     post_criteria,
     post_tender_plan,
     re_upload_evaluation_report,
@@ -80,7 +77,6 @@ from procedure_tools.utils.data import (
     get_submission_method_details,
     get_token,
 )
-from procedure_tools.utils.file import get_data_path, get_numberless_filename
 
 try:
     from colorama import init
@@ -91,31 +87,6 @@ except ImportError:
 
 WAIT_EDR_QUAL = "edr-qualification"
 WAIT_EDR_PRE_QUAL = "edr-pre-qualification"
-
-
-def set_faker_seed(args):
-    faker_seed = args.seed or random.randint(0, 1000000)
-    logging.info(f"Using seed {faker_seed}\n")
-    Faker.seed(faker_seed)
-
-
-def init_procedure(args, session=None):
-    set_faker_seed(args)
-
-    if args.stop:
-        args.stop = get_numberless_filename(args.stop)
-
-    if args.pause:
-        # Handle comma-separated filenames
-        pause_filenames = [get_numberless_filename(filename.strip()) for filename in args.pause.split(',')]
-        args.pause = pause_filenames
-
-    data_path = get_data_path(args.data)
-    if data_path is None:
-        logging.error("Data path not found.\n")
-    else:
-        process_procedure(args, session=session)
-        logging.info("Completed.\n")
 
 
 def process_procedure(
@@ -587,7 +558,7 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
         )
 
     if config["hasPrequalification"]:
-        if WAIT_EDR_PRE_QUAL in args.wait.split(","):
+        if WAIT_EDR_PRE_QUAL in args.wait:
             wait_edr_pre_qual(client, args, context, tender_id)
 
     qualifications_ids = []
@@ -747,7 +718,7 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
             status="active",
         )
 
-    if WAIT_EDR_QUAL in args.wait.split(","):
+    if WAIT_EDR_QUAL in args.wait:
         wait_edr_qual(client, args, context, tender_id)
 
     awards_ids = []

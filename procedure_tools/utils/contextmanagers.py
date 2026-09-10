@@ -2,6 +2,7 @@ import datetime
 import io
 import logging
 import os
+import threading
 from contextlib import contextmanager
 from functools import partial
 
@@ -11,7 +12,9 @@ from procedure_tools.fake import fake, fake_en
 from procedure_tools.utils import helpers
 from procedure_tools.utils.file import get_actual_file_path
 from procedure_tools.utils.handlers import EX_OK
-from procedure_tools.utils.style import fore_error
+from procedure_tools.utils.style import fore_warning
+
+_pause_lock = threading.Lock()
 
 
 @contextmanager
@@ -27,9 +30,7 @@ def open_file(path, mode="r", encoding="UTF-8", args=None, silent_io_error=False
             file.close()
         except IOError as e:
             if not silent_io_error:
-                msg = fore_error(str(e))
-                msg += "\n"
-                logging.info(msg)
+                logging.info(f"{fore_warning(str(e))}\n")
             logging.info("Skipping...\n")
             yield
         except Exception:
@@ -39,7 +40,8 @@ def open_file(path, mode="r", encoding="UTF-8", args=None, silent_io_error=False
     if args and hasattr(args, 'stop') and file_name == args.stop:
         raise SystemExit(EX_OK)
     if args and hasattr(args, 'pause') and args.pause and file_name in args.pause:
-        input("Press Enter key to continue...")
+        with _pause_lock:
+            input("Press Enter key to continue...")
 
 
 @contextmanager

@@ -1,6 +1,6 @@
 {
   "data": {
-    "rationale": "Зниження ціни трішечки.",
+    "rationale": "{{ fake.sentence(nb_words=8) }}",
     "rationaleTypes": [
       "externalIndicators"
     ]

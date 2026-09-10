@@ -6,7 +6,7 @@
       },
       {
         "confidentiality": "buyerOnly",
-        "confidentialityRationale": "Доступ до цього документу має бути обмежений лише для замовника",
+        "confidentialityRationale": "{{ fake.sentence(nb_words=10) }}",
         "title": "bid_confidential_document_file.txt"
       }
     ],
@@ -22,8 +22,8 @@
     ],
     "items": [
       {
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ tender['items'][2].description }}",
+        "description_en": "{{ tender['items'][2].description_en }}",
         "id": "{{ tender['items'][2].id }}",
         "quantity": 1,
         "unit": {
@@ -35,7 +35,7 @@
     "lotValues": [
       {
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",
-        "subcontractingDetails": "Тестове підприємство, Україна"
+        "subcontractingDetails": "{{ fake.company() }}, Україна"
       }
     ],
     "qualificationDocuments": [
@@ -51,19 +51,19 @@
           "locality": "м. Запоріжя",
           "postalCode": "79013",
           "region": "Запорізька область",
-          "streetAddress": "вул. Коцюбинського, 15"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "contactPoint": {
-          "email": "fake@mail.com",
-          "name": "Іван Карпенко",
-          "telephone": "+380322123456"
+          "email": "{{ fake.email() }}",
+          "name": "{{ fake.name() }}",
+          "telephone": "{{ fake.prozorro_phone_number() }}"
         },
         "identifier": {
           "id": "00137228",
           "scheme": "UA-EDR",
-          "uri": "http://factory.example.com"
+          "uri": "{{ fake.url() }}"
         },
-        "name": "«Кенгуру»",
+        "name": "{{ fake.company() }}",
         "scale": "micro"
       }
     ]

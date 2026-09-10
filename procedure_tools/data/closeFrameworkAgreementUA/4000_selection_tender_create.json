@@ -49,14 +49,14 @@
           "locality": "м. Київ",
           "postalCode": "79000",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова 1"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "deliveryDate": {
           "endDate": "2019-01-30T15:48:03.841685+02:00",
           "startDate": "2019-01-27T15:48:03.841685+02:00"
         },
-        "description": "Тестова назва предмета закупівлі",
-        "description_en": "Procurement item test name",
+        "description": "{{ agreement['items'][0].description }}",
+        "description_en": "{{ agreement['items'][0].description_en }}",
         "id": "7fa0fbf85aab4f48a43afb8ccbc944e4",
         "quantity": 5,
         "relatedLot": "ddb35dd0e9904726aafd18baed24863a",
@@ -68,9 +68,9 @@
     ],
     "lots": [
       {
-        "description": "Тестовий опис лоту",
+        "description": "{{ fake.sentence(nb_words=6) }}",
         "id": "ddb35dd0e9904726aafd18baed24863a",
-        "title": "Тестова назва лоту"
+        "title": "{{ fake.sentence(nb_words=4) }}"
       }
     ],
     "milestones": [
@@ -117,11 +117,11 @@
         "locality": "м. Київ",
         "postalCode": "01220",
         "region": "м. Київ",
-        "streetAddress": "вул. Тестова, 11, корпус 1"
+        "streetAddress": "{{ fake.street_address() }}"
       },
       "contactPoint": {
-        "name": "Державне управління справами",
-        "telephone": "+380440000000"
+        "name": "{{ fake.company() }}",
+        "telephone": "{{ fake.prozorro_phone_number() }}"
       },
       "identifier": {
         "id": "00037256",
@@ -129,9 +129,9 @@
         "uri": "http://www.dus.gov.ua/"
       },
       "kind": "general",
-      "name": "Державне управління справами"
+      "name": "{{ fake.company() }}"
     },
     "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",
-    "title": "Тестовий опис предмету закупівлі у заголовку тендеру (created with procedure_tools)"
+    "title": "{{ fake.sentence(nb_words=10) }} (created with procedure_tools)"
   }
 }
