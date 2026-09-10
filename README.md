@@ -77,9 +77,11 @@
 
 ## Usage
 ```
-usage: procedure [-h] [-v] [-a 460800] [-p /api/0/] [-d aboveThresholdUA]
+usage: procedure [-h] [-v] [-a 460800] [-p /api/0/]
+                 [-d aboveThresholdUA [aboveThresholdUA ...]] [--parallel [N]]
                  [-m quick(mode:no-auction)] [-s tender_create.json]
-                 [--pause tender_create.json] [-w edr-qualification] [-e SEED]
+                 [--pause tender_create.json [tender_create.json ...]]
+                 [-w edr-qualification [edr-qualification ...]] [-e SEED]
                  [--reviewer-token REVIEWER_TOKEN] [--bot-token BOT_TOKEN]
                  [--debug] [--debug-req] [--debug-json-level DEBUG_JSON_LEVEL]
                  host token ds_host ds_username ds_password
@@ -108,8 +110,8 @@ options:
   -p /api/0/, --path /api/0/
                         api path
 
-  -d aboveThresholdUA, --data aboveThresholdUA
-                        data files, custom path or one of:
+  -d aboveThresholdUA [aboveThresholdUA ...], --data aboveThresholdUA [aboveThresholdUA ...]
+                        one or more data folders, custom path or one of (omit to run all; sequential unless --parallel):
                          - aboveThreshold
                          - aboveThreshold.econtract
                          - aboveThreshold.features
@@ -132,6 +134,7 @@ options:
                          - competitiveDialogueUA.features
                          - complexAsset.arma
                          - dynamicPurchasingSystem.competitiveOrdering.long
+                         - dynamicPurchasingSystem.competitiveOrdering.long.MultiSourcing
                          - dynamicPurchasingSystem.competitiveOrdering.short
                          - esco
                          - esco.features
@@ -143,6 +146,8 @@ options:
                          - requestForProposal
                          - simple.defense
 
+  --parallel [N]        run data folders in parallel (optional max concurrent folders; omit N to run all)
+
   -m quick(mode:no-auction), --submission quick(mode:no-auction)
                         value for submissionMethodDetails, one of:
                          - quick
@@ -153,11 +158,11 @@ options:
   -s tender_create.json, --stop tender_create.json
                         data file name to stop after
 
-  --pause tender_create.json
-                        data file name(s) to pause after (comma-separated)
+  --pause tender_create.json [tender_create.json ...]
+                        one or more data file names to pause after
 
-  -w edr-qualification, --wait edr-qualification
-                        wait for event, one or many of (divided by comma):
+  -w edr-qualification [edr-qualification ...], --wait edr-qualification [edr-qualification ...]
+                        one or more events to wait for:
                          - edr-qualification
                          - edr-pre-qualification
 
@@ -210,107 +215,195 @@ procedure https://lb-api-sandbox-2.prozorro.gov.ua broker_api_token https://uplo
 procedure https://lb-api-sandbox-2.prozorro.gov.ua broker_api_token https://upload-docs-sandbox-2.prozorro.gov.ua broker_ds_username broker_ds_password --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA --stop=bid_create_4.json
 ```
 ```
-[10:30:30] Using seed 801738
+[18:12:29] Using seed 55654
 
-[10:30:30] Initializing cdb client
+[18:12:29] Initializing cdb client
 
-[10:30:30] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/spore
-[10:30:30] Response status: 200 OK
+[18:12:29] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/spore
+[18:12:29] Response status: 200 OK
 
-[10:30:30] Client time delta with server: -574 milliseconds
+[18:12:29] Client time delta with server: -839 milliseconds
 
-[10:30:30] Initializing ds client
+[18:12:29] Initializing ds client
 
-[10:30:30] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/constants
-[10:30:30] Response status: 200 OK
+[18:12:29] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/constants
+[18:12:29] Response status: 200 OK
 
-[10:30:30] Creating framework...
+[18:12:29] Creating framework...
 
-[10:30:30] Processing data file: framework_create.json
+[18:12:29] Processing data file: framework_create.json
 
-[10:30:30] Skipping...
+[18:12:29] Skipping...
 
-[10:30:30] Creating plan...
+[18:12:29] Creating plan...
 
-[10:30:30] Processing data file: plan_create.json
+[18:12:29] Processing data file: plan_create.json
 
-[10:30:30] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans
-[10:30:30] Response status: 201 Created
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.address`.
+[18:12:29] Provider `faker.providers.address` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.automotive`.
+[18:12:29] Provider `faker.providers.automotive` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.bank`.
+[18:12:29] Provider `faker.providers.bank` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.barcode`.
+[18:12:29] Specified locale `uk_UA` is not available for provider `faker.providers.barcode`. Locale reset to `en_US` for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.color`.
+[18:12:29] Provider `faker.providers.color` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.company`.
+[18:12:29] Specified locale `uk_UA` is not available for provider `faker.providers.company`. Locale reset to `en_US` for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.credit_card`.
+[18:12:29] Provider `faker.providers.credit_card` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.currency`.
+[18:12:29] Specified locale `uk_UA` is not available for provider `faker.providers.currency`. Locale reset to `en_US` for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.date_time`.
+[18:12:29] Specified locale `uk_UA` is not available for provider `faker.providers.date_time`. Locale reset to `en_US` for this provider.
+[18:12:29] Provider `faker.providers.emoji` does not feature localization. Specified locale `uk_UA` is not utilized for this provider.
+[18:12:29] Provider `faker.providers.file` does not feature localization. Specified locale `uk_UA` is not utilized for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.geo`.
+[18:12:29] Specified locale `uk_UA` is not available for provider `faker.providers.geo`. Locale reset to `en_US` for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.internet`.
+[18:12:29] Provider `faker.providers.internet` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.isbn`.
+[18:12:29] Specified locale `uk_UA` is not available for provider `faker.providers.isbn`. Locale reset to `en_US` for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.job`.
+[18:12:29] Provider `faker.providers.job` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.lorem`.
+[18:12:29] Provider `faker.providers.lorem` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.misc`.
+[18:12:29] Specified locale `uk_UA` is not available for provider `faker.providers.misc`. Locale reset to `en_US` for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.passport`.
+[18:12:29] Specified locale `uk_UA` is not available for provider `faker.providers.passport`. Locale reset to `en_US` for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.person`.
+[18:12:29] Provider `faker.providers.person` has been localized to `uk_UA`.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.phone_number`.
+[18:12:29] Provider `faker.providers.phone_number` has been localized to `uk_UA`.
+[18:12:29] Provider `faker.providers.profile` does not feature localization. Specified locale `uk_UA` is not utilized for this provider.
+[18:12:29] Provider `faker.providers.python` does not feature localization. Specified locale `uk_UA` is not utilized for this provider.
+[18:12:29] Provider `faker.providers.sbn` does not feature localization. Specified locale `uk_UA` is not utilized for this provider.
+[18:12:29] Looking for locale `uk_UA` in provider `faker.providers.ssn`.
+[18:12:29] Provider `faker.providers.ssn` has been localized to `uk_UA`.
+[18:12:29] Provider `faker.providers.user_agent` does not feature localization. Specified locale `uk_UA` is not utilized for this provider.
+[18:12:29] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans
+[18:12:30] Response status: 201 Created
 
-[10:30:30] Plan created:
- - data.id              e8dbb846f1934d0cbfa2d2cf8fa7305d
- - access.token         c389d267bd3743b8a6d1e363981c9d12
- - access.transfer      bb6aff2da2bd43d4a6c51f5cb7973ebf
+[18:12:30] Plan created:
+ - data.id              e612239f5c0c449cb9957eaa345e2786
+ - access.token         f8344867dabf492d9c7e6dce784b5a8c
+ - access.transfer      f9ec1165b75a4f9b8ecdcd699fed49dd
  - data.status          draft
 
-[10:30:30] Patching plan...
+[18:12:30] Patching plan...
 
-[10:30:30] Processing data file: plan_patch.json
+[18:12:30] Processing data file: plan_patch.json
 
-[10:30:30] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans/e8dbb846f1934d0cbfa2d2cf8fa7305d?acc_token=c389d267bd3743b8a6d1e363981c9d12
-[10:30:30] Response status: 200 OK
+[18:12:30] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans/e612239f5c0c449cb9957eaa345e2786?acc_token=f8344867dabf492d9c7e6dce784b5a8c
+[18:12:30] Response status: 200 OK
 
-[10:30:30] Plan patched:
- - data.id              e8dbb846f1934d0cbfa2d2cf8fa7305d
+[18:12:30] Plan patched:
+ - data.id              e612239f5c0c449cb9957eaa345e2786
  - data.status          scheduled
 
-[10:30:30] Creating tender...
+[18:12:30] Creating tender...
 
-[10:30:30] Processing data file: tender_create.json
+[18:12:30] Processing data file: tender_create.json
 
-[10:30:30] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans/e8dbb846f1934d0cbfa2d2cf8fa7305d/tenders
-[10:30:30] Response status: 201 Created
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.address`.
+[18:12:30] Provider `faker.providers.address` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.automotive`.
+[18:12:30] Provider `faker.providers.automotive` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.bank`.
+[18:12:30] Specified locale `en_US` is not available for provider `faker.providers.bank`. Locale reset to `en_GB` for this provider.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.barcode`.
+[18:12:30] Provider `faker.providers.barcode` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.color`.
+[18:12:30] Provider `faker.providers.color` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.company`.
+[18:12:30] Provider `faker.providers.company` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.credit_card`.
+[18:12:30] Provider `faker.providers.credit_card` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.currency`.
+[18:12:30] Provider `faker.providers.currency` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.date_time`.
+[18:12:30] Provider `faker.providers.date_time` has been localized to `en_US`.
+[18:12:30] Provider `faker.providers.emoji` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+[18:12:30] Provider `faker.providers.file` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.geo`.
+[18:12:30] Provider `faker.providers.geo` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.internet`.
+[18:12:30] Provider `faker.providers.internet` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.isbn`.
+[18:12:30] Provider `faker.providers.isbn` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.job`.
+[18:12:30] Provider `faker.providers.job` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.lorem`.
+[18:12:30] Provider `faker.providers.lorem` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.misc`.
+[18:12:30] Provider `faker.providers.misc` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.passport`.
+[18:12:30] Provider `faker.providers.passport` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.person`.
+[18:12:30] Provider `faker.providers.person` has been localized to `en_US`.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.phone_number`.
+[18:12:30] Provider `faker.providers.phone_number` has been localized to `en_US`.
+[18:12:30] Provider `faker.providers.profile` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+[18:12:30] Provider `faker.providers.python` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+[18:12:30] Provider `faker.providers.sbn` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+[18:12:30] Looking for locale `en_US` in provider `faker.providers.ssn`.
+[18:12:30] Provider `faker.providers.ssn` has been localized to `en_US`.
+[18:12:30] Provider `faker.providers.user_agent` does not feature localization. Specified locale `en_US` is not utilized for this provider.
+[18:12:30] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans/e612239f5c0c449cb9957eaa345e2786/tenders
+[18:12:30] Response status: 201 Created
 
-[10:30:30] Tender created:
- - data.id              2e09be9f47e8426f84a0e01090d55f09
- - access.token         d35c5f6af3e8495786a186b8f07e8b9e
- - access.transfer      3c4b150e500c43f8af41529178f43c83
+[18:12:30] Tender created:
+ - data.id              52ec4c3892234a6188864c538b1f3fce
+ - access.token         63ca69daf1214ed29a19f8494eef7255
+ - access.transfer      f13035713b5440adb9cbd03409b7d709
  - data.status          draft
- - data.tenderID        UA-2026-05-16-000001-a
+ - data.tenderID        UA-2026-09-10-000173-a
  - data.procurementMethodType closeFrameworkAgreementUA
 
-[10:30:30] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09
-[10:30:30] Response status: 200 OK
+[18:12:30] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce
+[18:12:30] Response status: 200 OK
 
-[10:30:30] Processing data file: tender_document_attach.json
+[18:12:30] Processing data file: tender_document_attach.json
 
-[10:30:30] Processing data file: tender_document_file.txt
+[18:12:30] Processing data file: tender_document_file.txt
 
-[10:30:30] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:31] Response status: 200 OK
+[18:12:30] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:30] Response status: 200 OK
 
-[10:30:31] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09/documents?acc_token=d35c5f6af3e8495786a186b8f07e8b9e
-[10:30:31] Response status: 201 Created
+[18:12:30] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce/documents?acc_token=63ca69daf1214ed29a19f8494eef7255
+[18:12:30] Response status: 201 Created
 
-[10:30:31] Document attached:
- - data.id              72f2937f3b9449368d928dc18b692453
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/693b89d694fb4ec3a4603da194089a7a?Signature=HmNTyfCQJ75uWUrzsyJjWB5zWr5wBiqoZfRwwlqM5B1lENK%2BaFzA6ZqhxDQX%2BVpMPmALxu2INPBqNYEcPXppBw%3D%3D&KeyID=1331dc52
+[18:12:30] Document attached:
+ - data.id              0775225db0bc4d4592f08925f606b64c
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/8e932296d74947cba7b774115464b0a6?Signature=V90oqJupc8dhJ2ubOlKnev018Ned3UAINo7oc6eoWG5c3rpbrKukdIPb5dF%2FlEdLZ78lik%2BbNC3KHMV4umcUCQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:31] Processing data file: contract_proforma_attach.json
+[18:12:30] Processing data file: contract_proforma_attach.json
 
-[10:30:31] Processing data file: contract_proforma.txt
+[18:12:30] Processing data file: contract_proforma.txt
 
-[10:30:31] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:31] Response status: 200 OK
+[18:12:30] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:31] Response status: 200 OK
 
-[10:30:31] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09/documents?acc_token=d35c5f6af3e8495786a186b8f07e8b9e
-[10:30:31] Response status: 201 Created
+[18:12:31] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce/documents?acc_token=63ca69daf1214ed29a19f8494eef7255
+[18:12:31] Response status: 201 Created
 
-[10:30:31] Document attached:
- - data.id              9bd72e1f4a7d4c72807af7ac48ca4eec
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/2fadc77c51da4e0cb699e6599e990496?Signature=0ce30ZzuZOtax7l69u8OrVHvhcKOSJwfJtBcTFscU8bT5FMca8TNyHqOHXTjM9Nnr9TL7r%2FUCaBVmi5TjIUyBw%3D%3D&KeyID=1331dc52
+[18:12:31] Document attached:
+ - data.id              fbe8a676bdb042faac1f1255bc2a57ad
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/f8206684d5ce42bd968e637addcb72ca?Signature=3%2BEQxR%2BryklVpfj7uJOTJ71ZdFh0kCjd%2FLjZDf57WLll%2Bv7yCo5vY4XmHfLsrp4o7TrrnJdZB4fG%2FN75S0wnCw%3D%3D&KeyID=1331dc52
  - data.documentType    contractProforma
  - data.confidentiality public
 
-[10:30:31] Create tender criteria...
+[18:12:31] Create tender criteria...
 
-[10:30:31] Processing data file: criteria_create.json
+[18:12:31] Processing data file: criteria_create.json
 
-[10:30:31] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09/criteria?acc_token=d35c5f6af3e8495786a186b8f07e8b9e
-[10:30:31] Response status: 201 Created
+[18:12:31] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce/criteria?acc_token=63ca69daf1214ed29a19f8494eef7255
+[18:12:31] Response status: 201 Created
 
-[10:30:31] Tender criteria created:
+[18:12:31] Tender criteria created:
  - data[0].classification.id CRITERION.EXCLUSION.CONVICTIONS.PARTICIPATION_IN_CRIMINAL_ORGANISATION
  - data[1].classification.id CRITERION.EXCLUSION.CONVICTIONS.FRAUD
  - data[2].classification.id CRITERION.EXCLUSION.CONVICTIONS.CORRUPTION
@@ -330,272 +423,274 @@ procedure https://lb-api-sandbox-2.prozorro.gov.ua broker_api_token https://uplo
  - data[16].classification.id CRITERION.OTHER.BID.VALIDITY_PERIOD
  - data[17].classification.id CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.MANAGEMENT.SUBCONTRACTING_PROPORTION
 
-[10:30:31] Processing data file: tender_notice_attach.json
+[18:12:31] Processing data file: tender_notice_attach.json
 
-[10:30:31] Processing data file: tender_notice_file.p7s
+[18:12:31] Processing data file: tender_notice_file.p7s
 
-[10:30:31] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:32] Response status: 200 OK
+[18:12:31] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:31] Response status: 200 OK
 
-[10:30:32] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09/documents?acc_token=d35c5f6af3e8495786a186b8f07e8b9e
-[10:30:32] Response status: 201 Created
+[18:12:31] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce/documents?acc_token=63ca69daf1214ed29a19f8494eef7255
+[18:12:31] Response status: 201 Created
 
-[10:30:32] Document attached:
- - data.id              44969c9aa5e247d3bbb7b07102faff69
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/64d12055b9d94622ae5cb3d515716a4f?Signature=wLZCV1RH5id%2BWel59DXcl48lPW0Ymwc9ej3pjZHDlFRyfbfrDA5L0BxVJVNlowcGAtajYFmXSuo93t8oNvotBw%3D%3D&KeyID=1331dc52
+[18:12:31] Document attached:
+ - data.id              ce637505e59f45afa14ba0c765d09b71
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/705033241db247f381b3341cf2ffa06c?Signature=C3UjzT24D2qgkZB%2FFkJnuF8FqlpaqB0xYnPVF6tV9TVkle%2FR6ljKrUeeC5VWp2EP%2F8Qb3MpdpGT%2FiLyToXVtBQ%3D%3D&KeyID=1331dc52
  - data.documentType    notice
  - data.confidentiality public
 
-[10:30:32] Patching tender...
+[18:12:31] Patching tender...
 
-[10:30:32] Processing data file: tender_patch.json
+[18:12:31] Processing data file: tender_patch.json
 
-[10:30:32] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09?acc_token=d35c5f6af3e8495786a186b8f07e8b9e
-[10:30:32] Response status: 200 OK
+[18:12:31] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce?acc_token=63ca69daf1214ed29a19f8494eef7255
+[18:12:32] Response status: 200 OK
 
-[10:30:32] Tender patched:
- - data.id              2e09be9f47e8426f84a0e01090d55f09
+[18:12:32] Tender patched:
+ - data.id              52ec4c3892234a6188864c538b1f3fce
  - data.status          active.tendering
 
-[10:30:32] Skipping complaints creating: bot and reviewer tokens are required
+[18:12:32] Skipping complaints creating: bot and reviewer tokens are required
 
-[10:30:32] Creating bids...
+[18:12:32] Creating bids...
 
-[10:30:32] Processing data file: bid_create_0.json
+[18:12:32] Processing data file: bid_create_0.json
 
-[10:30:32] Processing data file: bid_document_file.txt
+[18:12:32] Processing data file: bid_document_file.txt
 
-[10:30:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:32] Response status: 200 OK
+[18:12:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:32] Response status: 200 OK
 
-[10:30:32] Processing data file: bid_confidential_document_file.txt
+[18:12:32] Processing data file: bid_confidential_document_file.txt
 
-[10:30:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:32] Response status: 200 OK
+[18:12:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:32] Response status: 200 OK
 
-[10:30:32] Processing data file: bid_eligibility_document_file.txt
+[18:12:32] Processing data file: bid_eligibility_document_file.txt
 
-[10:30:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:32] Response status: 200 OK
+[18:12:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:32] Response status: 200 OK
 
-[10:30:32] Processing data file: bid_financial_document_file.txt
+[18:12:32] Processing data file: bid_financial_document_file.txt
 
-[10:30:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:32] Response status: 200 OK
+[18:12:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:32] Response status: 200 OK
 
-[10:30:32] Processing data file: bid_qualification_document_file.txt
+[18:12:32] Processing data file: bid_qualification_document_file.txt
 
-[10:30:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:33] Response status: 200 OK
+[18:12:32] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:32] Response status: 200 OK
 
-[10:30:33] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09/bids
-[10:30:33] Response status: 201 Created
+[18:12:32] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce/bids
+[18:12:33] Response status: 201 Created
 
-[10:30:33] Document attached:
- - data.id              3ab39e18bec7452fb4803b2dca8b1d9f
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/668a589718664e36840177ed7df912bb?Signature=W4xGhrINtwuCw4Q%2Fe2xh420FMFeBzelSv%2Bqd7aGvZydFa4pO2nmimU3O7QN%2BKIORq1Vwk5OAdT8%2FaP6WV9I2Aw%3D%3D&KeyID=1331dc52
+[18:12:33] Document attached:
+ - data.id              933c4de0e5b14c7c86c7ebb83c5eee1a
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/62ba07ef96304b11aa8837b6c563912f?Signature=PV4i8ggdOa7ZxTJv5%2BidYOtQH%2FOXlu8tIRwLYMleZaMqIihc2m%2FiGGjumEnJTWWcitrRt2aH%2BGfUDqURyhQ3Bw%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:33] Document attached:
- - data.id              b2b31f24a3854f1baf69d1f43c56cae0
+[18:12:33] Document attached:
+ - data.id              07bb2f616b234b1ba1c95c4a39e5ae7e
  - data.confidentiality buyerOnly
 
-[10:30:33] Document attached:
- - data.id              7dcbb09df52a4bc1b92d8e520e8faa13
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/dc39aaba574f4fb48c32300da031df43?Signature=022Flj9vN14uxwT4zehA7aHuvC7DbkTcvvUSQQszorXPVTS9hFP1yRqE1dBct5Kxt9rAM6RLPA7E87VkK0FuBA%3D%3D&KeyID=1331dc52
+[18:12:33] Document attached:
+ - data.id              b20759d1d04a4ec1ac877287cc12bc38
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/638b42d633d541b5a465c72027983d4c?Signature=Hc0R0QeBYK7hqrDIckbYNG%2Bj8F67FaHcN9fOjVd2M84m2NimGZkkB5xioLHQZW1bjm0XNbKlqzkQIV2mb9knDQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:33] Document attached:
- - data.id              811dfb81b3ed44b2b026b87b389eef4e
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/6b103d07dbea4c0d9a34fb4f9af2c22d?Signature=PKw0%2BRT6djH%2BHn0c87RFu3qnn61gwLPZOhpBErU%2B0ttyA6DFgX59gu85r%2BzJm89jIlVaErww%2BJW04oeeidIACA%3D%3D&KeyID=1331dc52
+[18:12:33] Document attached:
+ - data.id              9c10afdd62034a72aa7c667b2c3bcf2e
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/538590d9f5dd4b9dbf67c8a266a21145?Signature=IqYt2GzZFLQU69sqe8YsO0aXRITD4VTyMdNagxMzVild%2BJIGlmYB6JU%2BOkLc3O%2FRcNEnof2xQnvN%2B04zCNZECw%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:33] Document attached:
- - data.id              195a7c5b72224512be9f83c5062565b7
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/fc67d66330ef4a19862784ac147f857e?Signature=imrQP4xMhCxTyVQqff4T%2Fk02yZUYTg7kFaYW4x7G7HRxAC%2FBSDPLr2pezQF10yNmFDXZQ5SGDgKa%2FI2etVZXAQ%3D%3D&KeyID=1331dc52
+[18:12:33] Document attached:
+ - data.id              a69b1578e48e4b0da7c8b5bca08b6ade
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/4985a09d6477409f986ba116d6002cc8?Signature=Zjq41C6d4aphqY6thUauZHUdbL4z3c3b%2B%2BRU47gkBM1ZrkKZI0MOQC7hCs1DaLjb3DkRvzN6h3Km7z%2B%2FdGkuBw%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:33] Bid created:
- - data.id              eb2188697a394c46aa5658f698a57b48
- - access.token         602d318d4f2e4175888040a5f57e51d9
+[18:12:33] Bid created:
+ - data.id              e944fc6b489e46cabb306fc6449d20ad
+ - access.token         160bd38c9e8449a49f1ab34999bfcdfc
  - data.status          draft
 
-[10:30:33] Processing data file: bid_create_1.json
+[18:12:33] Processing data file: bid_create_1.json
 
-[10:30:33] Processing data file: bid_document_file.txt
+[18:12:33] Processing data file: bid_document_file.txt
 
-[10:30:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:33] Response status: 200 OK
+[18:12:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:33] Response status: 200 OK
 
-[10:30:33] Processing data file: bid_confidential_document_file.txt
+[18:12:33] Processing data file: bid_confidential_document_file.txt
 
-[10:30:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:33] Response status: 200 OK
+[18:12:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:33] Response status: 200 OK
 
-[10:30:33] Processing data file: bid_eligibility_document_file.txt
+[18:12:33] Processing data file: bid_eligibility_document_file.txt
 
-[10:30:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:33] Response status: 200 OK
+[18:12:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:33] Response status: 200 OK
 
-[10:30:33] Processing data file: bid_financial_document_file.txt
+[18:12:33] Processing data file: bid_financial_document_file.txt
 
-[10:30:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:33] Response status: 200 OK
+[18:12:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:33] Response status: 200 OK
 
-[10:30:33] Processing data file: bid_qualification_document_file.txt
+[18:12:33] Processing data file: bid_qualification_document_file.txt
 
-[10:30:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:33] Response status: 200 OK
+[18:12:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:34] Response status: 200 OK
 
-[10:30:33] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09/bids
-[10:30:33] Response status: 201 Created
+[18:12:34] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce/bids
+[18:12:34] Response status: 201 Created
 
-[10:30:33] Document attached:
- - data.id              6aee5d5d054745c4828eb4b148b54e01
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/6003c8f210bb4c748810dd0da2df96ba?Signature=NBkNm6Cq1A1SR7l6zEJ45P6EGUqjSef69gl%2FmHY1S8y61j6KHEYqxSFRPZOEw5Zlb0CCeKmHLyOrtC2Kz3cQBw%3D%3D&KeyID=1331dc52
+[18:12:34] Document attached:
+ - data.id              d9ec77df23174591afd3c24f112ebdba
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/9c3be9d657a94b04a8e1a39915c8ad43?Signature=G1%2B2ANc4uLwgjkUycHH9WaNYPlsLbp8fYgIBE7pfDcfchj8PaeWXuTcmegje3Ms44p%2BXLt%2BuEvUvX%2Fl9%2F3sACg%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:33] Document attached:
- - data.id              e8181ee37ea248848f69bbfa1aacb3ca
+[18:12:34] Document attached:
+ - data.id              2d40af94470f48359101068bfa6f6cae
  - data.confidentiality buyerOnly
 
-[10:30:33] Document attached:
- - data.id              c5cd211a07f94c158c9b86055c53565f
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/ca26cec1a3824ae58ed67b3a05e21be2?Signature=GG9H%2FQ0S2Wt2YWN2fOnACeS7BgV5NSETCdvDZLLKZ38JoOo9Qr4XI6r4kTQ6Sfx3D0OmUADOTp4nEFxxGwDjCw%3D%3D&KeyID=1331dc52
+[18:12:34] Document attached:
+ - data.id              f7a9f652856d414381a3fb5e7363e8ca
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/f4519c16e524450bb0c9ebf1b5fe5bb1?Signature=rB9iT0SkkH7iz2hlCUckNNSc20P72jPvWeK41JWv5UqdFCUB4KpIMaPH%2FwFjEw7IRWQNzJoaHno%2FezhVlEsnDw%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:33] Document attached:
- - data.id              71ec3b626bc64448a3c9431afa671e9e
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/f6589302ea024db88e006e0c793a84d1?Signature=zO2uwosVqsLado3YRmxMIt7oJZf9NFQiXbAfBNU6nNhaDD00fRshaHAM4%2BYwFqd%2BTE8uj%2BqoikUv0usnc%2BGFDw%3D%3D&KeyID=1331dc52
+[18:12:34] Document attached:
+ - data.id              9e61d1807859469496217c1f3ae7ce47
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/26cc8891bf894a70b597862e460d4698?Signature=rwRDxC%2BkRZjzgX5uJ3yjvHNlw3VFs1LvgMZj9%2FFJJF3z0Ii9yYOL3jFhTewdwJuqQ64DnfBY9oaDckoj1g8OAQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:33] Document attached:
- - data.id              9f28c27ab79647a1ae215b7f2f482f68
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/97a0062500484c84a6c968e9c4aa5936?Signature=dPJaZNrsJcMEIfnzR8GnmTlfzoc1O21beOqTuMR%2BUQrNwx7hcrBUAdMxxPXQEb3JTJkXYnBrxYVwnlZ8ruBqAw%3D%3D&KeyID=1331dc52
+[18:12:34] Document attached:
+ - data.id              f80b6b8235d8413594865942083e20b9
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/d8049239cba14196b057c76a1eca98fa?Signature=XKyHjgBBPX8u1tSqCyiEPSuYiLP8qcjgMGscyIMATrcBr3%2BU1ocS61aaagFrscxCV7%2BHAuZC%2B2g84alXIo%2FJDg%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:33] Bid created:
- - data.id              3e69a169b48d4aecb3e45d077acfd8be
- - access.token         49f49d7d0db34c7881b607a8e1659de4
+[18:12:34] Bid created:
+ - data.id              498a853d4914421f82e3058043a78734
+ - access.token         724e6255c82749da855e16c6e453b64b
  - data.status          draft
 
-[10:30:33] Processing data file: bid_create_2.json
+[18:12:34] Processing data file: bid_create_2.json
 
-[10:30:33] Processing data file: bid_document_file.txt
+[18:12:34] Processing data file: bid_document_file.txt
 
-[10:30:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:33] Response status: 200 OK
+[18:12:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:34] Response status: 200 OK
 
-[10:30:33] Processing data file: bid_confidential_document_file.txt
+[18:12:34] Processing data file: bid_confidential_document_file.txt
 
-[10:30:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:33] Response status: 200 OK
+[18:12:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:34] Response status: 200 OK
 
-[10:30:33] Processing data file: bid_eligibility_document_file.txt
+[18:12:34] Processing data file: bid_eligibility_document_file.txt
 
-[10:30:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:34] Response status: 200 OK
+[18:12:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:34] Response status: 200 OK
 
-[10:30:34] Processing data file: bid_financial_document_file.txt
+[18:12:34] Processing data file: bid_financial_document_file.txt
 
-[10:30:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:34] Response status: 200 OK
+[18:12:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:34] Response status: 200 OK
 
-[10:30:34] Processing data file: bid_qualification_document_file.txt
+[18:12:34] Processing data file: bid_qualification_document_file.txt
 
-[10:30:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:34] Response status: 200 OK
+[18:12:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:34] Response status: 200 OK
 
-[10:30:34] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09/bids
-[10:30:34] Response status: 201 Created
+[18:12:34] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce/bids
+[18:12:34] Response status: 201 Created
 
-[10:30:34] Document attached:
- - data.id              205c9ee3049f4006b75a7d040cc56e8a
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/bcb44a81ef75402f84eafdfb6d8bae7d?Signature=Ls3T%2FtcBsmuiXLEMUsFvRD390f1aBO1BmeyPz4EsB%2Bf06PDJdfvsxbtJJvW6Yxp69cufCRcwK%2Fkqg6EvNA8JBA%3D%3D&KeyID=1331dc52
+[18:12:34] Document attached:
+ - data.id              bd1a7d32c96a42c0901f6bf5f1e3a63e
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/a2af76004c31493ea4a5473b6a9e8bf7?Signature=hAvuXpW2YzzydyWcrKHGnXjB0pOgNN%2BCmv8UhNhlxbm4pnIvewrPkZ4tXLfiSkibaYtTAcK%2BhrtOT15uUSUGDQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:34] Document attached:
- - data.id              bae4b4990d7e427eaabe1552083bbc4b
+[18:12:34] Document attached:
+ - data.id              e7b1b9e9a2094f37b7b716f6962cc12a
  - data.confidentiality buyerOnly
 
-[10:30:34] Document attached:
- - data.id              2043daa9ac3742408e733b5443a774df
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/34ce4e80ab8e4888abd85cf58ae9f403?Signature=RqbL%2BzRWW8fOly6BF0NRC7tJNJ7IPJXAvc0q1INfFyE%2BUxjHvbqGqTQKhz%2FMRDk2DwPJ4wteVtiVLS1e%2BK0wAA%3D%3D&KeyID=1331dc52
+[18:12:34] Document attached:
+ - data.id              cef75d59022e4fd993c385061b2e7926
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/129182ab5e2342c38071f54a119c29fb?Signature=%2FJaXMUjkggmMummyHZWDWq6CSkLSHl%2FIh1RDLVTpACyrpuzy9K4TBpv0As6%2F0ozcq%2FG99ywvN4LMFmOiyVAVDw%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:34] Document attached:
- - data.id              a592c193d1cc470eaf7452466620c80e
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/223bdd86ad6d4274a66e0acf31447b08?Signature=%2FgPuT5%2FUJNwPBMdwmpS7aD9q8fHwwGslflxxDqUuYFzU27fV07OR%2B8uGmmB1%2BF%2FJogJyd7SVzFaPvs%2B%2BcIzzDw%3D%3D&KeyID=1331dc52
+[18:12:34] Document attached:
+ - data.id              9b0e4e74a38d4b1bbe875260ffbdec5d
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/1040b5564b27433083d83e05faf7ee44?Signature=6aHPgOmuS3msJxwrmLnfhTLoDhpq63l3dER4Hxx4%2Flk1T8x7w69ZJtNy%2FMNGrROeGbljZHUif8TqDsEo46dnDQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:34] Document attached:
- - data.id              b4787d19689f47a4883a5b47de4d83c3
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/7635960dd2294fb0afa907f3d26aa3b1?Signature=JWRK9xdw9%2BOLMJfS%2FfsuOEGfJkIsMAtdpRw09Weam%2FqP%2Bcs6HMDrmsmx4mJ8oJvI6ApNi22cr1alDLH4JZtWCg%3D%3D&KeyID=1331dc52
+[18:12:34] Document attached:
+ - data.id              9391281cc8ba4016921e728a0386858b
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/aa3a008eb4294b448f808520b7449c0a?Signature=gAghlR1wyw5Z%2FHGAxbcsl%2FdNQOV5vOxYgQVItqVNBPHCN%2FDNw%2F%2Fqu9w%2FxUlnYED2zQZPZQt4bku6wJhUovd%2BCQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:34] Bid created:
- - data.id              516f74e1a39d4a5eaaab24f70d8ebd35
- - access.token         c460ac7c00424b3b96d7f840b0c87125
+[18:12:34] Bid created:
+ - data.id              62f8c8bf23814c52afccca164d957af6
+ - access.token         529ea0d9bb714dac8a6b029e9ca7adf6
  - data.status          draft
 
-[10:30:34] Processing data file: bid_create_3.json
+[18:12:34] Processing data file: bid_create_3.json
 
-[10:30:34] Processing data file: bid_document_file.txt
+[18:12:34] Processing data file: bid_document_file.txt
 
-[10:30:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:34] Response status: 200 OK
+[18:12:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:35] Response status: 200 OK
 
-[10:30:34] Processing data file: bid_confidential_document_file.txt
+[18:12:35] Processing data file: bid_confidential_document_file.txt
 
-[10:30:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:34] Response status: 200 OK
+[18:12:35] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:35] Response status: 200 OK
 
-[10:30:34] Processing data file: bid_eligibility_document_file.txt
+[18:12:35] Processing data file: bid_eligibility_document_file.txt
 
-[10:30:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:34] Response status: 200 OK
+[18:12:35] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:35] Response status: 200 OK
 
-[10:30:34] Processing data file: bid_financial_document_file.txt
+[18:12:35] Processing data file: bid_financial_document_file.txt
 
-[10:30:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:34] Response status: 200 OK
+[18:12:35] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:35] Response status: 200 OK
 
-[10:30:34] Processing data file: bid_qualification_document_file.txt
+[18:12:35] Processing data file: bid_qualification_document_file.txt
 
-[10:30:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[10:30:34] Response status: 200 OK
+[18:12:35] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[18:12:35] Response status: 200 OK
 
-[10:30:34] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/2e09be9f47e8426f84a0e01090d55f09/bids
-[10:30:35] Response status: 201 Created
+[18:12:35] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/52ec4c3892234a6188864c538b1f3fce/bids
+[18:12:35] Response status: 201 Created
 
-[10:30:35] Document attached:
- - data.id              7843e91987684bec934febbb444ca94a
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/203ffc1b7a8d4fadbaadeeea3dc26e7d?Signature=Qrm0OZNm3Ram7obBHt7oNg8Vf5D4LP0mslFYhCm0qCroJkNKZZp3YgfPQSkXTOf1FVKromjjHvbXtlX70a%2FXAQ%3D%3D&KeyID=1331dc52
+[18:12:35] Document attached:
+ - data.id              4c6471b73a6c4ee683d99f41262db5f2
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/aaed15d55dc844f2b76da97875aea490?Signature=a8i3MIjjlKshwBe3OvK8I1cib6xV1XdohKV3lUIUgDit4mSRNLMwFl5rO9tpQTroRPyuqn4Gpe8fm5bihrZYBg%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:35] Document attached:
- - data.id              83f44692c5974ee38a78329d1a6553e9
+[18:12:35] Document attached:
+ - data.id              fec799d49c2643639290fc33b66953ca
  - data.confidentiality buyerOnly
 
-[10:30:35] Document attached:
- - data.id              ce50ef3335204415af49a9ad9b13402f
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/d8cc831c86e54b96a5fd1c55dc33002e?Signature=gI7kA66gnud3pxJuRN8bhKqYIlr%2Blj1NjsAXLgj3YpDrd8WSdFn4BUlRdxmg83NLZnXPy3e3vckuNTeWC3j%2FBg%3D%3D&KeyID=1331dc52
+[18:12:35] Document attached:
+ - data.id              12c2c99de2444cf6b96b27936b92867e
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/aa286aeb52ac4d75a62729157e3b4bbb?Signature=9rkdHL5d67%2B5I0kmWmtCJBvrcSXQH3qerLvr05eCKIJjqZn20WkP7HqMXsmhbWoyybRDRFZ3WPfL0me6Q0JLCQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:35] Document attached:
- - data.id              66f243c9a8a34aeab308f5010fedc61c
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/03292ecf7fe2490d898c77b147881239?Signature=FMGtDzKdwrpBgkxp5kEJIHMrRuvB1bkemP%2BIwXOWhOQl4f%2FVU2TFJmCpZMwozGnm7VOzJo0IgHgK0ZZLhjXZAw%3D%3D&KeyID=1331dc52
+[18:12:35] Document attached:
+ - data.id              b681bb722cf54e83aff0c5f2f17ebea3
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/32625c1007b14620afa9b8156ca3c5f8?Signature=b1aky5beC3mtMoz1RyQXL5ZqzQdqoOkOsXnU6XQ%2FrprzCll67dU6aZbmWyHKbq68z8qupRMyzLaNYL22bwhMDA%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:35] Document attached:
- - data.id              bc0996012dda4a309b21beaa3ea7aab3
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/693e30a9c4614a4693157d1cb5d59385?Signature=pUWvQdTfJATCQxB6U7M1hkqxuQgwulYoMhAgHJ80kYgYNXkh7Hz%2F92JfBFAFlbxy%2FC2sRx8bMUkM%2FjCjImqwBg%3D%3D&KeyID=1331dc52
+[18:12:35] Document attached:
+ - data.id              c81904ab28b145e5afbd7f00bdc3e54f
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/0223d1f395804c0394424ae9b2d8c4db?Signature=KStIoz41qycRchzHHN0dWJduB%2BeIbXYSS5vChhC%2BeF9laxCq%2BIx%2FRHDqKQx1xzI0sDyz2Y2EDVGnprMvO6utCw%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[10:30:35] Bid created:
- - data.id              6fcfb1927da04bad8874804dd709b7d6
- - access.token         c8852d143fce4b2c977f67c395a1d22d
+[18:12:35] Bid created:
+ - data.id              4b94a3b2cd7542f481a89348c61eddeb
+ - access.token         cf9bd9a358a24011815705456004e85e
  - data.status          draft
+
+[18:12:35] Completed.
 
 ```
 
