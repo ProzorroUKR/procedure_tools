@@ -112,4 +112,5 @@ jobs:
           REVIEWER_TOKEN: ${{ secrets.REVIEWER_TOKEN }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
+          python .github/scripts/write_test_env.py
           pytest procedure_tools/test.py::test_${{ matrix.case }}

@@ -4,56 +4,39 @@ from unittest import mock
 import pytest
 
 from procedure_tools.main import main
-
-API_HOST = "API_HOST"
-API_TOKEN = "API_TOKEN"
-DS_HOST = "DS_HOST"
-DS_USERNAME = "DS_USERNAME"
-DS_PASSWORD = "DS_PASSWORD"
-REVIEWER_TOKEN = "REVIEWER_TOKEN"
-BOT_TOKEN = "BOT_TOKEN"
-
-
-REQUIRED_ENV_VARIABLES = [API_HOST, API_TOKEN, DS_HOST, DS_USERNAME, DS_PASSWORD, REVIEWER_TOKEN, BOT_TOKEN]
+from procedure_tools.utils.env import REQUIRED_ARGS, EnvFileNotFound, load_run_env
 
 INACTIVE_REASON = "Currently inactive procedure"
 skipinactive = pytest.mark.skip(reason=INACTIVE_REASON)
 
-missing_env = [v for v in REQUIRED_ENV_VARIABLES if not os.environ.get(v)]
+TEST_ENV = os.environ.get("PROCEDURE_ENV", "test")
+SKIP_REQUIRED = REQUIRED_ARGS + (
+    ("reviewer_token", "REVIEWER_TOKEN"),
+    ("bot_token", "BOT_TOKEN"),
+)
+
+
+def _load_test_env():
+    try:
+        return load_run_env(TEST_ENV or None)
+    except EnvFileNotFound:
+        return None, {}
+
+
+_ENV_FILE, _ENV_VALUES = _load_test_env()
+_MISSING_ENV = [label for dest, label in SKIP_REQUIRED if not _ENV_VALUES.get(dest)]
+if _ENV_FILE is None:
+    _MISSING_ENV = [f"env file for {TEST_ENV!r} (copy .env.{TEST_ENV}.example to .env.{TEST_ENV})"]
+
 skipifenv = pytest.mark.skipif(
-    bool(missing_env),
-    reason=f"Env variables not specified: {', '.join(missing_env)}",
+    bool(_MISSING_ENV),
+    reason=f"Env not specified: {', '.join(_MISSING_ENV)}",
 )
 
 
 def run_test(argv):
-    default_args = [
-        "--reviewer-token",
-        os.environ.get(REVIEWER_TOKEN),
-        "--bot-token",
-        os.environ.get(BOT_TOKEN),
-        "--acceleration",
-        "10000",
-        "--path",
-        "/api/2.5/",
-        "--submission",
-        "quick(mode:no-auction)",
-        "--debug",
-        "--debug-request",
-        "--debug-json-level",
-        "2",
-    ]
-    args = (
-        [
-            os.environ.get(API_HOST),
-            os.environ.get(API_TOKEN),
-            os.environ.get(DS_HOST),
-            os.environ.get(DS_USERNAME),
-            os.environ.get(DS_PASSWORD),
-        ]
-        + default_args
-        + argv
-    )
+    args = ["--env", TEST_ENV]
+    args.extend(argv)
 
     print("\n\nTest with args: %s\n\n" % (args))
 
