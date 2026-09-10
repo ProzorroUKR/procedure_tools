@@ -110,19 +110,19 @@ def log_summary(results):
         elif code == EX_OK:
             status = fore_success("success")
         else:
-            status = fore_error("fail")
+            status = fore_error("failed")
             if error:
                 errors.append((data_dir, error))
-        lines.append(f" - {data_dir:<{width}} {status}")
-    if errors:
-        lines.append("")
-        lines.append("Errors")
-        for data_dir, error in errors:
-            error_lines = str(error).strip().splitlines() or [str(error).strip()]
-            lines.append(f" - {data_dir}")
-            for error_line in error_lines:
-                lines.append(f"   {fore_error(error_line)}")
+        lines.append(f" - {data_dir:<{width}}\t{status}")
     logging.info("\n".join(lines) + "\n")
+    if errors:
+        error_lines = ["Errors"]
+        for data_dir, error in errors:
+            error_text = str(error).strip().splitlines() or [str(error).strip()]
+            error_lines.append(f" - {data_dir}")
+            for error_line in error_text:
+                error_lines.append(f"   {fore_error(error_line)}")
+        logging.info("\n".join(error_lines) + "\n")
     for handler in logging.root.handlers:
         handler.flush()
 
