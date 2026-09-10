@@ -64,7 +64,7 @@ def log_summary(rows):
     if not rows:
         return
     width = max(len(str(data_dir)) for data_dir, *_ in rows)
-    lines = ["Summary"]
+    lines = [fore_warning("Summary")]
     errors = []
     for row in rows:
         data_dir = row[0]
@@ -76,7 +76,7 @@ def log_summary(rows):
             errors.append((data_dir, error))
     logging.info("\n".join(lines) + "\n")
     if errors:
-        error_lines = ["Errors"]
+        error_lines = [fore_error("Errors")]
         for data_dir, error in errors:
             error_text = str(error).strip().splitlines() or [str(error).strip()]
             error_lines.append(f" - {data_dir}")
