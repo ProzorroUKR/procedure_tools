@@ -2,6 +2,7 @@ import datetime
 import io
 import logging
 import os
+import threading
 from contextlib import contextmanager
 from functools import partial
 
@@ -12,6 +13,8 @@ from procedure_tools.utils import helpers
 from procedure_tools.utils.file import get_actual_file_path
 from procedure_tools.utils.handlers import EX_OK
 from procedure_tools.utils.style import fore_error
+
+_pause_lock = threading.Lock()
 
 
 @contextmanager
@@ -39,7 +42,8 @@ def open_file(path, mode="r", encoding="UTF-8", args=None, silent_io_error=False
     if args and hasattr(args, 'stop') and file_name == args.stop:
         raise SystemExit(EX_OK)
     if args and hasattr(args, 'pause') and args.pause and file_name in args.pause:
-        input("Press Enter key to continue...")
+        with _pause_lock:
+            input("Press Enter key to continue...")
 
 
 @contextmanager

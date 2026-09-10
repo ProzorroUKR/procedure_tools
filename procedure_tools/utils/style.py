@@ -1,4 +1,16 @@
 import os
+import threading
+
+_log_context = threading.local()
+
+
+def set_log_prefix(prefix):
+    _log_context.prefix = prefix
+
+
+def get_log_prefix():
+    return getattr(_log_context, "prefix", None)
+
 
 try:
     from colorama import Fore, Style
