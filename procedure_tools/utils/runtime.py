@@ -22,7 +22,7 @@ except ImportError:  # pragma: no cover - non-POSIX
     tty = None
 
 _controller = None
-_PAUSE_HINT = "Press P to pause and show summary"
+_PAUSE_HINT = "Press P to pause and show summary, S to show summary"
 _thread_data_dir = threading.local()
 _QUIET_SETTLE_SECONDS = 0.05
 
@@ -241,8 +241,13 @@ class RunController:
                 if not ready:
                     continue
                 char = sys.stdin.read(1)
-                if char and char.lower() == "p":
+                if not char:
+                    continue
+                key = char.lower()
+                if key == "p":
                     self._pause_from_listener()
+                elif key == "s":
+                    self.log_summary()
             except (ValueError, OSError, termios.error if termios else OSError):
                 break
             finally:
