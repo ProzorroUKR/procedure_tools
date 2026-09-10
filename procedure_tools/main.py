@@ -21,6 +21,15 @@ from procedure_tools.utils.data import (
     SUBMISSION_QUICK_NO_AUCTION,
     SUBMISSIONS,
 )
+from procedure_tools.utils.env import (
+    ENV_SELECT_VAR,
+    EXTEND_ARGS,
+    REQUIRED_ARGS,
+    EnvFileNotFound,
+    EnvValueError,
+    first_set,
+    load_run_env,
+)
 from procedure_tools.utils.file import (
     DATA_DIR_DEFAULT,
     get_data_path,
@@ -259,15 +268,44 @@ def run(args, session=None):
         raise SystemExit(failed[0])
 
 
-def main():
+def _env_help():
+    return (
+        "env file or environment name for this run "
+        f"(default: {ENV_SELECT_VAR} or .env if present; CLI arguments override the file).\n"
+        "Looks up .env.<name>, <name>.env, or envs/<name>"
+    )
+
+
+def build_parser(env_values=None):
+    env_values = env_values or {}
     parser = argparse.ArgumentParser(
         formatter_class=ArgumentParserFormatter,
     )
-    parser.add_argument("host", help="CDB API Host")
-    parser.add_argument("token", help="CDB API Token")
-    parser.add_argument("ds_host", help="DS API Host")
-    parser.add_argument("ds_username", help="DS API Username")
-    parser.add_argument("ds_password", help="DS API Password")
+    parser.add_argument(
+        "host",
+        nargs="?",
+        help="CDB API Host",
+    )
+    parser.add_argument(
+        "token",
+        nargs="?",
+        help="CDB API Token",
+    )
+    parser.add_argument(
+        "ds_host",
+        nargs="?",
+        help="DS API Host",
+    )
+    parser.add_argument(
+        "ds_username",
+        nargs="?",
+        help="DS API Username",
+    )
+    parser.add_argument(
+        "ds_password",
+        nargs="?",
+        help="DS API Password",
+    )
     parser.add_argument(
         "-v",
         "--version",
@@ -275,18 +313,55 @@ def main():
         version=__version__,
     )
     parser.add_argument(
+        "-E",
+        "--env",
+        help=_env_help(),
+        metavar="sandbox",
+    )
+    parser.add_argument(
+        "--host",
+        dest="host_option",
+        metavar="HOST",
+        help="CDB API Host (env API_HOST)",
+    )
+    parser.add_argument(
+        "--token",
+        dest="token_option",
+        metavar="TOKEN",
+        help="CDB API Token (env API_TOKEN)",
+    )
+    parser.add_argument(
+        "--ds-host",
+        dest="ds_host_option",
+        metavar="DS_HOST",
+        help="DS API Host (env DS_HOST)",
+    )
+    parser.add_argument(
+        "--ds-username",
+        dest="ds_username_option",
+        metavar="DS_USERNAME",
+        help="DS API Username (env DS_USERNAME)",
+    )
+    parser.add_argument(
+        "--ds-password",
+        dest="ds_password_option",
+        metavar="DS_PASSWORD",
+        help="DS API Password (env DS_PASSWORD)",
+    )
+    parser.add_argument(
         "-a",
         "--acceleration",
         help="acceleration multiplier",
         metavar=str(ACCELERATION_DEFAULT),
         type=int,
+        default=env_values.get("acceleration"),
     )
     parser.add_argument(
         "-p",
         "--path",
         help="api path",
         metavar=str(API_PATH_PREFIX_DEFAULT),
-        default=API_PATH_PREFIX_DEFAULT,
+        default=env_values.get("path", API_PATH_PREFIX_DEFAULT),
     )
     parser.add_argument(
         "-d",
@@ -302,7 +377,7 @@ def main():
         metavar="N",
         nargs="?",
         const=0,
-        default=None,
+        default=env_values.get("parallel"),
         type=int,
     )
     parser.add_argument(
@@ -310,12 +385,14 @@ def main():
         "--submission",
         help=f"value for submissionMethodDetails, one of:\n{format_choices(SUBMISSIONS)}",
         metavar=str(SUBMISSION_QUICK_NO_AUCTION),
+        default=env_values.get("submission"),
     )
     parser.add_argument(
         "-s",
         "--stop",
         help="data file name to stop after",
         metavar="tender_create.json",
+        default=env_values.get("stop"),
     )
     parser.add_argument(
         "--pause",
@@ -337,19 +414,23 @@ def main():
         "--seed",
         type=int,
         help="faker seed",
+        default=env_values.get("seed"),
     )
     parser.add_argument(
         "--reviewer-token",
         help="reviewer token",
+        default=env_values.get("reviewer_token"),
     )
     parser.add_argument(
         "--bot-token",
         help="bot token",
+        default=env_values.get("bot_token"),
     )
     parser.add_argument(
         "--debug",
         help="Debug log level",
         action="store_true",
+        default=bool(env_values.get("debug")),
     )
     parser.add_argument(
         "--debug-req",
@@ -357,21 +438,73 @@ def main():
         dest="debug_request",
         help="Log HTTP request/response bodies",
         action="store_true",
+        default=bool(env_values.get("debug_request")),
     )
     parser.add_argument(
         "--debug-json-level",
         dest="debug_json_level",
         type=int,
         help="Fold debug request/response JSON to specified nesting level (>=0)",
+        default=env_values.get("debug_json_level"),
     )
+    return parser
 
+
+def _parse_env_spec(argv):
+    env_parser = argparse.ArgumentParser(add_help=False)
+    env_parser.add_argument("-E", "--env")
+    env_ns, _ = env_parser.parse_known_args(argv)
+    return env_ns.env
+
+
+def apply_env_values(args, env_values):
+    args.host = first_set(args.host_option, args.host, env_values.get("host"))
+    args.token = first_set(args.token_option, args.token, env_values.get("token"))
+    args.ds_host = first_set(args.ds_host_option, args.ds_host, env_values.get("ds_host"))
+    args.ds_username = first_set(args.ds_username_option, args.ds_username, env_values.get("ds_username"))
+    args.ds_password = first_set(args.ds_password_option, args.ds_password, env_values.get("ds_password"))
+    for dest in EXTEND_ARGS:
+        if getattr(args, dest) is None and dest in env_values:
+            setattr(args, dest, env_values[dest])
+
+
+def parse_args(argv=None, environ=None, search_dirs=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if any(arg in ("-h", "--help", "-v", "--version") for arg in argv):
+        parser = build_parser()
+        parser.parse_args(argv)
+
+    env_spec = _parse_env_spec(argv)
     try:
-        args = parser.parse_args()
-        if args.debug_json_level is not None and args.debug_json_level < 0:
-            parser.error("--debug-json-level must be >= 0")
-        if args.parallel is not None and args.parallel < 0:
-            parser.error("--parallel must be >= 0")
+        env_file, env_values = load_run_env(env_spec, environ=environ, search_dirs=search_dirs)
+    except EnvFileNotFound as e:
+        parser = build_parser()
+        parser.error(str(e))
+    except EnvValueError as e:
+        parser = build_parser()
+        parser.error(str(e))
+
+    parser = build_parser(env_values)
+    args = parser.parse_args(argv)
+    apply_env_values(args, env_values)
+    args.env_file = env_file
+
+    missing = [label for dest, label in REQUIRED_ARGS if not getattr(args, dest)]
+    if missing:
+        parser.error("the following arguments are required: " + ", ".join(missing))
+    if args.debug_json_level is not None and args.debug_json_level < 0:
+        parser.error("--debug-json-level must be >= 0")
+    if args.parallel is not None and args.parallel < 0:
+        parser.error("--parallel must be >= 0")
+    return args
+
+
+def main():
+    try:
+        args = parse_args()
         apply_debug_log_format(args.debug)
+        if args.env_file:
+            logging.info(f"Using env file {args.env_file}\n")
         if not args.data:
             args.data = sorted(get_default_data_dirs())
         session = None

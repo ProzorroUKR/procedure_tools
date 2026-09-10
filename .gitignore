@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-*.env
+# Reports
 reports/
 
 # Distribution / packaging
@@ -93,6 +93,11 @@ celerybeat-schedule
 
 # Environments
 .env
+*.env
+.env.*
+!.env.example
+!*.env.example
+!.env.*.example
 .venv
 env/
 venv/
