@@ -259,8 +259,7 @@ def run(args, session=None):
 
         if interrupted:
             print("\n")
-        if len(results) > 1 or interrupted:
-            log_results_summary(results)
+        log_results_summary(results)
         if interrupted:
             raise KeyboardInterrupt
         failed = [code for _, code, _ in results if code != EX_OK]
