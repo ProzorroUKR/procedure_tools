@@ -239,6 +239,8 @@ def run(args, session=None):
                 interrupted = True
                 break
 
+    if interrupted:
+        print("\n")
     if len(results) > 1 or interrupted:
         log_summary(results)
     if interrupted:

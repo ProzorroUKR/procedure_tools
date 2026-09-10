@@ -13,6 +13,7 @@ from procedure_tools.utils.style import (
     fore_method,
     fore_status_code,
     fore_warning,
+    get_log_prefix,
 )
 
 try:
@@ -226,7 +227,10 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         return "\n".join(log_lines)
 
     def send(self, request, *args, **kwargs):
-        logging.info(f"{request.method} {request.url}")
+        request_line = f"{request.method} {request.url}"
+        if get_log_prefix():
+            request_line += "\n"
+        logging.info(request_line)
         if self.should_log_exchange(request.url):
             debug_request = self.get_debug_request(request)
             logging.info(f"HTTP Request:\n\n{self.pad_log_lines(debug_request)}\n")
