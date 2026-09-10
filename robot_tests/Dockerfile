@@ -8,5 +8,5 @@ USER ${ROBOT_UID}:${ROBOT_GID}
 
 ENV PYTHONPATH "${PYTHONPATH}:/opt/robotframework"
 
-COPY ./robot_tests  /opt/robotframework/tests
+COPY ./robot_tests/tests  /opt/robotframework/tests
 COPY ./procedure_tools  /opt/robotframework/procedure_tools

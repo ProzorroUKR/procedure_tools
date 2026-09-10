@@ -7,9 +7,9 @@
 2. Install git  https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 3. Clone the project `git clone https://github.com/ProzorroUKR/procedure_tools.git`
 4. Rename `.dev.env.example` into `.dev.env`
-5. Go to the projects dir and run the tests
+5. Go to the robot tests dir and run the tests
 ```commandline
-cd procedure_tools
+cd procedure_tools/robot_tests
 docker-compose up
 ```
 6. [Optional] You can use "PyCharm Community Edition" (free version) https://www.jetbrains.com/pycharm/download/?section=mac
