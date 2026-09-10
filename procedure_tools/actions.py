@@ -5,7 +5,7 @@ import os
 from datetime import timedelta
 from functools import partial
 from mimetypes import MimeTypes
-from time import sleep
+from time import sleep as time_sleep
 
 from procedure_tools.client import CDBClient, DSClient
 from procedure_tools.utils.contextmanagers import open_file, read_file
@@ -46,8 +46,17 @@ from procedure_tools.utils.handlers import (
     tender_post_criteria_success_handler,
     tender_post_plan_success_handler,
 )
+from procedure_tools.utils.runtime import get_controller
 
 EDR_FILENAME = "edr_identification.yaml"
+
+
+def sleep(seconds):
+    controller = get_controller()
+    if controller:
+        controller.pause_aware_sleep(seconds)
+    else:
+        time_sleep(seconds)
 
 
 def get_constants(client: CDBClient, args, context):
@@ -1520,6 +1529,9 @@ def wait(
     date_seconds = math.ceil(delta_seconds) if delta_seconds > 0 else 0
     info_str = f" for {date_info_str}" if date_info_str else ""
     logging.info(f"Waiting {date_seconds} seconds{info_str} - {date_str}...\n")
+    controller = get_controller()
+    if controller:
+        controller.set_activity(None, f"waiting {date_seconds}s")
     sleep(date_seconds)
 
 
@@ -1536,6 +1548,9 @@ def wait_status(
     logging.info(f"Waiting for {status}...\n")
     status = [status] if not isinstance(status, list) else status
     fail_status = [fail_status] if fail_status and not isinstance(fail_status, list) else fail_status
+    controller = get_controller()
+    if controller:
+        controller.set_activity(None, f"waiting for {', '.join(status)}")
     while True:
         response = client.get(f"tenders/{tender_id}")
         current_status = response.json()["data"]["status"]

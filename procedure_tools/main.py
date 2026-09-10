@@ -37,12 +37,10 @@ from procedure_tools.utils.file import (
     get_numberless_filename,
 )
 from procedure_tools.utils.handlers import EX_DATAERR, EX_OK
+from procedure_tools.utils.runtime import RunController, log_results_summary, set_controller
 from procedure_tools.utils.style import (
-    fore_error,
     fore_info,
     fore_log_level,
-    fore_success,
-    fore_warning,
     get_log_prefix,
     set_log_prefix,
 )
@@ -118,33 +116,6 @@ def exit_code(value):
     return 1
 
 
-def log_summary(results):
-    width = max(len(str(data_dir)) for data_dir, _, _ in results)
-    lines = ["Summary"]
-    errors = []
-    for data_dir, code, error in results:
-        if code is None:
-            status = fore_warning("aborted")
-        elif code == EX_OK:
-            status = fore_success("success")
-        else:
-            status = fore_error("failed")
-            if error:
-                errors.append((data_dir, error))
-        lines.append(f" - {data_dir:<{width}}\t{status}")
-    logging.info("\n".join(lines) + "\n")
-    if errors:
-        error_lines = ["Errors"]
-        for data_dir, error in errors:
-            error_text = str(error).strip().splitlines() or [str(error).strip()]
-            error_lines.append(f" - {data_dir}")
-            for error_line in error_text:
-                error_lines.append(f"   {fore_error(error_line)}")
-        logging.info("\n".join(error_lines) + "\n")
-    for handler in logging.root.handlers:
-        handler.flush()
-
-
 def run_result_error(exc):
     message = getattr(exc, "message", None)
     if message:
@@ -158,44 +129,55 @@ def run_result_error(exc):
     return f"{name}: {text}"
 
 
-def run_data_dir(args, session=None):
+def run_data_dir(args, session=None, controller=None):
     close_session = False
     if session is None:
         session = requests.Session()
         adapters.mount(session)
         close_session = True
+    data_dir = args.data
+    if controller:
+        controller.mark_started(data_dir)
     try:
         data_path = get_data_path(args.data)
         if data_path is None:
             logging.error("Data path not found.\n")
-            return EX_DATAERR, "Data path not found"
-        process_procedure(args, session=session)
-        logging.info("Completed.\n")
-        return EX_OK, None
+            result = EX_DATAERR, "Data path not found"
+        else:
+            process_procedure(args, session=session)
+            logging.info("Completed.\n")
+            result = EX_OK, None
     except SystemExit as e:
         code = exit_code(e.code)
         if code == EX_OK:
             logging.info("Completed.\n")
-            return code, None
-        return code, run_result_error(e)
+            result = code, None
+        else:
+            result = code, run_result_error(e)
     except Exception as e:
         logging.exception("Failed")
-        return 1, run_result_error(e)
+        result = 1, run_result_error(e)
     finally:
         if close_session:
             session.close()
+    if controller:
+        controller.mark_finished(data_dir, *result)
+    return result
 
 
-def run_data_dir_parallel(args, data_dir):
+def run_data_dir_parallel(args, data_dir, controller=None):
     folder_args = copy.copy(args)
     folder_args.data = data_dir
     set_log_prefix(data_dir)
     try:
         set_faker_seed(folder_args)
-        return run_data_dir(folder_args)
+        return run_data_dir(folder_args, controller=controller)
     except Exception as e:
         logging.exception("Failed")
-        return 1, run_result_error(e)
+        result = 1, run_result_error(e)
+        if controller:
+            controller.mark_finished(data_dir, *result)
+        return result
     finally:
         set_log_prefix(None)
 
@@ -209,63 +191,84 @@ def run(args, session=None):
     args.wait = args.wait or []
 
     data_dirs = args.data if isinstance(args.data, list) else [args.data]
+    controller = RunController(data_dirs)
+    set_controller(controller)
+    controller.start()
     interrupted = False
-    if args.parallel is not None and len(data_dirs) > 1:
-        codes = {}
-        max_workers = args.parallel or len(data_dirs)
-        max_workers = max(1, min(max_workers, len(data_dirs)))
-        executor = ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="procedure")
-        try:
-            futures = {executor.submit(run_data_dir_parallel, args, data_dir): data_dir for data_dir in data_dirs}
-            for future in as_completed(futures):
-                data_dir = futures[future]
-                try:
-                    codes[data_dir] = future.result()
-                except KeyboardInterrupt:
-                    raise
-                except BaseException as e:
-                    codes[data_dir] = (1, run_result_error(e))
-        except KeyboardInterrupt:
-            executor.shutdown(wait=False, cancel_futures=True)
-            interrupted = True
-            for future, data_dir in futures.items():
-                if data_dir in codes:
-                    continue
-                if future.done() and not future.cancelled():
+    try:
+        if args.parallel is not None and len(data_dirs) > 1:
+            codes = {}
+            max_workers = args.parallel or len(data_dirs)
+            max_workers = max(1, min(max_workers, len(data_dirs)))
+            executor = ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="procedure")
+            try:
+                futures = {
+                    executor.submit(run_data_dir_parallel, args, data_dir, controller): data_dir
+                    for data_dir in data_dirs
+                }
+                for future in as_completed(futures):
+                    data_dir = futures[future]
                     try:
                         codes[data_dir] = future.result()
+                    except KeyboardInterrupt:
+                        raise
                     except BaseException as e:
-                        codes[data_dir] = (1, run_result_error(e))
-                else:
-                    codes[data_dir] = (None, None)
-        else:
-            executor.shutdown(wait=True)
-        results = [(data_dir, *(codes.get(data_dir) or (None, None))) for data_dir in data_dirs]
-    else:
-        set_faker_seed(args)
-        results = []
-        for data_dir in data_dirs:
-            args.data = data_dir
-            if len(data_dirs) > 1:
-                logging.info(f"Starting {data_dir}\n")
-            try:
-                code, error = run_data_dir(args, session=session)
-                results.append((data_dir, code, error))
+                        result = (1, run_result_error(e))
+                        codes[data_dir] = result
+                        controller.mark_finished(data_dir, *result)
             except KeyboardInterrupt:
-                results.append((data_dir, None, None))
-                results.extend((remaining, None, None) for remaining in data_dirs[len(results) :])
+                executor.shutdown(wait=False, cancel_futures=True)
                 interrupted = True
-                break
+                for future, data_dir in futures.items():
+                    if data_dir in codes:
+                        continue
+                    if future.done() and not future.cancelled():
+                        try:
+                            codes[data_dir] = future.result()
+                        except BaseException as e:
+                            result = (1, run_result_error(e))
+                            codes[data_dir] = result
+                            controller.mark_finished(data_dir, *result)
+                    else:
+                        codes[data_dir] = (None, None)
+                        controller.mark_finished(data_dir, None, None)
+            else:
+                executor.shutdown(wait=True)
+            results = [(data_dir, *(codes.get(data_dir) or (None, None))) for data_dir in data_dirs]
+        else:
+            set_faker_seed(args)
+            results = []
+            for data_dir in data_dirs:
+                args.data = data_dir
+                set_log_prefix(data_dir if len(data_dirs) > 1 else None)
+                if len(data_dirs) > 1:
+                    logging.info(f"Starting {data_dir}\n")
+                try:
+                    controller.check_pause()
+                    code, error = run_data_dir(args, session=session, controller=controller)
+                    results.append((data_dir, code, error))
+                except KeyboardInterrupt:
+                    controller.mark_finished(data_dir, None, None)
+                    results.append((data_dir, None, None))
+                    for remaining in data_dirs[len(results) :]:
+                        controller.mark_finished(remaining, None, None)
+                        results.append((remaining, None, None))
+                    interrupted = True
+                    break
+            set_log_prefix(None)
 
-    if interrupted:
-        print("\n")
-    if len(results) > 1 or interrupted:
-        log_summary(results)
-    if interrupted:
-        raise KeyboardInterrupt
-    failed = [code for _, code, _ in results if code != EX_OK]
-    if failed:
-        raise SystemExit(failed[0])
+        if interrupted:
+            print("\n")
+        if len(results) > 1 or interrupted:
+            log_results_summary(results)
+        if interrupted:
+            raise KeyboardInterrupt
+        failed = [code for _, code, _ in results if code != EX_OK]
+        if failed:
+            raise SystemExit(failed[0])
+    finally:
+        controller.stop()
+        set_controller(None)
 
 
 def _env_help():

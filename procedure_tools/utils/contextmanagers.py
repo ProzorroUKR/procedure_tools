@@ -12,6 +12,7 @@ from procedure_tools.fake import fake, fake_en
 from procedure_tools.utils import helpers
 from procedure_tools.utils.file import get_actual_file_path
 from procedure_tools.utils.handlers import EX_OK
+from procedure_tools.utils.runtime import get_controller
 from procedure_tools.utils.style import fore_warning
 
 _pause_lock = threading.Lock()
@@ -21,6 +22,10 @@ _pause_lock = threading.Lock()
 def open_file(path, mode="r", encoding="UTF-8", args=None, silent_io_error=False, **kwargs):
     _, file_name = os.path.split(path)
     actual_path = get_actual_file_path(path)
+    controller = get_controller()
+    if controller:
+        controller.check_pause()
+        controller.set_activity(None, file_name)
     logging.info(f"Processing data file: {file_name}\n")
     try:
         try:
@@ -41,7 +46,12 @@ def open_file(path, mode="r", encoding="UTF-8", args=None, silent_io_error=False
         raise SystemExit(EX_OK)
     if args and hasattr(args, 'pause') and args.pause and file_name in args.pause:
         with _pause_lock:
-            input("Press Enter key to continue...")
+            if controller:
+                controller.wait_for_enter()
+            else:
+                input("Press Enter key to continue...")
+    if controller:
+        controller.check_pause()
 
 
 @contextmanager
