@@ -1,7 +1,10 @@
+import logging
 import threading
 
 from faker import Faker
 from faker.providers.phone_number import Provider as PhoneNumberProvider
+
+logging.getLogger("faker").setLevel(logging.INFO)
 
 
 class ProzorroPhoneNumberProvider(PhoneNumberProvider):
