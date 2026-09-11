@@ -356,6 +356,8 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
         "esco",
         "priceQuotation",
         "simple.defense",
+        "negotiation",
+        "reporting",
     ):
         criteria_response = post_criteria(
             client,

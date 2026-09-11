@@ -1,0 +1,144 @@
+{
+  "config": {
+    "hasMultiSourcing": false,
+    "awardComplainDuration": 0,
+    "cancellationComplainDuration": 0,
+    "clarificationUntilDuration": 0,
+    "enquiryPeriodRegulation": 0,
+    "hasAuction": false,
+    "hasAwardComplaints": false,
+    "hasAwardingOrder": true,
+    "hasCancellationComplaints": false,
+    "hasEnquiries": false,
+    "hasPreSelectionAgreement": false,
+    "hasPrequalification": false,
+    "hasQualificationComplaints": false,
+    "hasTenderComplaints": false,
+    "hasValueEstimation": true,
+    "hasValueRestriction": true,
+    "minBidsNumber": 1,
+    "minEnquiriesDuration": 0,
+    "minTenderingDuration": 0,
+    "qualificationComplainDuration": 0,
+    "qualificationDuration": 0,
+    "restricted": false,
+    "tenderComplainRegulation": 0,
+    "valueCurrencyEquality": true
+  },
+  "data": {
+    "causeDetails": {
+      "code": "activeCombatZone",
+      "description": "У разі, коли державний замовник або його відокремлений підрозділ, що здійснює закупівлю, перебуває на території активних бойових дій, які не завершені на дату укладення державного контракту (договору)",
+      "scheme": "DECREE1275",
+      "title": "Підпункт 8 пункту 9"
+    },
+    "description": "Тестова назва предмета закупівлі",
+    "description_en": "Procurement item test name",
+    "items": [
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Генератори",
+          "id": "31120000-3",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "вул. Тестова 1"
+        },
+        "deliveryDate": {
+          "endDate": "2017-09-19T19:39:39.580353",
+          "startDate": "2017-09-16T19:39:39.580353"
+        },
+        "description": "Тестова назва предмета закупівлі",
+        "description_en": "Procurement item test name",
+        "id": "2dc54675d6364e2baffbc0f8e74432ac",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        },
+        "product": "1270c96a250e474ba0dd7bc782705411",
+        "category": "31120000-730722-40996564"
+      }
+    ],
+    "mainProcurementCategory": "services",
+    "milestones": [
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 70,
+        "sequenceNumber": 1,
+        "title": "executionOfWorks",
+        "type": "financing"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 999,
+          "type": "banking"
+        },
+        "percentage": 30,
+        "sequenceNumber": 2,
+        "title": "executionOfWorks",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "sequenceNumber": 3,
+        "title": "signingTheContract",
+        "type": "delivery"
+      }
+    ],
+    "mode": "test",
+    "procurementMethod": "limited",
+    "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
+    "procurementMethodType": "reporting",
+    "procuringEntity": {
+      "address": {
+        "countryName": "Україна",
+        "locality": "м. Київ",
+        "postalCode": "42000",
+        "region": "м. Київ",
+        "streetAddress": "вул. Тестова 22"
+      },
+      "contactPoint": {
+        "name": "Тестовенко Тест Тестович",
+        "telephone": "+380424424242",
+        "url": "https://example.com"
+      },
+      "identifier": {
+        "id": "21725150",
+        "legalName": "Тестовий заклад",
+        "scheme": "UA-EDR"
+      },
+      "kind": "other",
+      "name": "Тестовий заклад #1 м.Київ"
+    },
+    "status": "draft",
+    "title": "Тестовий опис предмету закупівлі у заголовку тендеру (created with procedure_tools)",
+    "title_en": "Procurement item test description in procedure title (created with procedure_tools)",
+    "value": {
+      "amount": 500000,
+      "currency": "UAH",
+      "valueAddedTaxIncluded": true
+    }
+  }
+}
