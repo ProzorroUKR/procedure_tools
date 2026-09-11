@@ -11,20 +11,20 @@
           "locality": "м. Київ",
           "postalCode": "21100",
           "region": "м. Київ",
-          "streetAddress": "вул. Тестова, 33"
+          "streetAddress": "{{ fake.street_address() }}"
         },
         "contactPoint": {
-          "email": "factory@example.com",
-          "name": "Нейменко Нейм Неймович",
-          "telephone": "+380000000000"
+          "email": "{{ fake.email() }}",
+          "name": "{{ fake.name() }}",
+          "telephone": "{{ fake.prozorro_phone_number() }}"
         },
         "identifier": {
           "id": "13313462",
-          "legalName": "Державне комунальне підприємство громадського харчування «Школяр»",
+          "legalName": "{{ fake.company() }}",
           "scheme": "UA-EDR",
           "uri": "https://example.com"
         },
-        "name": "Тестове підприємство",
+        "name": "{{ fake.company() }}",
         "scale": "micro"
       }
     ],

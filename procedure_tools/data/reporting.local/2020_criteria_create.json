@@ -8,7 +8,7 @@
         "id": "CRITERION.OTHER.SUBJECT_OF_PROCUREMENT.LOCAL_ORIGIN_LEVEL"
       },
       "relatesTo": "item",
-      "relatedItem": "2dc54675d6364e2baffbc0f8e74432ac",
+      "relatedItem": "{{ tender['items'][0].id }}",
       "legislation": [
         {
           "version": "2021-12-16",
