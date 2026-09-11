@@ -341,34 +341,16 @@ def process_tender(client, ds_client, args, context, prefix, session=None):
         prefix=prefix,
     )
 
-    if method_type in (
-        "belowThreshold",
-        "requestForProposal",
-        "competitiveOrdering",
-        "aboveThreshold",
-        "aboveThresholdUA",
-        "aboveThresholdEU",
-        "closeFrameworkAgreementUA",
-        "competitiveDialogueEU",
-        "competitiveDialogueUA",
-        "competitiveDialogueEU.stage2",
-        "competitiveDialogueUA.stage2",
-        "esco",
-        "priceQuotation",
-        "simple.defense",
-    ):
-        criteria_response = post_criteria(
-            client,
-            args,
-            context,
-            tender_id,
-            tender_token,
-            prefix=prefix,
-        )
-        if criteria_response:
-            tender_criteria = criteria_response.json()["data"]
-        else:
-            tender_criteria = None
+    criteria_response = post_criteria(
+        client,
+        args,
+        context,
+        tender_id,
+        tender_token,
+        prefix=prefix,
+    )
+    if criteria_response:
+        tender_criteria = criteria_response.json()["data"]
     else:
         tender_criteria = None
 

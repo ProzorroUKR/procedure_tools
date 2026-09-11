@@ -238,6 +238,12 @@ def test_negotiation():
     run_test(argv)
 
 
+@skipifenv
+def test_negotiation_local():
+    argv = ["--data", "negotiation.local"]
+    run_test(argv)
+
+
 @skipinactive
 @skipifenv
 def test_negotiation_quick():
@@ -248,6 +254,12 @@ def test_negotiation_quick():
 @skipifenv
 def test_reporting():
     argv = ["--data", "reporting"]
+    run_test(argv)
+
+
+@skipifenv
+def test_reporting_local():
+    argv = ["--data", "reporting.local"]
     run_test(argv)
 
 

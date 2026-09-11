@@ -1,0 +1,14 @@
+{
+  "data": {
+    "qualified": true,
+    "requirementResponses": [
+      {
+        "id": "1d41ae48620d4f13b7e26f068d3215be",
+        "requirement": {
+          "id": "ab858cce17054d27867c85a9ed188a8f"
+        },
+        "value": "36.6"
+      }
+    ]
+  }
+}
