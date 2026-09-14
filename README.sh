@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-echo "Readme generation started."
+echo "README.md generation started."
 
 FILE='README.md'
 ENV_FILE=".env.readme"
@@ -11,8 +11,15 @@ if [ ! -f "${ENV_FILE}" ]; then
     exit 1
 fi
 
+READ_ENV_PY='
+from procedure_tools.utils.env import load_env_file
+import sys
+
+print(load_env_file(sys.argv[1]).get(sys.argv[2], ""))
+'
+
 read_env() {
-    python -c 'from procedure_tools.utils.env import load_env_file; import sys; print(load_env_file(sys.argv[1]).get(sys.argv[2], ""))' "${ENV_FILE}" "$1"
+    python -c "${READ_ENV_PY}" "${ENV_FILE}" "$1"
 }
 
 API_HOST="$(read_env API_HOST)"
@@ -33,19 +40,19 @@ cat > $FILE <<- EOM
 
 ## Install
 
-1. Clone
+1. Clone the repository:
 
     \`\`\`
     git clone https://github.com/ProzorroUKR/procedure_tools.git
     \`\`\`
 
-2. Navigate to cloned folder:
+2. Navigate to the cloned folder:
 
     \`\`\`
     cd procedure_tools
     \`\`\`
 
-3. Install with pip
+3. Install with pip:
 
     * vanilla:
 
@@ -59,7 +66,7 @@ cat > $FILE <<- EOM
         pip install -e .[color]
         \`\`\`
 
-    * with tests requirements:
+    * with test requirements:
 
         \`\`\`
         pip install -e .[test]
@@ -67,7 +74,7 @@ cat > $FILE <<- EOM
 
 ## Update
 
-1. Pull
+1. Pull the latest changes:
 
     \`\`\`
     git pull
@@ -75,31 +82,31 @@ cat > $FILE <<- EOM
 
     In case of conflicts:
 
-    * Undo changes in project folder or reset with command
+    * Undo the changes in the project folder, or reset with this command:
 
         \`\`\`
         git reset --hard
         \`\`\`
 
-    * Pull again
+    * Pull again:
 
         \`\`\`
         git pull
         \`\`\`
 
-    * If this did not help, clean project folder
+    * If that does not help, clean the project folder:
 
         \`\`\`
         git clean -fd
         \`\`\`
 
-    * Pull again
+    * Pull again:
 
         \`\`\`
         git pull
         \`\`\`
 
-2. Install
+2. Install:
 
     \`\`\`
     pip install -e .
@@ -110,18 +117,18 @@ cat > $FILE <<- EOM
 \`\`\`
 EOM
 
-echo "Executing command help."
+echo "Generating the help output."
 
 procedure -h >> $FILE
 
-echo "Command help successfully generated."
+echo "Help output generated."
 
 cat >> $FILE <<- EOM
 \`\`\`
 
 ## Env files
 
-All CLI parameters can be set in an env file. Command-line arguments override the file.
+All CLI parameters can be set in an env file. Command-line arguments override values from the file.
 
 Copy an example file for the environment you need:
 
@@ -131,7 +138,9 @@ cp .env.staging.example .env.staging
 cp .env.dev.example .env.dev
 \`\`\`
 
-Use \`--env\` (or \`-E\`) to select the file for the current run. It accepts a path or an environment name and looks up \`.env.<name>\`, \`<name>.env\`, or \`envs/<name>\`. If omitted, \`PROCEDURE_ENV\` is used, otherwise \`.env\` when that file exists.
+Fill in the file with your credentials.
+
+Use \`--env\` (or \`-E\`) to select the file for the current run. It accepts a path or an environment name and looks up \`.env.<name>\`, \`<name>.env\`, or \`envs/<name>\`. If omitted, \`PROCEDURE_ENV\` is used. If that is also unset, \`.env\` is used when that file exists.
 
 \`\`\`
 procedure --env sandbox --data closeFrameworkAgreementUA
@@ -145,60 +154,60 @@ Override selected values from the command line:
 procedure --env sandbox --token other_token --data closeFrameworkAgreementUA
 \`\`\`
 
-## Usage example
+## Usage examples
 
-### With env file
+### With an env file
 
-Create with default data
+Create with the default data:
 \`\`\`
 procedure --env sandbox --data=closeFrameworkAgreementUA
 \`\`\`
 
-Create with default data and stop after specific data file
+Create with the default data and stop after a specific data file:
 \`\`\`
 procedure --env sandbox --data=closeFrameworkAgreementUA --stop=bid_create_3.json
 \`\`\`
 
-Create with custom data files (relative path)
+Create with custom data files (relative path):
 \`\`\`
 procedure --env sandbox --data=customdata/closeFrameworkAgreementUA
 \`\`\`
 
-Create with custom data files (absolute path)
+Create with custom data files (absolute path):
 \`\`\`
-procedure --env sandbox --data=/Users/JonhDoe/customdata/closeFrameworkAgreementUA
-\`\`\`
-
-Create with custom data files (absolute path, Windows)
-\`\`\`
-procedure --env sandbox --data=C:\\Users\\JonhDoe\\customdata\\closeFrameworkAgreementUA
+procedure --env sandbox --data=/Users/JohnDoe/customdata/closeFrameworkAgreementUA
 \`\`\`
 
-### Without env file
+Create with custom data files (absolute path, Windows):
+\`\`\`
+procedure --env sandbox --data=C:\\Users\\JohnDoe\\customdata\\closeFrameworkAgreementUA
+\`\`\`
 
-Create with default data
+### Without an env file
+
+Create with the default data:
 \`\`\`
 procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA
 \`\`\`
 
-Create with default data and stop after specific data file
+Create with the default data and stop after a specific data file:
 \`\`\`
 procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA --stop=bid_create_3.json
 \`\`\`
 
-Create with custom data files (relative path)
+Create with custom data files (relative path):
 \`\`\`
 procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=customdata/closeFrameworkAgreementUA
 \`\`\`
 
-Create with custom data files (absolute path)
+Create with custom data files (absolute path):
 \`\`\`
-procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=/Users/JonhDoe/customdata/closeFrameworkAgreementUA
+procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=/Users/JohnDoe/customdata/closeFrameworkAgreementUA
 \`\`\`
 
-Create with custom data files (absolute path, Windows)
+Create with custom data files (absolute path, Windows):
 \`\`\`
-procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=C:\\Users\\JonhDoe\\customdata\\closeFrameworkAgreementUA
+procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=C:\\Users\\JohnDoe\\customdata\\closeFrameworkAgreementUA
 \`\`\`
 
 ## Output example
@@ -208,37 +217,45 @@ procedure --env sandbox --data=closeFrameworkAgreementUA --stop=bid_create_4.jso
 \`\`\`
 EOM
 
-echo "Executing command example."
+echo "Generating the command example."
 
 procedure --env readme --data=closeFrameworkAgreementUA --stop=bid_create_3.json >> $FILE
 
-echo "Command example successfully generated."
+echo "Command example generated."
 
 cat >> $FILE <<- EOM
 \`\`\`
 
-## Update readme
+## Update the README
 
-Copy and fill \`.env.readme\`:
+1. Copy the \`.env.readme.example\` file to \`.env.readme\`:
 
 \`\`\`
 cp .env.readme.example .env.readme
 \`\`\`
 
-then run:
+2. Fill in \`.env.readme\` with your credentials.
 
+3. Run the script to generate the README:
 \`\`\`
 ./README.sh
 \`\`\`
 
-## Run tests
+## Run the tests
 
-Copy and fill \`.env.test\`, then run:
+1. Copy the \`.env.test.example\` file to \`.env.test\`:
 
 \`\`\`
 cp .env.test.example .env.test
+\`\`\`
+
+2. Fill in \`.env.test\` with your credentials.
+
+3. Run the tests:
+
+\`\`\`
 pytest
 \`\`\`
 EOM
 
-echo "Readme successfully generated."
+echo "README.md successfully generated."
