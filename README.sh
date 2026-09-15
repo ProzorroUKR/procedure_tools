@@ -52,67 +52,67 @@ cat > $FILE <<- EOM
     cd procedure_tools
     \`\`\`
 
-3. Install with pip or uv
+3. Install with pip or uv.
 
-### Install with pip:
+### Install with pip
 
-    * vanilla:
+* vanilla:
 
-        \`\`\`
-        pip install -e .
-        \`\`\`
+    \`\`\`
+    pip install -e .
+    \`\`\`
 
-    * colorized output:
+* colorized output:
 
-        \`\`\`
-        pip install -e .[color]
-        \`\`\`
+    \`\`\`
+    pip install -e .[color]
+    \`\`\`
 
-    * with test requirements:
+* with test requirements:
 
-        \`\`\`
-        pip install -e .[test]
-        \`\`\`
+    \`\`\`
+    pip install -e .[test]
+    \`\`\`
 
-    * with dev requirements:
+* with dev requirements:
 
-        \`\`\`
-        pip install -e .[dev]
-        \`\`\`
+    \`\`\`
+    pip install -e .[dev]
+    \`\`\`
 
-    * with all requirements:
+* with all requirements:
 
-        \`\`\`
-        pip install -e .[dev,test,color]
-        \`\`\`
+    \`\`\`
+    pip install -e .[dev,test,color]
+    \`\`\`
 
-### Install with uv:
+### Install with uv
 
-    * vanilla:
+* vanilla:
 
     \`\`\`
     uv sync
     \`\`\`
 
-    * with color requirements:
+* with color requirements:
 
     \`\`\`
     uv sync --extra color
     \`\`\`
 
-    * with test requirements:
+* with test requirements:
 
     \`\`\`
     uv sync --extra test
     \`\`\`
 
-    * with dev requirements:
+* with dev requirements:
 
     \`\`\`
     uv sync --extra dev
     \`\`\`
 
-    * with all requirements:
+* with all requirements:
 
     \`\`\`
     uv sync --extra dev --extra test --extra color
