@@ -222,7 +222,7 @@
         }
       }
     ],
-    "mainProcurementCategory": "goods",
+    "mainProcurementCategory": "services",
     "milestones": [
       {
         "code": "prepayment",
