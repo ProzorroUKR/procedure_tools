@@ -196,7 +196,7 @@
         "yearlyPaymentsPercentageRange": 0.6
       }
     ],
-    "mainProcurementCategory": "services",
+    "mainProcurementCategory": "goods",
     "milestones": [
       {
         "code": "prepayment",

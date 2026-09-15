@@ -252,7 +252,7 @@
         }
       }
     ],
-    "mainProcurementCategory": "services",
+    "mainProcurementCategory": "goods",
     "milestones": [
       {
         "code": "prepayment",
