@@ -94,7 +94,7 @@ cat > $FILE <<- EOM
     uv sync
     \`\`\`
 
-* with color requirements:
+* colorized output:
 
     \`\`\`
     uv sync --extra color
