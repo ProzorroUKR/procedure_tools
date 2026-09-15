@@ -52,7 +52,9 @@ cat > $FILE <<- EOM
     cd procedure_tools
     \`\`\`
 
-3. Install with pip:
+3. Install with pip or uv
+
+### Install with pip:
 
     * vanilla:
 
@@ -71,6 +73,50 @@ cat > $FILE <<- EOM
         \`\`\`
         pip install -e .[test]
         \`\`\`
+
+    * with dev requirements:
+
+        \`\`\`
+        pip install -e .[dev]
+        \`\`\`
+
+    * with all requirements:
+
+        \`\`\`
+        pip install -e .[dev,test,color]
+        \`\`\`
+
+### Install with uv:
+
+    * vanilla:
+
+    \`\`\`
+    uv sync
+    \`\`\`
+
+    * with color requirements:
+
+    \`\`\`
+    uv sync --extra color
+    \`\`\`
+
+    * with test requirements:
+
+    \`\`\`
+    uv sync --extra test
+    \`\`\`
+
+    * with dev requirements:
+
+    \`\`\`
+    uv sync --extra dev
+    \`\`\`
+
+    * with all requirements:
+
+    \`\`\`
+    uv sync --extra dev --extra test --extra color
+    \`\`\`
 
 ## Update
 

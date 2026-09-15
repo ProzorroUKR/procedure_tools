@@ -1,5 +1,0 @@
-requests
-python-dateutil
-jinja2
-faker
-jsonpath-ng

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 
 from procedure_tools.utils.date import fix_datetime, get_now, parse_date
