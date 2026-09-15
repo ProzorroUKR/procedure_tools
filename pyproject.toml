@@ -1,3 +1,79 @@
+[project]
+name = "procedure_tools"
+dynamic = ["version"]
+description = "CLI tools for creating Prozorro CDB procedures"
+readme = "README.md"
+keywords = ["prozorro", "procurement"]
+classifiers = [
+  "Programming Language :: Python",
+  "Topic :: Internet :: WWW/HTTP",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "faker",
+    "jinja2",
+    "jsonpath-ng",
+    "python-dateutil",
+    "requests",
+]
+
+[project.optional-dependencies]
+color = [
+    "colorama",
+    "pygments",
+]
+test = [
+    "pytest",
+]
+dev = [
+    "autoflake",
+    "black",
+    "isort",
+    "pylint",
+    "pylint-pytest",
+]
+
+[project.scripts]
+procedure = "procedure_tools.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = {attr = "procedure_tools.version.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["procedure_tools*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+procedure_tools = ["data/**/*"]
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+python_files = [
+    "procedure_tools/test.py",
+    "test_*.py",
+]
+testpaths = [
+    "procedure_tools",
+]
+norecursedirs = [
+    "__pycache__",
+    ".git",
+    ".eggs",
+    "*.egg",
+]
+addopts = "-v --color=yes -rs"
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "[%(asctime)s] %(message)s"
+log_cli_date_format = "%H:%M:%S"
+
 [tool.black]
 line-length = 120
 skip-string-normalization = true
