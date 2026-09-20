@@ -38,7 +38,7 @@ def run_test(argv):
     args = ["--env", TEST_ENV]
     args.extend(argv)
 
-    print("\n\nTest with args: %s\n\n" % (args))
+    print(f"\n\nTest with args: {args}\n\n")
 
     with mock.patch("sys.argv", [""] + args), pytest.raises(SystemExit) as e:
         main()

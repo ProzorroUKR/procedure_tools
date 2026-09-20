@@ -7,6 +7,8 @@ from procedure_tools.utils.handlers import (
     plan_patch_success_handler,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def plan_ref(context, step):
     """(index, plan, token) of the plan the step refers to: part #1 or the last created plan."""
@@ -26,7 +28,7 @@ def store_plan(context, index, plan):
 @action("plan_create")
 def plan_create(context, step):
     """Create a plan (POST plans); sets plan, plan_token and appends to plans, plans_tokens."""
-    logging.info("Creating plan...\n")
+    logger.info("Creating plan...\n")
     data = context.load(step)
     response = context.client.post(
         "plans",
@@ -44,7 +46,7 @@ def plan_create(context, step):
 @action("plan_patch")
 def plan_patch(context, step):
     """Patch a plan (PATCH plans/{id}); parts: [plan index] (default: the last created plan)."""
-    logging.info("Patching plan...\n")
+    logger.info("Patching plan...\n")
     index, plan, token = plan_ref(context, step)
     data = context.load(step)
     response = context.client.patch(

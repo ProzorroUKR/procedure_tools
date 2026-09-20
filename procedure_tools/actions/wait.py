@@ -42,6 +42,9 @@ from procedure_tools.utils.handlers import (
 )
 from procedure_tools.utils.runtime import get_controller
 
+logger = logging.getLogger(__name__)
+
+
 # --- waiting primitives
 
 
@@ -50,7 +53,7 @@ def wait_until_date(date_str, client_timedelta=timedelta(), date_info_str=None):
     delta_seconds = (parse_date(date_str) - now).total_seconds()
     date_seconds = math.ceil(delta_seconds) if delta_seconds > 0 else 0
     info_str = f" for {date_info_str}" if date_info_str else ""
-    logging.info(f"Waiting {date_seconds} seconds{info_str} - {date_str}...\n")
+    logger.info(f"Waiting {date_seconds} seconds{info_str} - {date_str}...\n")
     controller = get_controller()
     if controller:
         controller.set_activity(None, f"waiting {date_seconds}s")
@@ -58,7 +61,7 @@ def wait_until_date(date_str, client_timedelta=timedelta(), date_info_str=None):
 
 
 def wait_tender_status(client, args, context, tender_id, delay, status, fail_status=None):
-    logging.info(f"Waiting for {status}...\n")
+    logger.info(f"Waiting for {status}...\n")
     status = [status] if not isinstance(status, list) else status
     fail_status = [fail_status] if fail_status and not isinstance(fail_status, list) else fail_status
     controller = get_controller()
@@ -77,7 +80,7 @@ def wait_tender_status(client, args, context, tender_id, delay, status, fail_sta
 
 
 def wait_auction_participation_urls(client, args, tender_id, bids):
-    logging.info("Waiting for the auction participation urls...\n")
+    logger.info("Waiting for the auction participation urls...\n")
     active_bids = [bid for bid in bids if bid["data"].get("status") != "unsuccessful"]
     active_bids_ids = [bid["data"]["id"] for bid in active_bids]
     success_bids_ids = []
@@ -117,7 +120,7 @@ def wait_auction_participation_urls(client, args, tender_id, bids):
 
 def wait_edr_documents(context, path, items):
     """Wait until every item (award or qualification) has the EDR identification document."""
-    logging.info(f"Waiting for {EDR_FILENAME} in {path} documents...\n")
+    logger.info(f"Waiting for {EDR_FILENAME} in {path} documents...\n")
     for item in items:
         while EDR_FILENAME not in [doc["title"] for doc in item.get("documents", [])]:
             sleep(SECONDS_BUFFER)
@@ -153,7 +156,7 @@ def tender_wait_next_check(context, step):
     response = refresh_tender(context)
     next_check = get_next_check(response)
     if not next_check:
-        logging.info("No next check date, nothing to wait for\n")
+        logger.info("No next check date, nothing to wait for\n")
         return
     wait_until_date(
         next_check,
@@ -181,7 +184,7 @@ def wait_seconds(context, step):
     """Sleep for a number of seconds: {"seconds": 5}."""
     data = context.load(step)
     seconds = data.get("seconds", 0)
-    logging.info(f"Waiting {seconds} seconds...\n")
+    logger.info(f"Waiting {seconds} seconds...\n")
     sleep(seconds)
 
 
@@ -193,7 +196,7 @@ def tender_awards_wait_complaint_period(context, step):
     response = context.client.get(f"tenders/{tender_id(context)}/awards")
     end_dates = get_complaint_period_end_dates(response)
     if not end_dates:
-        logging.info("No award complaint periods, nothing to wait for\n")
+        logger.info("No award complaint periods, nothing to wait for\n")
         return
     wait_until_date(
         max(end_dates),

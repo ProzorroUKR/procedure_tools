@@ -4,6 +4,9 @@ import logging
 from procedure_tools.utils.date import client_timedelta_string
 from procedure_tools.utils.style import fore_error, fore_info
 
+logger = logging.getLogger(__name__)
+
+
 PAD = 20
 
 EX_OK = 0
@@ -142,7 +145,7 @@ def format_log_fields(payload: dict, fields: list[str]) -> str:
         group_order = []
 
         for grouped_path in grouped_paths:
-            wildcard_root, wildcard_suffix = split_wildcard_path(grouped_path)
+            _, wildcard_suffix = split_wildcard_path(grouped_path)
             for value, resolved_path in extract_path_values(payload, grouped_path):
                 group_key = resolved_path
                 if wildcard_suffix and resolved_path.endswith(wildcard_suffix):
@@ -184,20 +187,20 @@ def format_response_text(text):
 def error(text, allow_error=False):
     msg = fore_error(text)
     msg += "\n"
-    logging.info(msg)
+    logger.info(msg)
     if not allow_error:
         raise ProcedureExit(EX_DATAERR, text)
 
 
 def default_error_handler(response):
     msg = "Response text:\n"
-    logging.info(msg)
+    logger.info(msg)
     error(format_response_text(response.text))
 
 
 def allow_error_handler(response):
     msg = "Response text:\n"
-    logging.info(msg)
+    logger.info(msg)
     error(format_response_text(response.text), allow_error=True)
 
 
@@ -222,7 +225,7 @@ def client_init_response_handler(
 ):
     response_handler(response)
     timedelta_string = client_timedelta_string(client_timedelta)
-    logging.info(f"Client time delta with server: {timedelta_string}\n")
+    logger.info(f"Client time delta with server: {timedelta_string}\n")
 
 
 def tender_create_success_handler(response):
@@ -239,7 +242,7 @@ def tender_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def framework_create_success_handler(response):
@@ -254,7 +257,7 @@ def framework_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def framework_patch_success_handler(response):
@@ -267,7 +270,7 @@ def framework_patch_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def submission_create_success_handler(response):
@@ -281,7 +284,7 @@ def submission_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def framework_get_success_handler(response):
@@ -295,7 +298,7 @@ def framework_get_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def plan_create_success_handler(response):
@@ -311,7 +314,7 @@ def plan_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def plan_patch_success_handler(response):
@@ -324,7 +327,7 @@ def plan_patch_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def contract_credentials_success_handler(response):
@@ -337,7 +340,7 @@ def contract_credentials_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def contract_post_success_handler(response):
@@ -350,7 +353,7 @@ def contract_post_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def contract_access_success_handler(role: str, contract_id: str):
@@ -368,7 +371,7 @@ def contract_access_success_handler(role: str, contract_id: str):
         )
         msg += format_log_entry("role", role)
 
-        logging.info(msg)
+        logger.info(msg)
 
     return handler
 
@@ -393,10 +396,10 @@ def bid_create_success_handler(response):
         "qualificationDocuments",
     ):
         for document in data.get(bid_document_container, []):
-            response = type("Response", (object,), {"json": lambda self: {"data": document}})()
+            response = type("Response", (object,), {"json": lambda self, document=document: {"data": document}})()
             document_attach_success_handler(response)
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def item_create_success_handler(response):
@@ -409,7 +412,7 @@ def item_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def item_get_success_handler(response):
@@ -423,7 +426,7 @@ def item_get_success_handler(response):
             ],
         )
 
-        logging.info(msg)
+        logger.info(msg)
 
 
 def item_patch_success_handler(response):
@@ -436,7 +439,7 @@ def item_patch_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def signatory_post_success_handler(response):
@@ -448,7 +451,7 @@ def signatory_post_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def tender_patch_success_handler(response):
@@ -461,7 +464,7 @@ def tender_patch_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def tender_post_criteria_success_handler(response):
@@ -473,7 +476,7 @@ def tender_post_criteria_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def tender_check_status_success_handler(response):
@@ -486,7 +489,7 @@ def tender_check_status_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def tender_check_status_invalid_handler(response):
@@ -500,7 +503,7 @@ def tender_check_status_invalid_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def auction_participation_url_success_handler(response):
@@ -513,7 +516,7 @@ def auction_participation_url_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def auction_multilot_participation_url_success_handler(response):
@@ -528,7 +531,7 @@ def auction_multilot_participation_url_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def tender_post_plan_success_handler(response):
@@ -540,7 +543,7 @@ def tender_post_plan_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def tender_post_complaint_success_handler(response):
@@ -553,7 +556,7 @@ def tender_post_complaint_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
 def document_attach_success_handler(response):
@@ -568,4 +571,4 @@ def document_attach_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)

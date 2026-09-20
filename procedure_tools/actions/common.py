@@ -22,6 +22,9 @@ from procedure_tools.utils.handlers import (
 from procedure_tools.utils.runtime import get_controller
 from procedure_tools.utils.style import fore_warning
 
+logger = logging.getLogger(__name__)
+
+
 CONTRACT_ROLES = ("buyer", "supplier")
 
 
@@ -34,7 +37,7 @@ def sleep(seconds):
 
 
 def skip(message):
-    logging.info(f"{fore_warning(message)}\n")
+    logger.info(f"{fore_warning(message)}\n")
 
 
 # --- polling
@@ -51,7 +54,7 @@ def has_data(response):
 def get_until(context, path, ready=has_items, info=None, **kwargs):
     """GET ``path`` until ``ready(response)`` is true."""
     if info:
-        logging.info(f"{info}\n")
+        logger.info(f"{info}\n")
     while True:
         response = context.client.get(path, **kwargs)
         if ready(response):
@@ -139,7 +142,7 @@ def ensure_bids(context):
     """Bids list; fetched without tokens when no bids were created in this run."""
     if context.get("bids"):
         return context["bids"]
-    logging.info("Checking bids...\n")
+    logger.info("Checking bids...\n")
     response = get_until(context, f"tenders/{tender_id(context)}/bids", auth_token=context.args.token)
     context["bids"] = response.json()["data"]
     return context["bids"]

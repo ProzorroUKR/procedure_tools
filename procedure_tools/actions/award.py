@@ -14,11 +14,13 @@ from procedure_tools.utils.handlers import (
     item_patch_success_handler,
 )
 
+logger = logging.getLogger(__name__)
+
 
 @action("tender_award_create")
 def tender_award_create(context, step):
     """Create an award (POST tenders/{id}/awards) in limited procedures; parts are a free label."""
-    logging.info("Creating award...\n")
+    logger.info("Creating award...\n")
     data = context.load(step)
     context.client.post(
         f"tenders/{tender_id(context)}/awards",
@@ -33,7 +35,7 @@ def tender_award_create(context, step):
 @action("tender_award_patch")
 def tender_award_patch(context, step):
     """Patch an award (PATCH tenders/{id}/awards/{id}); parts: [award index]; refreshes awards."""
-    logging.info("Patching award...\n")
+    logger.info("Patching award...\n")
     index = step.index(0)
     data = context.load(step)
     context.client.patch(
@@ -49,7 +51,7 @@ def tender_award_patch(context, step):
 @action("tender_award_document_attach")
 def tender_award_document_attach(context, step):
     """Attach a document to an award (POST tenders/{id}/awards/{id}/documents); parts: [award index, free label]."""
-    logging.info("Uploading award document...\n")
+    logger.info("Uploading award document...\n")
     index = step.index(0)
     attach_document(
         context,

@@ -37,6 +37,8 @@ from procedure_tools.utils.handlers import (
     signatory_post_success_handler,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def contract_ref(context, step):
     """(index, contract, token) for steps with parts [contract index, (role)]."""
@@ -80,7 +82,7 @@ def tender_contracts_get(context, step):
 @action("contract_credentials_patch")
 def contract_credentials_patch(context, step):
     """Get the legacy contract token (PATCH contracts/{id}/credentials); parts: [contract index]; sets contracts_tokens[i]."""
-    logging.info("Getting credentials for contract...\n")
+    logger.info("Getting credentials for contract...\n")
     index = step.index(0)
     context.load(step)
     response = context.client.patch(
@@ -109,7 +111,7 @@ def contract_access_post(context, step):
         else:
             identifier = contract_data["suppliers"][0]["identifier"]
         data = {"data": {"identifier": identifier}}
-    logging.info(f"Getting access for contract {contract_data['id']} for {role}...\n")
+    logger.info(f"Getting access for contract {contract_data['id']} for {role}...\n")
     response = context.client.post(
         f"contracts/{contract_data['id']}/access",
         json=data,
@@ -123,7 +125,7 @@ def contract_access_post(context, step):
 @action("contract_patch")
 def contract_patch(context, step):
     """Patch a contract (PATCH contracts/{id}); parts: [contract index, (role)]."""
-    logging.info("Patching contract...\n")
+    logger.info("Patching contract...\n")
     index, contract_data, token = contract_ref(context, step)
     data = context.load(step)
     context.client.patch(
@@ -139,7 +141,7 @@ def contract_patch(context, step):
 @action("contract_post")
 def contract_post(context, step):
     """Create a contract (POST contracts) with the token of contract [index]; parts: [contract index, (role)]."""
-    logging.info("Creating contract...\n")
+    logger.info("Creating contract...\n")
     index, _, token = contract_ref(context, step)
     data = context.load(step)
     context.client.post(
@@ -155,7 +157,7 @@ def contract_post(context, step):
 @action("contract_document_attach")
 def contract_document_attach(context, step):
     """Attach a document to a contract (POST contracts/{id}/documents); parts: [contract index, (role)]."""
-    logging.info("Uploading contract document...\n")
+    logger.info("Uploading contract document...\n")
     index, contract_data, token = contract_ref(context, step)
     attach_document(context, step, f"contracts/{contract_data['id']}/documents", acc_token=token)
     refresh_contract(context, index)
@@ -164,7 +166,7 @@ def contract_document_attach(context, step):
 @action("contract_buyer_signer_info_put")
 def contract_buyer_signer_info_put(context, step):
     """Set the buyer signer info (PUT contracts/{id}/buyer/signer_info); parts: [contract index, (role)]."""
-    logging.info("Setting contract buyer signer info...\n")
+    logger.info("Setting contract buyer signer info...\n")
     index, contract_data, token = contract_ref(context, step)
     data = context.load(step)
     context.client.put(
@@ -180,7 +182,7 @@ def contract_buyer_signer_info_put(context, step):
 @action("contract_suppliers_signer_info_put")
 def contract_suppliers_signer_info_put(context, step):
     """Set the suppliers signer info (PUT contracts/{id}/suppliers/signer_info) with the winning bid token; parts: [contract index, (role)]."""
-    logging.info("Setting contract suppliers signer info...\n")
+    logger.info("Setting contract suppliers signer info...\n")
     index = step.index(0)
     role = contract_role(step, 1)
     contract_data = contract(context, index)
@@ -199,7 +201,7 @@ def contract_suppliers_signer_info_put(context, step):
 @action("contract_signatories_post")
 def contract_signatories_post(context, step):
     """Sign a contract (POST contracts/{id}/signatories); parts: [contract index, (role)]."""
-    logging.info("Signing contract...\n")
+    logger.info("Signing contract...\n")
     index, contract_data, token = contract_ref(context, step)
     data = context.load(step)
     context.client.post(
@@ -215,7 +217,7 @@ def contract_signatories_post(context, step):
 @action("contract_cancellation_post")
 def contract_cancellation_post(context, step):
     """Cancel a contract (POST contracts/{id}/cancellations); parts: [contract index, (role)]."""
-    logging.info("Cancelling contract...\n")
+    logger.info("Cancelling contract...\n")
     index, contract_data, token = contract_ref(context, step)
     data = context.load(step)
     context.client.post(
@@ -231,7 +233,7 @@ def contract_cancellation_post(context, step):
 @action("contract_change_post")
 def contract_change_post(context, step):
     """Create a contract change (POST contracts/{id}/changes); parts: [contract index, (role)]."""
-    logging.info("Creating contract change...\n")
+    logger.info("Creating contract change...\n")
     index, contract_data, token = contract_ref(context, step)
     data = context.load(step)
     context.client.post(
@@ -247,7 +249,7 @@ def contract_change_post(context, step):
 @action("contract_change_patch")
 def contract_change_patch(context, step):
     """Patch a contract change (PATCH contracts/{id}/changes/{id}); parts: [contract index, change index, (role)]."""
-    logging.info("Patching contract change...\n")
+    logger.info("Patching contract change...\n")
     index, contract_data, change, token = change_ref(context, step)
     data = context.load(step)
     context.client.patch(
@@ -263,7 +265,7 @@ def contract_change_patch(context, step):
 @action("contract_change_document_attach")
 def contract_change_document_attach(context, step):
     """Attach a document to a contract change (POST contracts/{id}/changes/{id}/documents); parts: [contract index, change index, (role)]."""
-    logging.info("Uploading contract change document...\n")
+    logger.info("Uploading contract change document...\n")
     index, contract_data, change, token = change_ref(context, step)
     attach_document(
         context,
@@ -277,7 +279,7 @@ def contract_change_document_attach(context, step):
 @action("contract_change_signatories_post")
 def contract_change_signatories_post(context, step):
     """Sign a contract change (POST contracts/{id}/changes/{id}/signatories); parts: [contract index, change index, (role)]."""
-    logging.info("Signing contract change...\n")
+    logger.info("Signing contract change...\n")
     index, contract_data, change, token = change_ref(context, step)
     data = context.load(step)
     context.client.post(
@@ -293,7 +295,7 @@ def contract_change_signatories_post(context, step):
 @action("contract_change_cancellation_post")
 def contract_change_cancellation_post(context, step):
     """Cancel a contract change (POST contracts/{id}/changes/{id}/cancellations); parts: [contract index, change index, (role)]."""
-    logging.info("Cancelling contract change...\n")
+    logger.info("Cancelling contract change...\n")
     index, contract_data, change, token = change_ref(context, step)
     data = context.load(step)
     context.client.post(

@@ -10,11 +10,13 @@ from procedure_tools.actions.common import (
 from procedure_tools.actions.registry import action
 from procedure_tools.utils.handlers import item_patch_success_handler
 
+logger = logging.getLogger(__name__)
+
 
 @action("tender_qualification_patch")
 def tender_qualification_patch(context, step):
     """Patch a tender qualification (PATCH tenders/{id}/qualifications/{id}); parts: [qualification index]."""
-    logging.info("Patching qualification...\n")
+    logger.info("Patching qualification...\n")
     index = step.index(0)
     data = context.load(step)
     context.client.patch(
@@ -30,7 +32,7 @@ def tender_qualification_patch(context, step):
 @action("tender_qualification_document_attach")
 def tender_qualification_document_attach(context, step):
     """Attach a document to a tender qualification (POST tenders/{id}/qualifications/{id}/documents); parts: [qualification index]."""
-    logging.info("Uploading qualification document...\n")
+    logger.info("Uploading qualification document...\n")
     index = step.index(0)
     attach_document(
         context,

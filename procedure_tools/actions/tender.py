@@ -17,11 +17,13 @@ from procedure_tools.utils.handlers import (
     tender_post_plan_success_handler,
 )
 
+logger = logging.getLogger(__name__)
+
 
 @action("tender_create")
 def tender_create(context, step):
     """Create a tender (POST tenders, or POST plans/{id}/tenders when a plan is in context); sets tender, tender_token, tender_config."""
-    logging.info("Creating tender...\n")
+    logger.info("Creating tender...\n")
     data = context.load(step)
     plan = context.get("plan")
     path = f"plans/{plan['id']}/tenders" if plan else "tenders"
@@ -38,7 +40,7 @@ def tender_create(context, step):
 @action("tender_patch")
 def tender_patch(context, step):
     """Patch the tender (PATCH tenders/{id}), for example to switch its status."""
-    logging.info("Patching tender...\n")
+    logger.info("Patching tender...\n")
     data = context.load(step)
     response = context.client.patch(
         f"tenders/{tender_id(context)}",
@@ -60,7 +62,7 @@ def tender_get(context, step):
 @action("tender_document_attach")
 def tender_document_attach(context, step):
     """Attach a document to the tender (POST tenders/{id}/documents); parts are a free label; appends to tender_documents."""
-    logging.info("Uploading tender document...\n")
+    logger.info("Uploading tender document...\n")
     response = attach_document(
         context,
         step,
@@ -73,7 +75,7 @@ def tender_document_attach(context, step):
 @action("tender_document_put")
 def tender_document_put(context, step):
     """Replace a tender document with a new version (PUT tenders/{id}/documents/{id}); parts: [tender_documents index] or a label, then the last attached document with the same title is replaced."""
-    logging.info("Re-uploading tender document...\n")
+    logger.info("Re-uploading tender document...\n")
     data = context.load(step)
     documents = context.get("tender_documents") or []
     part = step.part(0)
@@ -100,7 +102,7 @@ def tender_document_put(context, step):
 @action("tender_criteria_post")
 def tender_criteria_post(context, step):
     """Create tender criteria (POST tenders/{id}/criteria); sets criteria."""
-    logging.info("Creating tender criteria...\n")
+    logger.info("Creating tender criteria...\n")
     data = context.load(step)
     response = context.client.post(
         f"tenders/{tender_id(context)}/criteria",
@@ -115,7 +117,7 @@ def tender_criteria_post(context, step):
 @action("tender_plan_post")
 def tender_plan_post(context, step):
     """Connect a plan to the tender (POST tenders/{id}/plans); the data file holds the plan id, e.g. {{ plans[1].id }}."""
-    logging.info("Connecting plan to tender...\n")
+    logger.info("Connecting plan to tender...\n")
     data = context.load(step)
     context.client.post(
         f"tenders/{tender_id(context)}/plans",
@@ -130,7 +132,7 @@ def tender_plan_post(context, step):
 @action("tender_credentials_patch")
 def tender_credentials_patch(context, step):
     """Take over the second stage tender (PATCH tenders/{stage2TenderID}/credentials); the previous tender moves to stage1_tender."""
-    logging.info("Getting credentials for second stage...\n")
+    logger.info("Getting credentials for second stage...\n")
     stage2_tender_id = context.require("tender").get("stage2TenderID")
     if not stage2_tender_id:
         error(f"{step.filename}: the tender has no stage2TenderID yet")

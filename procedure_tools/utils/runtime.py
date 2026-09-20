@@ -21,6 +21,12 @@ except ImportError:  # pragma: no cover - non-POSIX
     termios = None
     tty = None
 
+
+logger = logging.getLogger(__name__)
+
+
+STDIN_ERRORS = (ValueError, OSError, termios.error) if termios else (ValueError, OSError)
+
 _controller = None
 _PAUSE_HINT = "Press P to pause and show summary, S to show summary"
 _thread_data_dir = threading.local()
@@ -74,7 +80,7 @@ def log_summary(rows):
         lines.append(f" - {data_dir:<{width}}\t{status_label(status, activity)}")
         if status == "failed" and error:
             errors.append((data_dir, error))
-    logging.info("\n".join(lines) + "\n")
+    logger.info("\n".join(lines) + "\n")
     if errors:
         error_lines = [fore_error("Errors")]
         for data_dir, error in errors:
@@ -82,7 +88,7 @@ def log_summary(rows):
             error_lines.append(f" - {data_dir}")
             for error_line in error_text:
                 error_lines.append(f"   {fore_error(error_line)}")
-        logging.info("\n".join(error_lines) + "\n")
+        logger.info("\n".join(error_lines) + "\n")
     for handler in logging.root.handlers:
         handler.flush()
 
@@ -137,7 +143,7 @@ class RunController:
         self._enabled = True
         self._listener = threading.Thread(target=self._listen_loop, name="pause-listener", daemon=True)
         self._listener.start()
-        logging.info(f"{_PAUSE_HINT}\n")
+        logger.info(f"{_PAUSE_HINT}\n")
 
     def stop(self):
         self._stop.set()
@@ -248,7 +254,7 @@ class RunController:
                     self._pause_from_listener()
                 elif key == "s":
                     self.log_summary()
-            except (ValueError, OSError, termios.error if termios else OSError):
+            except STDIN_ERRORS:
                 break
             finally:
                 self._stdin_lock.release()
@@ -260,7 +266,7 @@ class RunController:
             self._quiet.clear()
             self._resume.clear()
             self._maybe_signal_quiet_locked()
-        logging.info("Pausing...\n")
+        logger.info("Pausing...\n")
         while not self._quiet.wait(timeout=0.2):
             if self._stop.is_set():
                 self._resume.set()
@@ -268,7 +274,7 @@ class RunController:
         for handler in logging.root.handlers:
             handler.flush()
         time.sleep(_QUIET_SETTLE_SECONDS)
-        logging.info("Paused.\n")
+        logger.info("Paused.\n")
         self.log_summary()
         was_cbreak = self._cbreak
         if was_cbreak:
@@ -282,7 +288,7 @@ class RunController:
             if was_cbreak and not self._stop.is_set():
                 self._enable_cbreak()
             self._resume.set()
-            logging.info("Resumed.\n")
+            logger.info("Resumed.\n")
 
     def _enable_cbreak(self):
         if termios is None or tty is None or self._fd is None:

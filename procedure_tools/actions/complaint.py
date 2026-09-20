@@ -30,6 +30,9 @@ from procedure_tools.utils.handlers import (
     tender_post_complaint_success_handler,
 )
 
+logger = logging.getLogger(__name__)
+
+
 ROLES = ("bot", "reviewer", "tenderer", "complainer")
 
 KINDS = {
@@ -66,11 +69,9 @@ def complaints_allowed(context, kind, object_index):
         step_object_index, _, role = complaint_ref(step, kind)
         if step_object_index == object_index:
             roles.add(role)
-    if "bot" in roles and not context.args.bot_token:
-        return False
-    if "reviewer" in roles and not context.args.reviewer_token:
-        return False
-    return True
+    missing_bot = "bot" in roles and not context.args.bot_token
+    missing_reviewer = "reviewer" in roles and not context.args.reviewer_token
+    return not (missing_bot or missing_reviewer)
 
 
 def complaints_path(context, kind, object_index):
@@ -123,7 +124,7 @@ def create_complaint(context, step, kind):
             skip(f"Skipping {label} complaint {complaint_index}: no bid tokens in context")
             return
         acc_token = bids_tokens[0]
-    logging.info(f"Creating {label} complaint...\n")
+    logger.info(f"Creating {label} complaint...\n")
     data = context.load(step)
     response = context.client.post(
         complaints_path(context, kind, object_index),
@@ -161,7 +162,7 @@ def patch_complaint(context, step, kind):
     }
     if not auth_tokens[role]:
         error(f"{step.filename}: no auth token for role {role!r}")
-    logging.info(f"Patching {label} complaint as {role}...\n")
+    logger.info(f"Patching {label} complaint as {role}...\n")
     data = context.load(step)
     response = context.client.patch(
         f"{complaints_path(context, kind, object_index)}/{complaint['id']}",

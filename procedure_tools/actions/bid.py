@@ -15,6 +15,9 @@ from procedure_tools.utils.handlers import (
     item_patch_success_handler,
 )
 
+logger = logging.getLogger(__name__)
+
+
 BID_DOCUMENT_CONTAINERS = (
     "documents",
     "eligibilityDocuments",
@@ -35,7 +38,7 @@ def refresh_bid(context, index):
 @action("tender_bid_create")
 def tender_bid_create(context, step):
     """Create a bid (POST tenders/{id}/bids), uploading the documents listed in it; parts: [bid index]; sets bids[i], bids_tokens[i]."""
-    logging.info("Creating bid...\n")
+    logger.info("Creating bid...\n")
     index = step.index(0)
     data = context.load(step)
     for container in BID_DOCUMENT_CONTAINERS:
@@ -60,7 +63,7 @@ def tender_bid_create(context, step):
 @action("tender_bid_patch")
 def tender_bid_patch(context, step):
     """Patch a bid (PATCH tenders/{id}/bids/{id}); parts: [bid index]."""
-    logging.info("Patching bid...\n")
+    logger.info("Patching bid...\n")
     index = step.index(0)
     data = context.load(step)
     response = context.client.patch(
@@ -76,7 +79,7 @@ def tender_bid_patch(context, step):
 @action("tender_bid_document_attach")
 def tender_bid_document_attach(context, step):
     """Attach a document to a bid (POST tenders/{id}/bids/{id}/documents); parts: [bid index, free label]."""
-    logging.info("Uploading bid document...\n")
+    logger.info("Uploading bid document...\n")
     index = step.index(0)
     attach_document(
         context,
@@ -90,7 +93,7 @@ def tender_bid_document_attach(context, step):
 @action("tender_bid_res_post")
 def tender_bid_res_post(context, step):
     """Post bid requirement responses (POST tenders/{id}/bids/{id}/requirement_responses); parts: [bid index]."""
-    logging.info("Posting bid requirement responses...\n")
+    logger.info("Posting bid requirement responses...\n")
     index = step.index(0)
     data = context.load(step)
     bid_documents = bid(context, index).get("documents") or []

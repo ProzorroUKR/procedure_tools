@@ -7,7 +7,7 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from procedure_tools.test import (  # noqa: E402
+from procedure_tools.test import (
     WORKFLOW_TEST_CASES,  # pyright: ignore[reportMissingImports]
 )
 
@@ -17,8 +17,7 @@ def main() -> None:
     output_path = os.environ.get("GITHUB_OUTPUT")
     if output_path:
         with open(output_path, "a", encoding="utf-8") as f:
-            for name, cases in outputs.items():
-                f.write(f"{name}={json.dumps(cases)}\n")
+            f.writelines(f"{name}={json.dumps(cases)}\n" for name, cases in outputs.items())
     else:
         print(json.dumps(outputs))
 

@@ -9,6 +9,9 @@ from procedure_tools.utils.file import get_data_path
 from procedure_tools.utils.handlers import EX_OK, error
 from procedure_tools.utils.runtime import get_controller
 
+logger = logging.getLogger(__name__)
+
+
 _pause_lock = threading.Lock()
 
 
@@ -51,7 +54,7 @@ def process_tools(args, session=None):
     steps = load_steps(data_path)
     if not steps:
         error(f"No action files found in {data_path}")
-    logging.info(f"Discovered {len(steps)} steps in {data_path}\n")
+    logger.info(f"Discovered {len(steps)} steps in {data_path}\n")
 
     client, ds_client = build_clients(args, session=session)
 
@@ -74,16 +77,16 @@ def run_step(context, step, position):
 
     if context.skip_steps > 0:
         context.skip_steps -= 1
-        logging.info(f"Step {position}/{len(context.steps)}: {step.filename} (skipped)\n")
+        logger.info(f"Step {position}/{len(context.steps)}: {step.filename} (skipped)\n")
         return
 
-    logging.info(f"Step {position}/{len(context.steps)}: {step.filename}\n")
+    logger.info(f"Step {position}/{len(context.steps)}: {step.filename}\n")
     context.step = step
     ACTIONS[step.action](context, step)
 
     args = context.args
     if step.matches(args.stop):
-        logging.info(f"Stopping after {step.filename}\n")
+        logger.info(f"Stopping after {step.filename}\n")
         raise SystemExit(EX_OK)
     if args.pause and any(step.matches(filename) for filename in args.pause):
         with _pause_lock:

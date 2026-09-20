@@ -19,11 +19,13 @@ from procedure_tools.utils.handlers import (
     item_patch_success_handler,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def framework_agreement_id(context):
     """Agreement id of the framework in context, waiting until the framework has one."""
     framework_id = context["framework"]["id"]
-    logging.info("Waiting for the framework agreement...\n")
+    logger.info("Waiting for the framework agreement...\n")
     while True:
         response = context.client.get(f"frameworks/{framework_id}")
         context["framework"] = get_data(response)
@@ -74,7 +76,7 @@ def tender_agreements_get(context, step):
 @action("tender_agreement_patch")
 def tender_agreement_patch(context, step):
     """Patch a tender agreement (PATCH tenders/{id}/agreements/{id}); parts: [agreement index]."""
-    logging.info("Patching agreement...\n")
+    logger.info("Patching agreement...\n")
     index = step.index(0)
     data = context.load(step)
     context.client.patch(
@@ -90,7 +92,7 @@ def tender_agreement_patch(context, step):
 @action("tender_agreement_document_attach")
 def tender_agreement_document_attach(context, step):
     """Attach a document to a tender agreement (POST tenders/{id}/agreements/{id}/documents); parts: [agreement index]."""
-    logging.info("Uploading agreement document...\n")
+    logger.info("Uploading agreement document...\n")
     index = step.index(0)
     attach_document(
         context,
@@ -104,7 +106,7 @@ def tender_agreement_document_attach(context, step):
 @action("tender_agreement_contract_patch")
 def tender_agreement_contract_patch(context, step):
     """Patch the agreement contract of a bid (PATCH tenders/{id}/agreements/{id}/contracts/{id}); parts: [agreement index, bid index]."""
-    logging.info("Patching agreement contract...\n")
+    logger.info("Patching agreement contract...\n")
     agreement_index = step.index(0)
     bid_index = step.index(1)
     agreement_data = agreement(context, agreement_index)

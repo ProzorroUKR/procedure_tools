@@ -12,6 +12,8 @@ from procedure_tools.utils.handlers import (
     submission_create_success_handler,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def framework_id(context):
     return context.require("framework", "run framework_create first")["id"]
@@ -46,7 +48,7 @@ def framework_qualification(context, index):
 @action("framework_create")
 def framework_create(context, step):
     """Create a framework (POST frameworks); sets framework, framework_token."""
-    logging.info("Creating framework...\n")
+    logger.info("Creating framework...\n")
     data = context.load(step)
     response = context.client.post(
         "frameworks",
@@ -61,7 +63,7 @@ def framework_create(context, step):
 @action("framework_patch")
 def framework_patch(context, step):
     """Patch the framework (PATCH frameworks/{id}), for example to activate it."""
-    logging.info("Patching framework...\n")
+    logger.info("Patching framework...\n")
     data = context.load(step)
     response = context.client.patch(
         f"frameworks/{framework_id(context)}",
@@ -87,7 +89,7 @@ def framework_get(context, step):
 @action("framework_submission_create")
 def framework_submission_create(context, step):
     """Create a submission (POST submissions); parts: [submission index]; sets submissions[i], submissions_tokens[i]."""
-    logging.info("Creating submission...\n")
+    logger.info("Creating submission...\n")
     index = step.index(0)
     data = context.load(step)
     response = context.client.post(
@@ -103,7 +105,7 @@ def framework_submission_create(context, step):
 @action("framework_submission_patch")
 def framework_submission_patch(context, step):
     """Patch a submission (PATCH submissions/{id}); parts: [submission index]."""
-    logging.info("Patching submission...\n")
+    logger.info("Patching submission...\n")
     index = step.index(0)
     data = context.load(step)
     response = context.client.patch(
@@ -119,7 +121,7 @@ def framework_submission_patch(context, step):
 @action("framework_qualification_document_attach")
 def framework_qualification_document_attach(context, step):
     """Attach a document to a framework qualification (POST qualifications/{id}/documents); parts: [submission index]."""
-    logging.info("Uploading qualification document...\n")
+    logger.info("Uploading qualification document...\n")
     index = step.index(0)
     qualification = framework_qualification(context, index)
     attach_document(
@@ -133,7 +135,7 @@ def framework_qualification_document_attach(context, step):
 @action("framework_qualification_patch")
 def framework_qualification_patch(context, step):
     """Patch a framework qualification (PATCH qualifications/{id}); parts: [submission index]."""
-    logging.info("Patching qualification...\n")
+    logger.info("Patching qualification...\n")
     index = step.index(0)
     qualification = framework_qualification(context, index)
     data = context.load(step)

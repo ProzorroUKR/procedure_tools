@@ -2,6 +2,7 @@ import logging
 from base64 import b64encode
 from copy import copy
 from datetime import timedelta
+from typing import ClassVar
 from urllib.parse import urljoin
 
 import requests
@@ -14,15 +15,18 @@ from procedure_tools.utils.handlers import (
 )
 from procedure_tools.version import __version__
 
+logger = logging.getLogger(__name__)
+
+
 API_PATH_PREFIX_DEFAULT = "/api/0/"
 
 
-class BaseApiClient(object):
+class BaseApiClient:
     name = "api"
 
     SPORE_PATH = "spore"
 
-    HEADERS_DEFAULT = {
+    HEADERS_DEFAULT: ClassVar[dict] = {
         "User-Agent": f"procedure_tools/{__version__}",
     }
 
@@ -35,7 +39,7 @@ class BaseApiClient(object):
         debug=False,
         **kwargs,
     ):
-        logging.info(f"Initializing {self.name} client\n")
+        logger.info(f"Initializing {self.name} client\n")
         self.host = host
         self.kwargs = kwargs
         self.debug_request = debug_request
@@ -106,7 +110,7 @@ class CDBClient(BaseApiClient):
         session=None,
         **request_kwargs,
     ):
-        super(CDBClient, self).__init__(host, session=session, **request_kwargs)
+        super().__init__(host, session=session, **request_kwargs)
         self.path_prefix = path_prefix
         self.headers.update({"Content-Type": "application/json"})
         # GET request to retrieve cookies and server time (via request() so debug request logging applies)
@@ -116,7 +120,7 @@ class CDBClient(BaseApiClient):
         try:
             server_datetime = parse_date_header(response.headers.get("date"))
             self.client_timedelta = server_datetime - client_datetime
-        except Exception:
+        except (TypeError, ValueError):
             self.client_timedelta = timedelta()
         client_init_response_handler(response, self.client_timedelta)
 
@@ -128,7 +132,7 @@ class CDBClient(BaseApiClient):
 
     def request(self, method, path, **kwargs):
         path = self.get_api_path(path, acc_token=kwargs.pop("acc_token", None))
-        return super(CDBClient, self).request(method, path, **kwargs)
+        return super().request(method, path, **kwargs)
 
 
 class DSClient(BaseApiClient):
@@ -142,7 +146,7 @@ class DSClient(BaseApiClient):
         session=None,
         **request_kwargs,
     ):
-        super(DSClient, self).__init__(host, session=session, **request_kwargs)
+        super().__init__(host, session=session, **request_kwargs)
         self.headers.update({"Authorization": "Basic " + b64encode(f"{username}:{password}".encode()).decode()})
 
     def post_document_upload(self, files, **kwargs):

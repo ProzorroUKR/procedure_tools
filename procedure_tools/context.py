@@ -10,6 +10,8 @@ from procedure_tools.steps import find_resource_path
 from procedure_tools.utils import helpers
 from procedure_tools.utils.handlers import error
 
+logger = logging.getLogger(__name__)
+
 
 class Context(dict):
     """
@@ -57,7 +59,7 @@ class Context(dict):
     def load(self, step=None):
         """Render the step data file as a template and parse it as JSON (empty file means ``{}``)."""
         step = step or self.step
-        logging.info(f"Processing data file: {step.filename}\n")
+        logger.info(f"Processing data file: {step.filename}\n")
         with open(step.path, encoding="utf-8") as file:
             content = file.read()
         rendered = self.render(content)

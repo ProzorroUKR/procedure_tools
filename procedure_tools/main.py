@@ -48,6 +48,9 @@ from procedure_tools.utils.style import (
 )
 from procedure_tools.version import __version__
 
+logger = logging.getLogger(__name__)
+
+
 LOG_DATEFMT = "%H:%M:%S"
 
 LOG_FORMAT_DEFAULT = "%(asctime)s %(prefix)s%(message)s"
@@ -103,7 +106,7 @@ def format_choices(choices):
 
 def set_faker_seed(args):
     faker_seed = args.seed or random.randint(0, 1000000)
-    logging.info(f"Using seed {faker_seed}\n")
+    logger.info(f"Using seed {faker_seed}\n")
     fake.seed_instance(faker_seed)
     fake_en.seed_instance(faker_seed)
 
@@ -141,21 +144,21 @@ def run_data_dir(args, session=None, controller=None):
     try:
         data_path = get_data_path(args.data)
         if data_path is None:
-            logging.error("Data path not found.\n")
+            logger.error("Data path not found.\n")
             result = EX_DATAERR, "Data path not found"
         else:
             process_tools(args, session=session)
-            logging.info("Completed.\n")
+            logger.info("Completed.\n")
             result = EX_OK, None
     except SystemExit as e:
         code = exit_code(e.code)
         if code == EX_OK:
-            logging.info("Completed.\n")
+            logger.info("Completed.\n")
             result = code, None
         else:
             result = code, run_result_error(e)
     except Exception as e:
-        logging.exception("Failed")
+        logger.exception("Failed")
         result = 1, run_result_error(e)
     finally:
         if close_session:
@@ -173,7 +176,7 @@ def run_data_dir_parallel(args, data_dir, controller=None):
         set_faker_seed(folder_args)
         return run_data_dir(folder_args, controller=controller)
     except Exception as e:
-        logging.exception("Failed")
+        logger.exception("Failed")
         result = 1, run_result_error(e)
         if controller:
             controller.mark_finished(data_dir, *result)
@@ -212,7 +215,7 @@ def run(args, session=None):
                         codes[data_dir] = future.result()
                     except KeyboardInterrupt:
                         raise
-                    except BaseException as e:
+                    except BaseException as e:  # noqa: BLE001 - worker failure becomes a run result
                         result = (1, run_result_error(e))
                         codes[data_dir] = result
                         controller.mark_finished(data_dir, *result)
@@ -225,7 +228,7 @@ def run(args, session=None):
                     if future.done() and not future.cancelled():
                         try:
                             codes[data_dir] = future.result()
-                        except BaseException as e:
+                        except BaseException as e:  # noqa: BLE001 - worker failure becomes a run result
                             result = (1, run_result_error(e))
                             codes[data_dir] = result
                             controller.mark_finished(data_dir, *result)
@@ -242,7 +245,7 @@ def run(args, session=None):
                 args.data = data_dir
                 set_log_prefix(data_dir if len(data_dirs) > 1 else None)
                 if len(data_dirs) > 1:
-                    logging.info(f"Starting {data_dir}\n")
+                    logger.info(f"Starting {data_dir}\n")
                 try:
                     controller.check_pause()
                     code, error = run_data_dir(args, session=session, controller=controller)
@@ -509,7 +512,7 @@ def main():
         args = parse_args()
         apply_debug_log_format(args.debug)
         if args.env_file:
-            logging.info(f"Using env file {args.env_file}\n")
+            logger.info(f"Using env file {args.env_file}\n")
         if not args.data:
             args.data = sorted(get_default_data_dirs())
         session = None

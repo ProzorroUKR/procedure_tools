@@ -25,6 +25,10 @@ except ImportError:
     TerminalFormatter = None
     JsonLexer = None
 
+
+logger = logging.getLogger(__name__)
+
+
 DEFAULT_TIMEOUT = 60
 DEFAULT_MAX_RETRIES = 5
 DEFAULT_RETRY_FORCELIST = (408, 409, 412, 429, 500, 502, 503, 504)
@@ -49,19 +53,19 @@ class RetryingHTTPAdapter(adapters.HTTPAdapter):
     def __init__(self, timeout, max_retries):
         self.timeout = timeout
 
-        super(RetryingHTTPAdapter, self).__init__(max_retries=max_retries)
+        super().__init__(max_retries=max_retries)
 
     def send(self, request, *args, **kwargs):
         last_exc = None
         for attempt in range(max(1, 1 + DEFAULT_MAX_RETRIES)):
             if attempt > 0:
-                logging.info("Retrying after connection error")
+                logger.info("Retrying after connection error")
             try:
                 kwargs["timeout"] = self.timeout
-                return super(RetryingHTTPAdapter, self).send(request, *args, **kwargs)
+                return super().send(request, *args, **kwargs)
             except ConnectionError as err:
                 last_exc = err
-                logging.info("Connection error: %s", err)
+                logger.info("Connection error: %s", err)
                 continue
         if last_exc:
             raise last_exc
@@ -79,7 +83,7 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         self.debug_request = debug_request
         self.debug_json_level = debug_json_level
         self.debug_exclude_paths = tuple(debug_exclude_paths)
-        super(LoggingHTTPAdapter, self).__init__()
+        super().__init__()
 
     def set_debug_options(self, enabled=False, json_level=None, exclude_paths=()):
         self.debug_request = enabled
@@ -115,11 +119,11 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         try:
             if not sys.stdout.isatty():
                 return text
-        except Exception:
+        except (AttributeError, ValueError, OSError):
             return text
         try:
             return highlight(text, JsonLexer(), TerminalFormatter()).rstrip("\n")
-        except Exception:
+        except Exception:  # noqa: BLE001 - colorizing is best effort
             return text
 
     def format_data(self, data):
@@ -230,23 +234,23 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         request_line = f"{request.method} {request.url}"
         if get_log_prefix():
             request_line += "\n"
-        logging.info(request_line)
+        logger.info(request_line)
         if self.should_log_exchange(request.url):
             debug_request = self.get_debug_request(request)
-            logging.info(f"HTTP Request:\n\n{self.pad_log_lines(debug_request)}\n")
+            logger.info(f"HTTP Request:\n\n{self.pad_log_lines(debug_request)}\n")
         response = self.transport_adapter.send(request, *args, **kwargs)
         if self.should_log_exchange(request.url):
             debug_response = self.get_debug_response(response)
-            logging.info(f"HTTP Response:\n\n{self.pad_log_lines(debug_response)}\n")
+            logger.info(f"HTTP Response:\n\n{self.pad_log_lines(debug_response)}\n")
         else:
             status_text = fore_status_code(response.status_code)
             reason_text = fore_warning(response.reason) if response.reason else ""
-            logging.info(f"Response status: {status_text} {reason_text}\n")
+            logger.info(f"Response status: {status_text} {reason_text}\n")
         return response
 
     def close(self):
         self.transport_adapter.close()
-        super(LoggingHTTPAdapter, self).close()
+        super().close()
 
 
 def mount(

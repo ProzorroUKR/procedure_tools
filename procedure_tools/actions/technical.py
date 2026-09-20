@@ -9,6 +9,9 @@ from procedure_tools.actions.registry import action
 from procedure_tools.utils.handlers import EX_OK, error
 from procedure_tools.utils.runtime import get_controller
 
+logger = logging.getLogger(__name__)
+
+
 _pause_lock = threading.Lock()
 
 TRUE_VALUES = ("true", "1", "yes", "on")
@@ -27,7 +30,7 @@ def stop_if(context, step):
     if not is_true(data.get("condition")):
         return
     message = data.get("message") or f"{step.filename}: condition is true"
-    logging.info(f"{message}, cannot continue...\n")
+    logger.info(f"{message}, cannot continue...\n")
     raise SystemExit(EX_OK)
 
 
@@ -39,7 +42,7 @@ def skip_if(context, step):
     if not is_true(data.get("condition")):
         return
     message = data.get("message") or f"{step.filename}: condition is true"
-    logging.info(f"{message}, skipping the next {steps} step(s)\n")
+    logger.info(f"{message}, skipping the next {steps} step(s)\n")
     context.skip_steps = steps
 
 
@@ -50,7 +53,7 @@ def context_set(context, step):
     if not isinstance(data, dict):
         error(f"{step.filename}: context_set expects a JSON object")
     context.update(data)
-    logging.info(f"Context updated: {', '.join(sorted(data))}\n")
+    logger.info(f"Context updated: {', '.join(sorted(data))}\n")
 
 
 @action("context_rename")
@@ -60,7 +63,7 @@ def context_rename(context, step):
     for old_key, new_key in data.items():
         if old_key in context:
             context[new_key] = context.pop(old_key)
-    logging.info(f"Context keys renamed: {', '.join(f'{old} -> {new}' for old, new in data.items())}\n")
+    logger.info(f"Context keys renamed: {', '.join(f'{old} -> {new}' for old, new in data.items())}\n")
 
 
 @action("context_delete")
@@ -70,7 +73,7 @@ def context_delete(context, step):
     keys = data.get("keys") or []
     for key in keys:
         context.pop(key, None)
-    logging.info(f"Context keys deleted: {', '.join(keys)}\n")
+    logger.info(f"Context keys deleted: {', '.join(keys)}\n")
 
 
 @action("pause")

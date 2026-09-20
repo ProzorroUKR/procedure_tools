@@ -25,20 +25,15 @@ def test_parse_args_positional_cli_still_works():
 def test_parse_args_loads_env_file_and_cli_overrides(tmp_path):
     env_file = tmp_path / ".env.sandbox"
     env_file.write_text(
-        "\n".join(
-            [
-                "API_HOST=https://from-env",
-                "API_TOKEN=env-token",
-                "DS_HOST=https://ds-from-env",
-                "DS_USERNAME=env-user",
-                "DS_PASSWORD=env-pass",
-                "API_PATH=/api/from-env/",
-                "DATA=reporting,aboveThreshold",
-                "ACCELERATION=123",
-                "DEBUG=true",
-            ]
-        )
-        + "\n",
+        "API_HOST=https://from-env\n"
+        "API_TOKEN=env-token\n"
+        "DS_HOST=https://ds-from-env\n"
+        "DS_USERNAME=env-user\n"
+        "DS_PASSWORD=env-pass\n"
+        "API_PATH=/api/from-env/\n"
+        "DATA=reporting,aboveThreshold\n"
+        "ACCELERATION=123\n"
+        "DEBUG=true\n",
         encoding="utf-8",
     )
     args = parse_args(
@@ -60,16 +55,11 @@ def test_parse_args_loads_env_file_and_cli_overrides(tmp_path):
 
 def test_parse_args_named_flags_override_positionals_and_env(tmp_path):
     (tmp_path / ".env").write_text(
-        "\n".join(
-            [
-                "API_HOST=https://from-env",
-                "API_TOKEN=env-token",
-                "DS_HOST=https://ds-from-env",
-                "DS_USERNAME=env-user",
-                "DS_PASSWORD=env-pass",
-            ]
-        )
-        + "\n",
+        "API_HOST=https://from-env\n"
+        "API_TOKEN=env-token\n"
+        "DS_HOST=https://ds-from-env\n"
+        "DS_USERNAME=env-user\n"
+        "DS_PASSWORD=env-pass\n",
         encoding="utf-8",
     )
     args = parse_args(
