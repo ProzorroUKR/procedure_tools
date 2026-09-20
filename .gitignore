@@ -132,3 +132,8 @@ dmypy.json
 
 # AI
 .claude/
+
+# Robot framework
+log.html
+report.html
+output.xml
