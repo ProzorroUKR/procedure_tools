@@ -110,7 +110,7 @@
         "value": {
           "amount": 500,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         }
       },
       {
@@ -120,7 +120,7 @@
         "value": {
           "amount": 500,
           "currency": "UAH",
-          "valueAddedTaxIncluded": true
+          "valueAddedTaxIncluded": false
         }
       }
     ],
@@ -230,7 +230,7 @@
     "value": {
       "amount": 0,
       "currency": "UAH",
-      "valueAddedTaxIncluded": true
+      "valueAddedTaxIncluded": false
     }
   }
 }
