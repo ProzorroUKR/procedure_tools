@@ -116,7 +116,7 @@ class CDBClient(BaseApiClient):
         try:
             server_datetime = parse_date_header(response.headers.get("date"))
             self.client_timedelta = server_datetime - client_datetime
-        except:
+        except Exception:
             self.client_timedelta = timedelta()
         client_init_response_handler(response, self.client_timedelta)
 

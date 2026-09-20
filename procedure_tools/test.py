@@ -43,7 +43,7 @@ def run_test(argv):
     with mock.patch("sys.argv", [""] + args), pytest.raises(SystemExit) as e:
         main()
 
-    assert e.type == SystemExit
+    assert e.type is SystemExit
     assert e.value.code == 0
 
 

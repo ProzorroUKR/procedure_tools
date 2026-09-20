@@ -26,11 +26,9 @@ test = [
     "pytest",
 ]
 dev = [
-    "autoflake",
-    "black",
-    "isort",
     "pylint",
     "pylint-pytest",
+    "ruff",
 ]
 
 [project.scripts]
@@ -75,18 +73,15 @@ log_cli_level = "DEBUG"
 log_cli_format = "[%(asctime)s] %(message)s"
 log_cli_date_format = "%H:%M:%S"
 
-[tool.black]
+[tool.ruff]
 line-length = 120
-skip-string-normalization = true
 
-[tool.isort]
-profile = "black"
+[tool.ruff.format]
+quote-style = "preserve"
 
-[tool.autoflake]
-quiet = true
-imports = [
-    "requests",
-]
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
 
 [tool.pylint]
 [tool.pylint.main]

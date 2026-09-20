@@ -2,7 +2,7 @@ import json
 import logging
 
 from procedure_tools.utils.date import client_timedelta_string
-from procedure_tools.utils.style import fore_error, fore_info, fore_status_code
+from procedure_tools.utils.style import fore_error, fore_info
 
 PAD = 20
 
