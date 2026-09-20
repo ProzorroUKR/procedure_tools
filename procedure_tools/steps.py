@@ -67,8 +67,33 @@ class Step:
     action: str
     parts: list[str]
     filename: str
-    path: str
+    path: str = ""
     prefix: str = ""
+    data: dict[str, Any] | list[Any] | None = None
+    """
+    Inline step data. When set, the action reads it instead of the file at
+    ``path``, so a caller that builds the payload itself (the Robot Framework
+    keywords, for example) needs no data file on disk.
+    """
+
+    @classmethod
+    def inline(
+        cls,
+        action: str,
+        parts: Collection[str] | None = None,
+        data: dict[str, Any] | list[Any] | None = None,
+        number: str = "0000",
+    ) -> Step:
+        """Build a step that carries its data instead of pointing at a file."""
+        parts = [str(part) for part in (parts or [])]
+        filename = "_".join([number, action, *parts]) + ACTION_FILE_EXTENSION
+        return cls(
+            number=number,
+            action=action,
+            parts=parts,
+            filename=filename,
+            data={} if data is None else data,
+        )
 
     @property
     def name(self) -> str:

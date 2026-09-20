@@ -1,6 +1,8 @@
 import argparse
 import logging
 import threading
+from collections.abc import Collection
+from typing import Any
 
 import requests
 
@@ -48,6 +50,48 @@ def build_clients(args: argparse.Namespace, session: requests.Session | None = N
     return client, ds_client
 
 
+def build_context(
+    args: argparse.Namespace,
+    data_path: str | None = None,
+    steps: list[Step] | None = None,
+    session: requests.Session | None = None,
+) -> Context:
+    """
+    Connect to the API and build the context the actions share.
+
+    ``data_path`` and ``steps`` are what the data folder run fills in; a caller
+    that drives the actions itself (see ``run_action``) leaves them out.
+    """
+    client, ds_client = build_clients(args, session=session)
+    context = Context(args, client, ds_client, data_path, steps or [])
+    context["acceleration"] = args.acceleration
+    context["submission"] = args.submission
+    context["client_timedelta"] = client.client_timedelta
+    context["constants"] = client.get("constants", auth_token=args.token).json()
+    return context
+
+
+def run_action(
+    context: Context,
+    action: str,
+    parts: Collection[str] | None = None,
+    data: dict[str, Any] | list[Any] | None = None,
+) -> Step:
+    """
+    Run a single action with the data passed in instead of a data file.
+
+    This is the entry point for callers that build the payloads themselves, the
+    Robot Framework keywords in ``robot_tests`` for example.
+    """
+    if action not in ACTIONS:
+        error(f"Unknown action {action!r}")
+    step = Step.inline(action, parts, data)
+    context.step = step
+    logger.info(f"Running {step.stem}\n")
+    ACTIONS[action](context, step)
+    return step
+
+
 def process_tools(args: argparse.Namespace, session: requests.Session | None = None) -> Context:
     """
     Run the data folder: discover the steps from the file names and execute
@@ -62,13 +106,7 @@ def process_tools(args: argparse.Namespace, session: requests.Session | None = N
         error(f"No action files found in {data_path}")
     logger.info(f"Discovered {len(steps)} steps in {data_path}\n")
 
-    client, ds_client = build_clients(args, session=session)
-
-    context = Context(args, client, ds_client, data_path, steps)
-    context["acceleration"] = args.acceleration
-    context["submission"] = args.submission
-    context["client_timedelta"] = client.client_timedelta
-    context["constants"] = client.get("constants", auth_token=args.token).json()
+    context = build_context(args, data_path=data_path, steps=steps, session=session)
 
     for position, step in enumerate(steps, start=1):
         run_step(context, step, position)

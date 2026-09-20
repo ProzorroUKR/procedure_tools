@@ -5,7 +5,7 @@ import datetime
 import json
 import logging
 from functools import partial
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jinja2 import Template
 
@@ -38,7 +38,7 @@ class Context(dict[str, Any]):
         args: argparse.Namespace,
         client: CDBClient,
         ds_client: DSClient,
-        data_path: str,
+        data_path: str | None,
         steps: list[Step],
     ) -> None:
         super().__init__()
@@ -50,6 +50,8 @@ class Context(dict[str, Any]):
         self.step: Step | None = None
         self.skip_steps = 0
         self.allow_fail_next = False
+        self.resources: dict[str, str] = {}
+        """Resource files registered by title, looked up before ``data_path``."""
 
     # --- templates
 
@@ -73,11 +75,35 @@ class Context(dict[str, Any]):
         template: Template = Template(content)
         return template.render(self.template_context())
 
+    def render_data(self, data: Any) -> Any:
+        """
+        Copy ``data``, rendering the strings in it that hold a template.
+
+        A caller that builds its payload in Python usually needs no templates,
+        so only strings with ``{{`` or ``{%`` in them go through Jinja; the
+        rest are left exactly as they are.
+        """
+        if isinstance(data, dict):
+            return {key: self.render_data(value) for key, value in data.items()}
+        if isinstance(data, list):
+            return [self.render_data(item) for item in data]
+        if isinstance(data, str):
+            return self.render(data) if ("{{" in data or "{%" in data) else data
+        return data
+
     def load(self, step: Step | None = None) -> dict[str, Any]:
-        """Render the step data file as a template and parse it as JSON (empty file means ``{}``)."""
+        """
+        Data of the step: the inline data it carries, or its data file rendered
+        as a template and parsed as JSON (an empty file means ``{}``).
+        """
         step = step or self.step
         if step is None:
             raise ValueError("no step to load: pass a step or set context.step first")
+        if step.data is not None:
+            logger.info(f"Processing inline data: {step.stem}\n")
+            return cast(dict[str, Any], self.render_data(step.data))
+        if not step.path:
+            raise ValueError(f"{step.filename}: the step has neither data nor a data file")
         logger.info(f"Processing data file: {step.filename}\n")
         with open(step.path, encoding="utf-8") as file:
             content = file.read()
@@ -93,7 +119,9 @@ class Context(dict[str, Any]):
 
     def resource(self, title: str) -> str:
         """Path of a resource file (document to upload) referenced by an action file."""
-        path = find_resource_path(self.data_path, title)
+        if title in self.resources:
+            return self.resources[title]
+        path = find_resource_path(self.data_path, title) if self.data_path else None
         if path is None:
             step = self.step.filename if self.step else "context"
             error(f"{step}: resource file {title!r} not found in {self.data_path}")
