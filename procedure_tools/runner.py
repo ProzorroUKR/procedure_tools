@@ -9,7 +9,7 @@ from procedure_tools.client import CDBClient, DSClient
 from procedure_tools.context import Context
 from procedure_tools.steps import Step, StepError, discover_steps
 from procedure_tools.utils.file import get_data_path
-from procedure_tools.utils.handlers import EX_DATAERR, EX_OK, ProcedureExit, error
+from procedure_tools.utils.handlers import EX_DATAERR, EX_OK, ProcedureExit, RequestFailed, error
 from procedure_tools.utils.runtime import get_controller
 
 logger = logging.getLogger(__name__)
@@ -88,7 +88,17 @@ def run_step(context: Context, step: Step, position: int) -> None:
 
     logger.info(f"Step {position}/{len(context.steps)}: {step.filename}\n")
     context.step = step
-    ACTIONS[step.action](context, step)
+    if context.allow_fail_next:
+        context.allow_fail_next = False
+        context.client.allow_fail = True
+    try:
+        ACTIONS[step.action](context, step)
+    except RequestFailed as e:
+        logger.info(f"Step {step.filename} failed as allowed: {e}\n")
+    finally:
+        if context.client.allow_fail:
+            logger.info(f"Step {step.filename} made no request, allow_fail had no effect\n")
+            context.client.allow_fail = False
 
     args = context.args
     if step.matches(args.stop):

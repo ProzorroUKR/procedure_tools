@@ -49,6 +49,15 @@ def skip_if(context: Context, step: Step) -> None:
     context.skip_steps = steps
 
 
+@action("allow_fail")
+def allow_fail(context: Context, step: Step) -> None:
+    """Let the first request of the next step fail without stopping the run: {} or {"message": "why it is expected"}."""
+    data = context.load(step)
+    message = data.get("message") or "the next request is allowed to fail"
+    logger.info(f"{message}\n")
+    context.allow_fail_next = True
+
+
 @action("context_set")
 def context_set(context: Context, step: Step) -> None:
     """Merge the data file into the context: {"my_value": "{{ tender.id }}"}."""

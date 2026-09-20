@@ -1,0 +1,7 @@
+{
+  "data": {
+    "reason": "{{ fake.paragraph(nb_sentences=2) }}",
+    "reasonType": "noDemand",
+    "relatedLot": "{{ tender.lots[0].id }}"
+  }
+}

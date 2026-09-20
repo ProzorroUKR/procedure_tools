@@ -49,6 +49,7 @@ class Context(dict[str, Any]):
         self.steps = steps
         self.step: Step | None = None
         self.skip_steps = 0
+        self.allow_fail_next = False
 
     # --- templates
 

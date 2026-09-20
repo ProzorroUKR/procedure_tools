@@ -11,6 +11,7 @@ import requests
 from procedure_tools.utils import adapters
 from procedure_tools.utils.date import get_utcnow, parse_date_header
 from procedure_tools.utils.handlers import (
+    allowed_error_handler,
     client_init_response_handler,
     response_handler,
 )
@@ -43,6 +44,7 @@ class BaseApiClient:
         logger.info(f"Initializing {self.name} client\n")
         self.host = host
         self.kwargs = kwargs
+        self.allow_fail = False  # let the next request fail without stopping the run (allow_fail action)
         self.debug_request = debug_request
         self.debug_json_level = debug_json_level
         adapters.configure_urllib3_logging(debug)
@@ -72,6 +74,9 @@ class BaseApiClient:
         auth_token = request_kwargs.pop("auth_token", None)
         success_handler = request_kwargs.pop("success_handler", None)
         error_handler = request_kwargs.pop("error_handler", None)
+        if self.allow_fail:
+            self.allow_fail = False
+            error_handler = allowed_error_handler
         request_kwargs["headers"] = copy(self.headers)
         request_kwargs["headers"].update({"Authorization": "Bearer " + auth_token} if auth_token else {})
         request_kwargs["headers"].update(kwargs.get("headers", {}))

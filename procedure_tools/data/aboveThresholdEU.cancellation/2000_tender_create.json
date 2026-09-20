@@ -1,0 +1,534 @@
+{
+  "config": {
+    "hasMultiSourcing": false,
+    "awardComplainDuration": 10,
+    "cancellationComplainDuration": 10,
+    "clarificationUntilDuration": 3,
+    "enquiryPeriodRegulation": 10,
+    "hasAuction": true,
+    "hasAwardComplaints": true,
+    "hasAwardingOrder": true,
+    "hasCancellationComplaints": true,
+    "hasEnquiries": false,
+    "hasPreSelectionAgreement": false,
+    "hasPrequalification": true,
+    "hasQualificationComplaints": true,
+    "hasTenderComplaints": true,
+    "hasValueEstimation": true,
+    "hasValueRestriction": true,
+    "minBidsNumber": 2,
+    "minEnquiriesDuration": 0,
+    "minTenderingDuration": 30,
+    "qualificationComplainDuration": 5,
+    "qualificationDuration": 20,
+    "restricted": false,
+    "tenderComplainRegulation": 4,
+    "valueCurrencyEquality": true
+  },
+  "data": {
+    "items": [
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221295+03:00",
+          "startDate": "2017-07-11T16:02:36.221241+03:00"
+        },
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "quantity": 1,
+        "relatedLot": "4ade34807aed42e4bd57993c9d3b99bd",
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221295+03:00",
+          "startDate": "2017-07-11T16:02:36.221241+03:00"
+        },
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "quantity": 3,
+        "relatedLot": "f48c7967ca814e889db0c402e0c8e054",
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221295+03:00",
+          "startDate": "2017-07-11T16:02:36.221241+03:00"
+        },
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "quantity": 25,
+        "relatedLot": "1a1da55d00dc4027b0d5f740ffb98889",
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221351+03:00",
+          "startDate": "2017-07-11T16:02:36.221327+03:00"
+        },
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "quantity": 33,
+        "relatedLot": "dd8a2f0c53fa4bd7abc6380db8583f50",
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221351+03:00",
+          "startDate": "2017-07-11T16:02:36.221327+03:00"
+        },
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "quantity": 26,
+        "relatedLot": "0536ce83945549eab91429a16fabc394",
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "deliveryDate": {
+          "endDate": "2017-08-10T16:02:36.221351+03:00",
+          "startDate": "2017-07-11T16:02:36.221327+03:00"
+        },
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "quantity": 20,
+        "relatedLot": "97aac424c0d84b2c89843cf7fbc00c9b",
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      }
+    ],
+    "lots": [
+      {
+        "description": "{{ fake.sentence(nb_words=6) }}",
+        "guarantee": {
+          "amount": 100,
+          "currency": "UAH"
+        },
+        "id": "4ade34807aed42e4bd57993c9d3b99bd",
+        "minimalStep": {
+          "amount": 25,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        },
+        "title": "Лот №1: {{ fake.word() }}",
+        "value": {
+          "amount": 2500,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        }
+      },
+      {
+        "description": "{{ fake.sentence(nb_words=6) }}",
+        "guarantee": {
+          "amount": 100,
+          "currency": "UAH"
+        },
+        "id": "f48c7967ca814e889db0c402e0c8e054",
+        "minimalStep": {
+          "amount": 25,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        },
+        "title": "Лот №2: {{ fake.word() }}",
+        "value": {
+          "amount": 2500,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        }
+      },
+      {
+        "description": "{{ fake.sentence(nb_words=6) }}",
+        "guarantee": {
+          "amount": 100,
+          "currency": "UAH"
+        },
+        "id": "1a1da55d00dc4027b0d5f740ffb98889",
+        "minimalStep": {
+          "amount": 25,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        },
+        "title": "Лот №3: {{ fake.word() }}",
+        "value": {
+          "amount": 2500,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        }
+      },
+      {
+        "description": "{{ fake.sentence(nb_words=6) }}",
+        "guarantee": {
+          "amount": 100,
+          "currency": "UAH"
+        },
+        "id": "dd8a2f0c53fa4bd7abc6380db8583f50",
+        "minimalStep": {
+          "amount": 25,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        },
+        "title": "Лот №4: {{ fake.word() }}",
+        "value": {
+          "amount": 2500,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        }
+      },
+      {
+        "description": "{{ fake.sentence(nb_words=6) }}",
+        "guarantee": {
+          "amount": 100,
+          "currency": "UAH"
+        },
+        "id": "0536ce83945549eab91429a16fabc394",
+        "minimalStep": {
+          "amount": 25,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        },
+        "title": "Лот №5: {{ fake.word() }}",
+        "value": {
+          "amount": 2500,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        }
+      },
+      {
+        "description": "{{ fake.sentence(nb_words=6) }}",
+        "guarantee": {
+          "amount": 100,
+          "currency": "UAH"
+        },
+        "id": "97aac424c0d84b2c89843cf7fbc00c9b",
+        "minimalStep": {
+          "amount": 25,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        },
+        "title": "Лот №6: {{ fake.word() }}",
+        "value": {
+          "amount": 2500,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        }
+      }
+    ],
+    "mainProcurementCategory": "goods",
+    "milestones": [
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 100,
+        "relatedLot": "4ade34807aed42e4bd57993c9d3b99bd",
+        "sequenceNumber": 1,
+        "title": "deliveryOfGoods",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "relatedLot": "4ade34807aed42e4bd57993c9d3b99bd",
+        "sequenceNumber": 2,
+        "title": "submissionDateOfApplications",
+        "type": "delivery"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 100,
+        "relatedLot": "f48c7967ca814e889db0c402e0c8e054",
+        "sequenceNumber": 1,
+        "title": "deliveryOfGoods",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "relatedLot": "f48c7967ca814e889db0c402e0c8e054",
+        "sequenceNumber": 2,
+        "title": "submissionDateOfApplications",
+        "type": "delivery"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 100,
+        "relatedLot": "1a1da55d00dc4027b0d5f740ffb98889",
+        "sequenceNumber": 1,
+        "title": "deliveryOfGoods",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "relatedLot": "1a1da55d00dc4027b0d5f740ffb98889",
+        "sequenceNumber": 2,
+        "title": "submissionDateOfApplications",
+        "type": "delivery"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 100,
+        "relatedLot": "dd8a2f0c53fa4bd7abc6380db8583f50",
+        "sequenceNumber": 1,
+        "title": "deliveryOfGoods",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "relatedLot": "dd8a2f0c53fa4bd7abc6380db8583f50",
+        "sequenceNumber": 2,
+        "title": "submissionDateOfApplications",
+        "type": "delivery"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 100,
+        "relatedLot": "0536ce83945549eab91429a16fabc394",
+        "sequenceNumber": 1,
+        "title": "deliveryOfGoods",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "relatedLot": "0536ce83945549eab91429a16fabc394",
+        "sequenceNumber": 2,
+        "title": "submissionDateOfApplications",
+        "type": "delivery"
+      },
+      {
+        "code": "postpayment",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 100,
+        "relatedLot": "97aac424c0d84b2c89843cf7fbc00c9b",
+        "sequenceNumber": 1,
+        "title": "deliveryOfGoods",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "working"
+        },
+        "percentage": 100,
+        "relatedLot": "97aac424c0d84b2c89843cf7fbc00c9b",
+        "sequenceNumber": 2,
+        "title": "submissionDateOfApplications",
+        "type": "delivery"
+      }
+    ],
+    "mode": "test",
+    "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
+    "procurementMethodType": "aboveThresholdEU",
+    "procuringEntity": {
+      "address": {
+        "countryName": "Україна",
+        "locality": "м. Київ",
+        "postalCode": "42000",
+        "region": "м. Київ",
+        "streetAddress": "{{ fake.street_address() }}"
+      },
+      "contactPoint": {
+        "availableLanguage": "uk",
+        "name": "{{ fake.name() }}",
+        "name_en": "Testovenko Test Testovych",
+        "telephone": "{{ fake.prozorro_phone_number() }}",
+        "url": "{{ fake.url() }}"
+      },
+      "identifier": {
+        "id": "21725150",
+        "legalName": "{{ fake.company() }}",
+        "legalName_en": "Test facility",
+        "scheme": "UA-EDR"
+      },
+      "kind": "general",
+      "name": "{{ fake.company() }}",
+      "name_en": "Test facility #1 of Kyiv"
+    },
+    "status": "draft",
+    "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",
+    "tenderPeriod": {
+      "endDate": "{{ from_now_iso(days=40) }}",
+      "startDate": "{{ from_now_iso() }}"
+    },
+    "title": "{{ fake.sentence(nb_words=10) }} (created with procedure_tools)",
+    "title_en": "{{ fake_en.sentence(nb_words=10) }} (created with procedure_tools)",
+    "value": {
+      "amount": 0,
+      "currency": "UAH",
+      "valueAddedTaxIncluded": false
+    }
+  }
+}

@@ -26,6 +26,7 @@ by its patch steps has no token.
 import logging
 from typing import Any
 
+from procedure_tools.actions.cancellation import cancellation
 from procedure_tools.actions.common import (
     award,
     qualification,
@@ -54,6 +55,7 @@ KINDS: dict[str, dict[str, Any]] = {
     "tender": {"collection": None, "resolve": None},
     "award": {"collection": "awards", "resolve": award},
     "qualification": {"collection": "qualifications", "resolve": qualification},
+    "cancellation": {"collection": "cancellations", "resolve": cancellation},
 }
 
 TYPES = ("complaint", "claim")
@@ -405,6 +407,30 @@ def tender_qualification_complaints_get(context: Context, step: Step) -> None:
 def tender_qualification_complaint_post_create(context: Context, step: Step) -> None:
     """Post to a qualification complaint (POST tenders/{id}/qualifications/{id}/complaints/{id}/posts); parts: [qualification index, complaint index, post index, reviewer|tenderer|complainer]."""
     create_complaint_post(context, step, "qualification", "complaint")
+
+
+@action("tender_cancellation_complaint_create")
+def tender_cancellation_complaint_create(context: Context, step: Step) -> None:
+    """Create a cancellation complaint (POST tenders/{id}/cancellations/{id}/complaints); parts: [cancellation index, complaint index]."""
+    create_complaint(context, step, "cancellation", "complaint")
+
+
+@action("tender_cancellation_complaint_patch")
+def tender_cancellation_complaint_patch(context: Context, step: Step) -> None:
+    """Patch a cancellation complaint as a role; parts: [cancellation index, complaint index, bot|reviewer|tenderer|complainer]."""
+    patch_complaint(context, step, "cancellation", "complaint")
+
+
+@action("tender_cancellation_complaint_post_create")
+def tender_cancellation_complaint_post_create(context: Context, step: Step) -> None:
+    """Post to a cancellation complaint; parts: [cancellation index, complaint index, post index, reviewer|tenderer|complainer]."""
+    create_complaint_post(context, step, "cancellation", "complaint")
+
+
+@action("tender_cancellation_complaints_get")
+def tender_cancellation_complaints_get(context: Context, step: Step) -> None:
+    """List the complaints of a cancellation (GET tenders/{id}/cancellations/{id}/complaints); parts: [cancellation index]."""
+    get_complaints(context, step, "cancellation", "complaint")
 
 
 # --- claims

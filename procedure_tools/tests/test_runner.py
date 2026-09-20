@@ -13,6 +13,7 @@ import json
 import re
 from collections.abc import Callable
 from datetime import timedelta
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -22,6 +23,7 @@ from procedure_tools.actions import wait as wait_actions
 from procedure_tools.context import Context
 from procedure_tools.runner import process_tools
 from procedure_tools.utils.file import get_default_data_dirs
+from procedure_tools.utils.handlers import ProcedureExit, allowed_error_handler, default_error_handler
 
 DATE = "2026-01-01T10:00:00+02:00"
 
@@ -87,6 +89,15 @@ class FakeResponse:
         return copy.deepcopy(self._payload)
 
 
+class FakeHTTPError(Exception):
+    """Raised by a fake ``respond`` to answer with an error status."""
+
+    def __init__(self, status_code: int, payload: dict[str, Any]) -> None:
+        super().__init__(status_code)
+        self.status_code = status_code
+        self.payload = payload
+
+
 class FakeDSClient:
     def __init__(self) -> None:
         self.uploads: list[str] = []
@@ -109,7 +120,10 @@ class FakeCDBClient:
         self.bids: list[str] = []
         self.awards: list[dict[str, Any]] = []
         self.complaints: dict[str, list[dict[str, Any]]] = {}
+        self.allow_fail = False
         self.questions: dict[str, dict[str, Any]] = {}
+        self.cancellations: dict[str, dict[str, Any]] = {}
+        self.armed = False  # the current request was preceded by allow_fail
         self.contracts: dict[str, dict[str, Any]] = {}
         self.changes: dict[str, list[dict[str, Any]]] = {}
         self.contracts_count = 12
@@ -126,12 +140,21 @@ class FakeCDBClient:
         acc_token: str | None = None,
         auth_token: str | None = None,
         success_handler: Callable[[FakeResponse], None] | None = None,
+        error_handler: Callable[[FakeResponse], None] | None = None,
         **kwargs: Any,
     ) -> FakeResponse:
         self.calls.append((method, path))
-        payload = self.respond(method, path, json or {})
-        response = FakeResponse(payload)
-        if success_handler:
+        self.armed = self.allow_fail
+        if self.allow_fail:
+            self.allow_fail = False
+            error_handler = allowed_error_handler  # type: ignore[assignment]
+        try:
+            response = FakeResponse(self.respond(method, path, json or {}))
+        except FakeHTTPError as e:
+            response = FakeResponse(e.payload, e.status_code)
+        if response.status_code >= 300:
+            (error_handler or default_error_handler)(response)  # type: ignore[arg-type]
+        elif success_handler:
             success_handler(response)
         return response
 
@@ -276,9 +299,34 @@ class FakeCDBClient:
         if re.fullmatch(r"tenders/[^/]+/awards/[^/]+/documents", path):
             return self.obj("doc", body)
         if re.fullmatch(r"tenders/[^/]+/qualifications", path):
-            return {"data": [{"id": f"qualification{i}", "status": "pending"} for i in range(8)]}
+            return {"data": [{"id": f"qualification{i}", "status": "pending"} for i in range(12)]}
         if re.fullmatch(r"tenders/[^/]+/qualifications/[^/]+", path):
             return self.obj("qualification", body, path=path)
+        if (
+            self.armed
+            and "/cancellations" in path
+            and (method == "POST" or body.get("data", {}).get("status") == "active")
+        ):
+            # the flow expects these to be refused (pending cancellation, complaint period, owner activation)
+            raise FakeHTTPError(
+                403, {"status": "error", "errors": [{"location": "body", "name": "data", "description": "Forbidden"}]}
+            )
+        if re.fullmatch(r"tenders/[^/]+/cancellations", path):
+            if method == "GET":
+                return {"data": list(self.cancellations.values())}
+            payload = self.obj("cancellation", body)
+            self.cancellations[payload["data"]["id"]] = payload["data"]
+            return payload
+        if re.fullmatch(r"tenders/[^/]+/cancellations/[^/]+", path):
+            cancellation = self.cancellations.setdefault(
+                path.rsplit("/", 1)[-1], self.obj("cancellation", path=path)["data"]
+            )
+            cancellation.update(body.get("data", {}))
+            if method == "GET" and cancellation.get("status") == "pending":
+                cancellation["status"] = "active"  # the complaint period is over
+            return {"data": cancellation}
+        if re.fullmatch(r"tenders/[^/]+/cancellations/[^/]+/documents", path):
+            return self.obj("doc", body)
         if re.fullmatch(r"tenders/[^/]+/questions", path):
             payload = self.obj("question", body)
             self.questions[payload["data"]["id"]] = payload["data"]
@@ -287,20 +335,20 @@ class FakeCDBClient:
             question = self.questions.setdefault(path.rsplit("/", 1)[-1], self.obj("question", path=path)["data"])
             question.update(body.get("data", {}))
             return {"data": question}
-        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications)/[^/]+/)?complaints/[^/]+/posts", path):
+        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications|cancellations)/[^/]+/)?complaints/[^/]+/posts", path):
             collection, _, complaint_id = path.rsplit("/", 1)[0].rpartition("/")
             post = self.obj("post", body)["data"]
             for complaint in self.complaints.get(collection, []):
                 if complaint["id"] == complaint_id:
                     complaint.setdefault("posts", []).append(post)
             return {"data": post}
-        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications)/[^/]+/)?complaints", path):
+        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications|cancellations)/[^/]+/)?complaints", path):
             if method == "GET":
                 return {"data": self.complaints.get(path, [])}
             payload = self.obj("complaint", body)
             self.complaints.setdefault(path, []).append(payload["data"])
             return payload
-        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications)/[^/]+/)?complaints/[^/]+", path):
+        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications|cancellations)/[^/]+/)?complaints/[^/]+", path):
             collection, _, complaint_id = path.rpartition("/")
             for complaint in self.complaints.get(collection, []):
                 if complaint["id"] == complaint_id:
@@ -396,7 +444,7 @@ def test_bundled_data_dirs_run_offline(fake_api: tuple[FakeCDBClient, FakeDSClie
     context = process_tools(make_args(data_dir))
     assert context.step is not None
     assert context.step.action == "tender_wait_status"
-    assert context["tender"]["status"] == "complete"
+    assert context["tender"]["status"] in ("complete", "cancelled")
     assert any(path.startswith("contracts") for _, path in client.calls)
     assert ds_client.uploads
 
@@ -602,6 +650,107 @@ def test_disable_questions(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None
     assert "questions" not in context
     assert not any("/questions" in p for _, p in client.calls)
     assert context["tender"]["status"] == "complete"
+
+
+def test_above_threshold_cancellation_offline(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args("aboveThreshold.cancellation"))
+    cancellations = context["cancellations"]
+    # tender-level draft withdrawn, defeated by a satisfied complaint, active after a declined complaint,
+    # lot draft withdrawn, then every remaining lot cancelled: in qualification (lots 4 and 3), in awarding
+    # (lot 5) and, last, lot 1 with its contract ready to sign
+    assert [c["status"] for c in cancellations] == [
+        "unsuccessful",
+        "unsuccessful",
+        "active",
+        "unsuccessful",
+        "active",
+        "active",
+        "active",
+        "active",
+    ]
+    assert "relatedLot" not in cancellations[0] and all("relatedLot" in c for c in cancellations[1:])
+    assert cancellations[2]["reasonType"] == "forceMajeure"
+    assert len(client.cancellations) == 8
+    # two creates and one activation were refused under allow_fail and the run went on
+    creates = [p for m, p in client.calls if m == "POST" and p.endswith("/cancellations")]
+    assert len(creates) == 10
+    assert context["cancellation_complaints"][1][0]["tendererAction"] == "Внесено зміни"
+    assert context["cancellation_complaints"][2][0]["status"] == "declined"
+    # the last lot is cancelled after its contract got credentials and signer info, before signing
+    last_cancellation = max(i for i, (m, p) in enumerate(client.calls) if m == "POST" and p.endswith("/cancellations"))
+    signer_info = max(i for i, (m, p) in enumerate(client.calls) if p.endswith("signer_info"))
+    assert signer_info < last_cancellation
+    assert not any(m == "PATCH" and re.fullmatch(r"contracts/[^/]+", p) for m, p in client.calls)
+    assert context["tender"]["status"] == "cancelled"
+
+
+def test_above_threshold_eu_cancellation_offline(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args("aboveThresholdEU.cancellation"))
+    cancellations = context["cancellations"]
+    # tender-level draft withdrawn, defeated by a satisfied complaint, active after a declined complaint,
+    # lot draft withdrawn, then every lot cancelled: in pre-qualification (lot 4), in qualification (lots 5 and 3),
+    # in awarding (lot 6) and, last, lot 1 with its contract ready to sign
+    assert [c["status"] for c in cancellations] == [
+        "unsuccessful",
+        "unsuccessful",
+        "active",
+        "unsuccessful",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+    ]
+    assert "relatedLot" not in cancellations[0] and all("relatedLot" in c for c in cancellations[1:])
+    assert len(client.cancellations) == 9
+    # three creates and one activation were refused under allow_fail and the run went on
+    creates = [p for m, p in client.calls if m == "POST" and p.endswith("/cancellations")]
+    assert len(creates) == 12
+    # lot 4 was cancelled before the stand-still patch, the ten qualifications were approved first
+    qualification_patches = [p for m, p in client.calls if m == "PATCH" and "/qualifications/" in p]
+    assert len(qualification_patches) == 10
+    last_qualification_patch = max(
+        i for i, (m, p) in enumerate(client.calls) if m == "PATCH" and "/qualifications/" in p
+    )
+    stand_still = next(
+        i
+        for i, (m, p) in enumerate(client.calls)
+        if i > last_qualification_patch and m == "PATCH" and re.fullmatch(r"tenders/[^/]+", p)
+    )
+    fifth_create = [i for i, (m, p) in enumerate(client.calls) if m == "POST" and p.endswith("/cancellations")][4]
+    assert fifth_create < stand_still
+    assert not any(m == "PATCH" and re.fullmatch(r"contracts/[^/]+", p) for m, p in client.calls)
+    assert context["tender"]["status"] == "cancelled"
+
+
+def test_allow_fail_lets_one_request_fail(
+    fake_api: tuple[FakeCDBClient, FakeDSClient], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client, _ = fake_api
+    flow = tmp_path / "flow"
+    flow.mkdir()
+    (flow / "0010_tender_create.json").write_text(json.dumps({"data": {"title": "t"}}), encoding="utf-8")
+    (flow / "0020_allow_fail.json").write_text(
+        json.dumps({"message": "refreshing is expected to fail"}), encoding="utf-8"
+    )
+    (flow / "0021_tender_get.json").write_text("{}", encoding="utf-8")
+    (flow / "0030_tender_get.json").write_text("{}", encoding="utf-8")
+    original_respond = client.respond
+
+    def respond(method: str, path: str, body: dict[str, Any]) -> dict[str, Any]:
+        if method == "GET" and re.fullmatch(r"tenders/[^/]+", path):
+            raise FakeHTTPError(403, {"status": "error", "errors": [{"location": "url", "name": "permission"}]})
+        return original_respond(method, path, body)
+
+    monkeypatch.setattr(client, "respond", respond)
+    with pytest.raises(ProcedureExit) as e:
+        process_tools(make_args(str(flow)))
+    # the first GET failed as allowed and the run went on; the second one stopped the run
+    assert e.value.message == "url.permission: "
+    assert sum(1 for m, p in client.calls if m == "GET" and re.fullmatch(r"tenders/[^/]+", p)) == 2
+    assert client.allow_fail is False
 
 
 def test_reporting_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:

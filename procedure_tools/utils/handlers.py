@@ -263,6 +263,22 @@ def error(text: str, allow_error: bool = False) -> None:
         raise ProcedureExit(EX_DATAERR, text)
 
 
+class RequestFailed(Exception):
+    """A request failed while a failure was allowed (see the ``allow_fail`` action)."""
+
+
+def allowed_error_handler(response: requests.Response) -> None:
+    """Log a failed response without the red error text and abort the step with RequestFailed."""
+    payload = parse_response_payload(response)
+    if payload is None or payload == {}:
+        summary = format_response_text(response.text)
+        logger.info(f"Response text (failure allowed):\n{summary}\n")
+    else:
+        summary = format_error_summary(payload, response.text)
+        logger.info("Response error (failure allowed):\n" + format_log_all_fields(payload))
+    raise RequestFailed(summary)
+
+
 def default_error_handler(response: requests.Response) -> None:
     log_error_response(response, allow_error=False)
 

@@ -2,6 +2,7 @@ from procedure_tools.actions import (  # noqa: F401  (importing registers the ac
     agreement,
     award,
     bid,
+    cancellation,
     complaint,
     contract,
     framework,

@@ -62,6 +62,11 @@ def test_above_threshold() -> None:
 
 
 @skipifenv
+def test_above_threshold_cancellation() -> None:
+    run_data("aboveThreshold.cancellation", "tender_bid_patch_1.json")
+
+
+@skipifenv
 def test_above_threshold_features() -> None:
     run_data("aboveThreshold.features", "tender_bid_patch_1.json")
 
@@ -79,6 +84,11 @@ def test_above_threshold_econtract() -> None:
 @skipifenv
 def test_above_threshold_eu() -> None:
     run_data("aboveThresholdEU", "tender_bid_patch_1.json")
+
+
+@skipifenv
+def test_above_threshold_eu_cancellation() -> None:
+    run_data("aboveThresholdEU.cancellation", "tender_bid_patch_1.json")
 
 
 @skipifenv
