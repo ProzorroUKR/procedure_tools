@@ -1,6 +1,5 @@
 import logging
 
-from procedure.utils.handlers import item_patch_success_handler
 from tools.actions.common import (
     attach_document,
     qualification,
@@ -9,6 +8,7 @@ from tools.actions.common import (
     tender_token,
 )
 from tools.actions.registry import action
+from tools.utils.handlers import item_patch_success_handler
 
 
 @action("tender_qualification_patch")

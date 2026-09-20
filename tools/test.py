@@ -3,8 +3,8 @@ from unittest import mock
 
 import pytest
 
-from procedure.utils.env import REQUIRED_ARGS, EnvFileNotFound, load_run_env
 from tools.main import main
+from tools.utils.env import REQUIRED_ARGS, EnvFileNotFound, load_run_env
 
 INACTIVE_REASON = "Currently inactive procedure"
 skipinactive = pytest.mark.skip(reason=INACTIVE_REASON)
@@ -169,7 +169,6 @@ def test_complex_asset_arma():
     run_data("complexAsset.arma", "tender_bid_patch_1.json")
 
 
-@skipinactive
 @skipifenv
 def test_negotiation():
     run_data("negotiation")
@@ -180,7 +179,6 @@ def test_negotiation_local():
     run_data("negotiation.local")
 
 
-@skipinactive
 @skipifenv
 def test_negotiation_quick():
     run_data("negotiation.quick")

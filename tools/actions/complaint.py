@@ -15,14 +15,14 @@ entirely when a role needed by their patch steps has no token.
 
 import logging
 
-from procedure.utils.data import get_data, get_token
-from procedure.utils.handlers import (
+from tools.actions.common import award, qualification, skip, tender_id, tender_token
+from tools.actions.registry import action
+from tools.utils.data import get_data, get_token
+from tools.utils.handlers import (
     error,
     item_patch_success_handler,
     tender_post_complaint_success_handler,
 )
-from tools.actions.common import award, qualification, skip, tender_id, tender_token
-from tools.actions.registry import action
 
 ROLES = ("bot", "reviewer", "tenderer", "complainer")
 

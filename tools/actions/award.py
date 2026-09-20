@@ -1,10 +1,5 @@
 import logging
 
-from procedure.utils.handlers import (
-    allow_null_success_handler,
-    item_create_success_handler,
-    item_patch_success_handler,
-)
 from tools.actions.common import (
     attach_document,
     award,
@@ -13,6 +8,11 @@ from tools.actions.common import (
     tender_token,
 )
 from tools.actions.registry import action
+from tools.utils.handlers import (
+    allow_null_success_handler,
+    item_create_success_handler,
+    item_patch_success_handler,
+)
 
 
 @action("tender_award_create")

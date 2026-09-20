@@ -7,19 +7,13 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from procedure.test import (
-    WORKFLOW_TEST_CASES,  # pyright: ignore[reportMissingImports]
-)
 from tools.test import (
-    WORKFLOW_TEST_CASES as TOOLS_WORKFLOW_TEST_CASES,  # pyright: ignore[reportMissingImports]
+    WORKFLOW_TEST_CASES,  # pyright: ignore[reportMissingImports]
 )
 
 
 def main() -> None:
-    outputs = {
-        "cases": WORKFLOW_TEST_CASES,
-        "tools_cases": TOOLS_WORKFLOW_TEST_CASES,
-    }
+    outputs = {"cases": WORKFLOW_TEST_CASES}
     output_path = os.environ.get("GITHUB_OUTPUT")
     if output_path:
         with open(output_path, "a", encoding="utf-8") as f:

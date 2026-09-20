@@ -8,6 +8,6 @@ services:
     env_file:
       - .dev.env
     volumes:
-      - ../procedure:/opt/robotframework/procedure
+      - ../tools:/opt/robotframework/tools
       - ./tests:/opt/robotframework/tests
       - ./reports:/opt/robotframework/reports

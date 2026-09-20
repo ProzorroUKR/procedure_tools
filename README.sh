@@ -12,7 +12,7 @@ if [ ! -f "${ENV_FILE}" ]; then
 fi
 
 READ_ENV_PY='
-from procedure.utils.env import load_env_file
+from tools.utils.env import load_env_file
 import sys
 
 print(load_env_file(sys.argv[1]).get(sys.argv[2], ""))
@@ -165,7 +165,7 @@ EOM
 
 echo "Generating the help output."
 
-procedure -h >> $FILE
+procedure-tools -h >> $FILE
 
 echo "Help output generated."
 
@@ -189,15 +189,15 @@ Fill in the file with your credentials.
 Use \`--env\` (or \`-E\`) to select the file for the current run. It accepts a path or an environment name and looks up \`.env.<name>\`, \`<name>.env\`, or \`envs/<name>\`. If omitted, \`PROCEDURE_ENV\` is used. If that is also unset, \`.env\` is used when that file exists.
 
 \`\`\`
-procedure --env sandbox --data closeFrameworkAgreementUA
-procedure --env .env.dev --data closeFrameworkAgreementUA
-PROCEDURE_ENV=sandbox procedure --data closeFrameworkAgreementUA
+procedure-tools --env sandbox --data closeFrameworkAgreementUA
+procedure-tools --env .env.dev --data closeFrameworkAgreementUA
+PROCEDURE_ENV=sandbox procedure-tools --data closeFrameworkAgreementUA
 \`\`\`
 
 Override selected values from the command line:
 
 \`\`\`
-procedure --env sandbox --token other_token --data closeFrameworkAgreementUA
+procedure-tools --env sandbox --token other_token --data closeFrameworkAgreementUA
 \`\`\`
 
 ## Usage examples
@@ -206,66 +206,66 @@ procedure --env sandbox --token other_token --data closeFrameworkAgreementUA
 
 Create with the default data:
 \`\`\`
-procedure --env sandbox --data=closeFrameworkAgreementUA
+procedure-tools --env sandbox --data=closeFrameworkAgreementUA
 \`\`\`
 
 Create with the default data and stop after a specific data file:
 \`\`\`
-procedure --env sandbox --data=closeFrameworkAgreementUA --stop=tender_bid_create_3.json
+procedure-tools --env sandbox --data=closeFrameworkAgreementUA --stop=tender_bid_create_1.json
 \`\`\`
 
 Create with custom data files (relative path):
 \`\`\`
-procedure --env sandbox --data=customdata/closeFrameworkAgreementUA
+procedure-tools --env sandbox --data=customdata/closeFrameworkAgreementUA
 \`\`\`
 
 Create with custom data files (absolute path):
 \`\`\`
-procedure --env sandbox --data=/Users/JohnDoe/customdata/closeFrameworkAgreementUA
+procedure-tools --env sandbox --data=/Users/JohnDoe/customdata/closeFrameworkAgreementUA
 \`\`\`
 
 Create with custom data files (absolute path, Windows):
 \`\`\`
-procedure --env sandbox --data=C:\\Users\\JohnDoe\\customdata\\closeFrameworkAgreementUA
+procedure-tools --env sandbox --data=C:\\Users\\JohnDoe\\customdata\\closeFrameworkAgreementUA
 \`\`\`
 
 ### Without an env file
 
 Create with the default data:
 \`\`\`
-procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA
+procedure-tools ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA
 \`\`\`
 
 Create with the default data and stop after a specific data file:
 \`\`\`
-procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA --stop=tender_bid_create_3.json
+procedure-tools ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA --stop=tender_bid_create_1.json
 \`\`\`
 
 Create with custom data files (relative path):
 \`\`\`
-procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=customdata/closeFrameworkAgreementUA
+procedure-tools ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=customdata/closeFrameworkAgreementUA
 \`\`\`
 
 Create with custom data files (absolute path):
 \`\`\`
-procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=/Users/JohnDoe/customdata/closeFrameworkAgreementUA
+procedure-tools ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=/Users/JohnDoe/customdata/closeFrameworkAgreementUA
 \`\`\`
 
 Create with custom data files (absolute path, Windows):
 \`\`\`
-procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=C:\\Users\\JohnDoe\\customdata\\closeFrameworkAgreementUA
+procedure-tools ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=C:\\Users\\JohnDoe\\customdata\\closeFrameworkAgreementUA
 \`\`\`
 
 ## Output example
 \`\`\`
-procedure --env sandbox --data=closeFrameworkAgreementUA --stop=tender_bid_create_4.json
+procedure-tools --env sandbox --data=closeFrameworkAgreementUA --stop=tender_bid_create_1.json
 \`\`\`
 \`\`\`
 EOM
 
 echo "Generating the command example."
 
-procedure --env readme --data=closeFrameworkAgreementUA --stop=tender_bid_create_3.json >> $FILE
+procedure-tools --env readme --data=closeFrameworkAgreementUA --stop=tender_bid_create_1.json >> $FILE
 
 echo "Command example generated."
 
@@ -277,7 +277,7 @@ EOM
 cat >> $FILE <<- EOM
 ## procedure-tools
 
-\`procedure-tools\` creates the same procedures with the same options (see \`procedure-tools -h\`), but there is no procedure specific code path: the data files define the flow. Every \`.json\` file in a data folder (\`tools/data/<name>\`) is one action:
+\`procedure-tools\` creates Prozorro CDB procedures from data folders. There is no procedure specific code path: the data files define the flow. Every \`.json\` file in a data folder (\`tools/data/<name>\`) is one action:
 
 \`\`\`
 0010_action_name[_part[_part...]].json
@@ -308,9 +308,9 @@ The runner does not depend on these numbers, they only define the order; a custo
 
 Files with any other extension are resources (documents to upload) that action files reference by title; a resource may carry a number prefix too. When the file on disk is shared by several documents or named differently, the attach file adds \`"file": "<resource name>"\` next to \`"data"\` and the title stays the document title.
 
-Every action updates the shared context: created objects (\`plan\`, \`tender\`, \`bids\`, \`awards\`, \`contracts\`, \`framework\`, \`agreement\`, ...) and their tokens (\`tender_token\`, \`bids_tokens\`, \`contracts_tokens\`, ...). The context is also the template context of the data files, so \`{{ tender.id }}\`, \`{{ contracts[0].dateModified }}\` or \`{{ plans[1].id }}\` resolve to what earlier actions stored. \`fake\`, \`fake_en\`, \`from_now_iso()\` and the other helpers work as in \`procedure\`.
+Every action updates the shared context: created objects (\`plan\`, \`tender\`, \`bids\`, \`awards\`, \`contracts\`, \`framework\`, \`agreement\`, ...) and their tokens (\`tender_token\`, \`bids_tokens\`, \`contracts_tokens\`, ...). The context is also the template context of the data files, so \`{{ tender.id }}\`, \`{{ contracts[0].dateModified }}\` or \`{{ plans[1].id }}\` resolve to what earlier actions stored. \`fake\`, \`fake_en\`, \`from_now_iso()\`, \`from_date_iso()\` and \`datetime\` are available in every template.
 
-Technical actions (\`tender_wait_status\`, \`tender_wait_next_check\`, \`wait_date\`, \`stop_if\`, \`context_rename\`, ...) replace the waits and branches that \`procedure\` hard-codes. Their parameters live in the data file, for example:
+Technical actions (\`tender_wait_status\`, \`tender_wait_next_check\`, \`wait_date\`, \`stop_if\`, \`skip_if\`, \`context_rename\`, ...) cover the waits and branches of a flow. Their parameters live in the data file, for example:
 
 \`\`\`
 2160_tender_wait_status.json    {"status": ["active.qualification", "active.awarded"], "fail_status": "unsuccessful"}
@@ -318,7 +318,7 @@ Technical actions (\`tender_wait_status\`, \`tender_wait_next_check\`, \`wait_da
 2150_tender_wait_next_check.json  {}
 \`\`\`
 
-An unknown action name fails before anything is sent to the API and prints the available actions. \`--stop\`, \`--pause\`, \`--wait\`, \`--parallel\` and env files work as for \`procedure\`.
+An unknown action name fails before anything is sent to the API and prints the available actions. \`--stop\` and \`--pause\` take a step file name (with or without its number), \`--wait\` enables the EDR waits, \`--parallel\` runs several data folders at once.
 
 Run:
 

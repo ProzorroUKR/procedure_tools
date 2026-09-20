@@ -1,11 +1,5 @@
 import logging
 
-from procedure.utils.data import get_data
-from procedure.utils.handlers import (
-    default_success_handler,
-    error,
-    item_patch_success_handler,
-)
 from tools.actions.common import (
     attach_document,
     ensure_agreements,
@@ -18,6 +12,12 @@ from tools.actions.common import (
     tender_token,
 )
 from tools.actions.registry import action
+from tools.utils.data import get_data
+from tools.utils.handlers import (
+    default_success_handler,
+    error,
+    item_patch_success_handler,
+)
 
 
 def framework_agreement_id(context):

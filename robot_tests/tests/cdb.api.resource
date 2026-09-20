@@ -2,11 +2,11 @@
 Library   RequestsLibrary
 Library   JSONLibrary
 Library   Collections
-Library   procedure/utils/data.py
+Library   tools/utils/data.py
 
 *** Variables ***
 ${TIMEZONE}   %{TIMEZONE}
-${files_prefix}   ../procedure/data
+${files_prefix}   ../tools/data
 
 ${cdb_api_host}   %{CDB_API_HOST}
 ${quintagroup_token}   %{QUINTAGROUP_TOKEN}

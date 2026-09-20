@@ -13,17 +13,6 @@ Parts: ``[contract index, (change index,) (role)]``. The optional role
 
 import logging
 
-from procedure.utils.data import get_token
-from procedure.utils.handlers import (
-    contract_access_success_handler,
-    contract_credentials_success_handler,
-    contract_post_success_handler,
-    default_success_handler,
-    error,
-    item_create_success_handler,
-    item_patch_success_handler,
-    signatory_post_success_handler,
-)
 from tools.actions.common import (
     attach_document,
     contract,
@@ -36,6 +25,17 @@ from tools.actions.common import (
     tender_token,
 )
 from tools.actions.registry import action
+from tools.utils.data import get_token
+from tools.utils.handlers import (
+    contract_access_success_handler,
+    contract_credentials_success_handler,
+    contract_post_success_handler,
+    default_success_handler,
+    error,
+    item_create_success_handler,
+    item_patch_success_handler,
+    signatory_post_success_handler,
+)
 
 
 def contract_ref(context, step):

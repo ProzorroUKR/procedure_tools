@@ -5,10 +5,10 @@ from functools import partial
 
 from jinja2 import Template
 
-from procedure.fake import fake, fake_en
-from procedure.utils import helpers
-from procedure.utils.handlers import error
+from tools.fake import fake, fake_en
 from tools.steps import find_resource_path
+from tools.utils import helpers
+from tools.utils.handlers import error
 
 
 class Context(dict):

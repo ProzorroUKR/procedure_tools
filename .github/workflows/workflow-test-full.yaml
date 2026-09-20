@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       cases: ${{ steps.get-cases.outputs.cases }}
-      tools_cases: ${{ steps.get-cases.outputs.tools_cases }}
     steps:
       - uses: actions/checkout@v6
       - name: Set up python 3.x
@@ -39,41 +38,6 @@ jobs:
       max-parallel: 5
       matrix:
         case: ${{ fromJson(needs.extract-test-cases.outputs.cases) }}
-    env:
-      PYTHONUNBUFFERED: 1
-    steps:
-      - uses: actions/checkout@v6
-      - name: Setup timezone
-        run: sudo timedatectl set-timezone Europe/Kyiv
-      - name: Set up python 3.x
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.x'
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e .[test]
-      - name: Run pytest
-        env:
-          API_HOST: ${{ secrets.API_HOST }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
-          DS_HOST: ${{ secrets.DS_HOST }}
-          DS_USERNAME: ${{ secrets.DS_USERNAME }}
-          DS_PASSWORD: ${{ secrets.DS_PASSWORD }}
-          REVIEWER_TOKEN: ${{ secrets.REVIEWER_TOKEN }}
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: |
-          python .github/scripts/write_test_env.py
-          pytest procedure/test.py::test_${{ matrix.case }}
-
-  pytest-tools-full:
-    needs: extract-test-cases
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 5
-      matrix:
-        case: ${{ fromJson(needs.extract-test-cases.outputs.tools_cases) }}
     env:
       PYTHONUNBUFFERED: 1
     steps:

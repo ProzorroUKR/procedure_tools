@@ -1,13 +1,5 @@
 import logging
 
-from procedure.utils.data import get_data
-from procedure.utils.handlers import (
-    error,
-    tender_create_success_handler,
-    tender_patch_success_handler,
-    tender_post_criteria_success_handler,
-    tender_post_plan_success_handler,
-)
 from tools.actions.common import (
     attach_document,
     refresh_tender,
@@ -16,6 +8,14 @@ from tools.actions.common import (
     tender_token,
 )
 from tools.actions.registry import action
+from tools.utils.data import get_data
+from tools.utils.handlers import (
+    error,
+    tender_create_success_handler,
+    tender_patch_success_handler,
+    tender_post_criteria_success_handler,
+    tender_post_plan_success_handler,
+)
 
 
 @action("tender_create")

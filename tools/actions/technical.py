@@ -5,9 +5,9 @@ Technical actions that change the run itself instead of calling the API.
 import logging
 import threading
 
-from procedure.utils.handlers import EX_OK, error
-from procedure.utils.runtime import get_controller
 from tools.actions.registry import action
+from tools.utils.handlers import EX_OK, error
+from tools.utils.runtime import get_controller
 
 _pause_lock = threading.Lock()
 

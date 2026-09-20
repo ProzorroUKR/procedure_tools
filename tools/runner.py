@@ -1,13 +1,13 @@
 import logging
 import threading
 
-from procedure.client import CDBClient, DSClient
-from procedure.utils.handlers import EX_OK, error
-from procedure.utils.runtime import get_controller
 from tools.actions import ACTIONS
+from tools.client import CDBClient, DSClient
 from tools.context import Context
 from tools.steps import StepError, discover_steps
 from tools.utils.file import get_data_path
+from tools.utils.handlers import EX_OK, error
+from tools.utils.runtime import get_controller
 
 _pause_lock = threading.Lock()
 

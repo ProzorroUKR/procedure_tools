@@ -2,36 +2,129 @@
 Technical actions that wait for the procedure to move on. The data file holds
 the parameters, an empty file (or ``{}``) uses the defaults.
 
-    2160_wait_status.json      {"status": ["active.qualification", "active.awarded"], "fail_status": "unsuccessful"}
-    2150_wait_next_check.json  {}
-    2380_wait_date.json        {"date": "{{ tender.contractPeriod.clarificationsUntil }}", "description": "..."}
+    2620_tender_wait_status.json      {"status": ["active.qualification", "active.awarded"], "fail_status": "unsuccessful"}
+    2230_tender_wait_next_check.json  {}
+    3300_wait_date.json               {"date": "{{ tender.contractPeriod.clarificationsUntil }}", "description": "..."}
 """
 
 import logging
+import math
+from datetime import timedelta
+from functools import partial
 
-from procedure.actions import wait as wait_until_date
-from procedure.actions import (
-    wait_auction_participation_urls,
-    wait_edr_pre_qual,
-    wait_edr_qual,
-)
-from procedure.actions import wait_status as wait_tender_status
-from procedure.procedure import WAIT_EDR_PRE_QUAL, WAIT_EDR_QUAL
-from procedure.utils.data import (
-    get_complaint_period_end_dates,
-    get_data,
-    get_next_check,
-)
-from procedure.utils.handlers import error
 from tools.actions.common import (
     ensure_awards,
     refresh_awards,
+    refresh_qualifications,
     refresh_tender,
     skip,
     sleep,
     tender_id,
 )
 from tools.actions.registry import action
+from tools.utils.data import (
+    EDR_FILENAME,
+    SECONDS_BUFFER,
+    WAIT_EDR_PRE_QUAL,
+    WAIT_EDR_QUAL,
+    get_complaint_period_end_dates,
+    get_data,
+    get_next_check,
+)
+from tools.utils.date import fix_datetime, get_utcnow, parse_date
+from tools.utils.handlers import (
+    auction_multilot_participation_url_success_handler,
+    auction_participation_url_success_handler,
+    error,
+    response_handler,
+    tender_check_status_invalid_handler,
+    tender_check_status_success_handler,
+)
+from tools.utils.runtime import get_controller
+
+# --- waiting primitives
+
+
+def wait_until_date(date_str, client_timedelta=timedelta(), date_info_str=None):
+    now = fix_datetime(get_utcnow(), client_timedelta)
+    delta_seconds = (parse_date(date_str) - now).total_seconds()
+    date_seconds = math.ceil(delta_seconds) if delta_seconds > 0 else 0
+    info_str = f" for {date_info_str}" if date_info_str else ""
+    logging.info(f"Waiting {date_seconds} seconds{info_str} - {date_str}...\n")
+    controller = get_controller()
+    if controller:
+        controller.set_activity(None, f"waiting {date_seconds}s")
+    sleep(date_seconds)
+
+
+def wait_tender_status(client, args, context, tender_id, delay, status, fail_status=None):
+    logging.info(f"Waiting for {status}...\n")
+    status = [status] if not isinstance(status, list) else status
+    fail_status = [fail_status] if fail_status and not isinstance(fail_status, list) else fail_status
+    controller = get_controller()
+    if controller:
+        controller.set_activity(None, f"waiting for {', '.join(status)}")
+    while True:
+        response = client.get(f"tenders/{tender_id}")
+        current_status = response.json()["data"]["status"]
+        if current_status in status:
+            response_handler(response, success_handler=tender_check_status_success_handler)
+            return response
+        if fail_status and current_status in fail_status:
+            response_handler(response, success_handler=tender_check_status_invalid_handler)
+            error("Terminated.")
+        sleep(delay)
+
+
+def wait_auction_participation_urls(client, args, tender_id, bids):
+    logging.info("Waiting for the auction participation urls...\n")
+    active_bids = [bid for bid in bids if bid["data"].get("status") != "unsuccessful"]
+    active_bids_ids = [bid["data"]["id"] for bid in active_bids]
+    success_bids_ids = []
+    while True:
+        tender_data = client.get(f"tenders/{tender_id}").json()["data"]
+        if set(success_bids_ids) == set(active_bids_ids):
+            break
+        for bid in active_bids:
+            bid_id = bid["data"]["id"]
+            if bid_id in success_bids_ids:
+                continue
+            response = client.get(
+                f"tenders/{tender_id}/bids/{bid_id}",
+                acc_token=bid["access"]["token"],
+                auth_token=args.token,
+            )
+            data = response.json()["data"]
+            if "lotValues" in data:
+                lots_with_auction = {lot["id"] for lot in tender_data.get("lots", []) if "auctionPeriod" in lot}
+                active_lot_values = [
+                    value
+                    for value in data["lotValues"]
+                    if value.get("status", "active") in ("pending", "active")
+                    and value["relatedLot"] in lots_with_auction
+                ]
+                if all("participationUrl" in value for value in active_lot_values):
+                    response_handler(
+                        response,
+                        success_handler=partial(auction_multilot_participation_url_success_handler),
+                    )
+                    success_bids_ids.append(bid_id)
+            elif "participationUrl" in data:
+                response_handler(response, success_handler=auction_participation_url_success_handler)
+                success_bids_ids.append(bid_id)
+        sleep(SECONDS_BUFFER)
+
+
+def wait_edr_documents(context, path, items):
+    """Wait until every item (award or qualification) has the EDR identification document."""
+    logging.info(f"Waiting for {EDR_FILENAME} in {path} documents...\n")
+    for item in items:
+        while EDR_FILENAME not in [doc["title"] for doc in item.get("documents", [])]:
+            sleep(SECONDS_BUFFER)
+            item = context.client.get(f"tenders/{tender_id(context)}/{path}/{item['id']}").json()["data"]
+
+
+# --- actions
 
 
 @action("tender_wait_status")
@@ -138,7 +231,7 @@ def tender_qualifications_wait_edr(context, step):
     if WAIT_EDR_PRE_QUAL not in (context.args.wait or []):
         skip(f"Skipping EDR wait: pass --wait {WAIT_EDR_PRE_QUAL} to enable")
         return
-    wait_edr_pre_qual(context.client, context.args, context, tender_id(context))
+    wait_edr_documents(context, "qualifications", refresh_qualifications(context))
 
 
 @action("tender_awards_wait_edr")
@@ -148,4 +241,4 @@ def tender_awards_wait_edr(context, step):
     if WAIT_EDR_QUAL not in (context.args.wait or []):
         skip(f"Skipping EDR wait: pass --wait {WAIT_EDR_QUAL} to enable")
         return
-    wait_edr_qual(context.client, context.args, context, tender_id(context))
+    wait_edr_documents(context, "awards", refresh_awards(context))

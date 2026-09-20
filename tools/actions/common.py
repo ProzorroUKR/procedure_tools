@@ -7,20 +7,20 @@ import logging
 from mimetypes import MimeTypes
 from time import sleep as time_sleep
 
-from procedure.utils.data import (
+from tools.utils.data import (
     SECONDS_BUFFER,
     get_access,
     get_config,
     get_data,
     get_token,
 )
-from procedure.utils.handlers import (
+from tools.utils.handlers import (
     default_success_handler,
     document_attach_success_handler,
     error,
 )
-from procedure.utils.runtime import get_controller
-from procedure.utils.style import fore_warning
+from tools.utils.runtime import get_controller
+from tools.utils.style import fore_warning
 
 CONTRACT_ROLES = ("buyer", "supplier")
 

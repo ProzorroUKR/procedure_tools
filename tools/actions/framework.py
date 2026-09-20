@@ -1,7 +1,9 @@
 import logging
 
-from procedure.utils.data import get_data, get_token
-from procedure.utils.handlers import (
+from tools.actions.common import attach_document, get_until, has_data
+from tools.actions.registry import action
+from tools.utils.data import get_data, get_token
+from tools.utils.handlers import (
     error,
     framework_create_success_handler,
     framework_get_success_handler,
@@ -9,8 +11,6 @@ from procedure.utils.handlers import (
     item_patch_success_handler,
     submission_create_success_handler,
 )
-from tools.actions.common import attach_document, get_until, has_data
-from tools.actions.registry import action
 
 
 def framework_id(context):

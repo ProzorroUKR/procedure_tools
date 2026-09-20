@@ -1,10 +1,5 @@
 import logging
 
-from procedure.utils.data import get_data, get_token
-from procedure.utils.handlers import (
-    bid_create_success_handler,
-    item_patch_success_handler,
-)
 from tools.actions.common import (
     attach_document,
     bid,
@@ -14,6 +9,11 @@ from tools.actions.common import (
     upload_ds,
 )
 from tools.actions.registry import action
+from tools.utils.data import get_data, get_token
+from tools.utils.handlers import (
+    bid_create_success_handler,
+    item_patch_success_handler,
+)
 
 BID_DOCUMENT_CONTAINERS = (
     "documents",
