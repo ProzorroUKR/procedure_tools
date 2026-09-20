@@ -8,8 +8,8 @@ Documentation     Setup and the keywords every procedure shares.
 ...               submission method) that the tender dates depend on.
 
 Library           Collections
-Library           ProcedureTools
-Library           ProcedureData
+Library           ${CURDIR}/../libraries/ProcedureTools.py
+Library           ${CURDIR}/../libraries/ProcedureData.py
 
 
 *** Keywords ***

@@ -30,16 +30,34 @@ ROBOT_OPTIONS=--exclude auction          # skip what waits for an auction
 ROBOT_OPTIONS=--loglevel DEBUG
 ```
 
+## Running locally
+
 Without Docker, with the package installed (`pip install -e .[test]`) plus
 `robotframework`:
 
 ```shell
-PYTHONPATH=robot_tests/libraries robot --outputdir robot_tests/reports robot_tests/tests
+cd robot_tests
+robot tests
 ```
+
+The libraries are imported by path, so nothing has to be on `PYTHONPATH`.
 
 The settings come from the environment under the same names the CLI uses
 (`API_HOST`, `API_TOKEN`, `DS_HOST`, `DS_USERNAME`, `DS_PASSWORD`,
-`ACCELERATION`, `SUBMISSION`), so one env file drives both.
+`ACCELERATION`, `SUBMISSION`), so one env file drives both. A local run reads
+them from the shell, or from an env file named by `PROCEDURE_ENV`:
+
+```shell
+PROCEDURE_ENV=../.env.dev robot tests
+```
+
+Run one suite, one test, or one tag:
+
+```shell
+robot tests/reporting.robot
+robot --test "Reporting Without A Plan" tests
+robot --include smoke tests
+```
 
 ## Layout
 
