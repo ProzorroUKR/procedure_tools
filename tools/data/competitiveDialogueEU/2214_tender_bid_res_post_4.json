@@ -1,0 +1,144 @@
+{
+  "data": [
+    {
+      "requirement": {
+        "id": "bacd6f59a253433bb8d0d2a5d7bf53b2"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "b446016cf2d0419da8971a3272318d07"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "48cd5478dd1c40f7ad9aae6f5b58621c"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "b9bbf7df18454f9fbb8dc449648f9e4b"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "aa1444125d714a92a7aa66577029337f"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "addecaa0b0ce41c4b7065cb75a8ed548"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "7364578c26b244369867aff386991164"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "c6f262537afb42178dc57f24a92cba7f"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "fdfc98939cfc4fe187c7cffa5cf27675"
+      },
+      "values": [
+        "Українська"
+      ]
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "dabf1aa240434729bcbfba051ed2bd18"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "2cc410aa11444189a17f50e1b0280841"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "2df9a4bb083444cc868fda59c81b2eb3"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "253a7a343b084781b9f4264aa9a09dce"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "e638a1444c3a48d187ad5450f33a9bab"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "6d91695aedb54c2c9f46df4b9ad739c8"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "8b17169700814395ac6b7fc19453aea7"
+      },
+      "value": 90
+    },
+    {
+      "requirement": {
+        "id": "aa043ac90b994a4c8a4dbf67d355e876"
+      },
+      "value": true
+    }
+  ]
+}

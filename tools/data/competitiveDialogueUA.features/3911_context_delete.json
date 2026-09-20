@@ -1,0 +1,24 @@
+{
+  "keys": [
+    "plan",
+    "plan_token",
+    "plans",
+    "plans_tokens",
+    "criteria",
+    "bids",
+    "bids_tokens",
+    "qualifications",
+    "awards",
+    "agreements",
+    "contracts",
+    "contracts_tokens",
+    "contracts_buyer_tokens",
+    "contracts_supplier_tokens",
+    "tender_complaints",
+    "tender_complaints_tokens",
+    "award_complaints",
+    "award_complaints_tokens",
+    "qualification_complaints",
+    "qualification_complaints_tokens"
+  ]
+}

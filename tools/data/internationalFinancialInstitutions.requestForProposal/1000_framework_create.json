@@ -1,0 +1,51 @@
+{
+  "config": {
+    "clarificationUntilDuration": 3,
+    "qualificationComplainDuration": 0,
+    "restrictedDerivatives": false
+  },
+  "data": {
+    "additionalClassifications": [
+      {
+        "description": "Техніка конторська/офісна, інша",
+        "id": "28.23.23",
+        "scheme": "ДКПП"
+      }
+    ],
+    "classification": {
+      "description": "Промислова техніка",
+      "id": "42000000-6",
+      "scheme": "ДК021"
+    },
+    "description": "{{ fake.sentence(nb_words=8) }}",
+    "frameworkDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
+    "frameworkType": "internationalFinancialInstitutions",
+    "procuringEntity": {
+      "address": {
+        "countryName": "Україна",
+        "locality": "м. Київ",
+        "postalCode": "01220",
+        "region": "м. Київ",
+        "streetAddress": "{{ fake.street_address() }}"
+      },
+      "contactPoint": {
+        "email": "{{ fake.email() }}",
+        "name": "{{ fake.company() }}",
+        "telephone": "{{ fake.prozorro_phone_number() }}",
+        "url": "{{ fake.url() }}"
+      },
+      "identifier": {
+        "id": "00037256",
+        "legalName": "{{ fake.company() }}",
+        "scheme": "UA-EDR",
+        "uri": "http://www.dus.gov.ua/"
+      },
+      "kind": "other",
+      "name": "{{ fake.company() }}"
+    },
+    "qualificationPeriod": {
+      "endDate": "{{ from_now_iso(days=366*2) }}"
+    },
+    "title": "{{ fake.sentence(nb_words=6) }}"
+  }
+}

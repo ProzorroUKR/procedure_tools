@@ -1,0 +1,4 @@
+{
+  "date": "{{ tender.contractPeriod.clarificationsUntil }}",
+  "description": "contract period clarifications until date"
+}

@@ -1,0 +1,16 @@
+{
+  "data": {
+    "contractNumber": 2,
+    "dateSigned": "{{ contracts[2].dateModified }}",
+    "period": {
+      "startDate": "{{ contracts[2].dateModified }}",
+      "endDate": "{{ from_date_iso(contracts[2].dateModified, days=365) }}"
+    },
+    "status": "active",
+    "value": {
+      "amount": 500,
+      "amountNet": 500,
+      "valueAddedTaxIncluded": false
+    }
+  }
+}

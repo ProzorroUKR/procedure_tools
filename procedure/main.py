@@ -129,7 +129,9 @@ def run_result_error(exc):
     return f"{name}: {text}"
 
 
-def run_data_dir(args, session=None, controller=None):
+def run_data_dir(args, session=None, controller=None, process=None, resolve_data_path=None):
+    process = process or process_procedure
+    resolve_data_path = resolve_data_path or get_data_path
     close_session = False
     if session is None:
         session = requests.Session()
@@ -139,12 +141,12 @@ def run_data_dir(args, session=None, controller=None):
     if controller:
         controller.mark_started(data_dir)
     try:
-        data_path = get_data_path(args.data)
+        data_path = resolve_data_path(args.data)
         if data_path is None:
             logging.error("Data path not found.\n")
             result = EX_DATAERR, "Data path not found"
         else:
-            process_procedure(args, session=session)
+            process(args, session=session)
             logging.info("Completed.\n")
             result = EX_OK, None
     except SystemExit as e:
@@ -165,13 +167,18 @@ def run_data_dir(args, session=None, controller=None):
     return result
 
 
-def run_data_dir_parallel(args, data_dir, controller=None):
+def run_data_dir_parallel(args, data_dir, controller=None, process=None, resolve_data_path=None):
     folder_args = copy.copy(args)
     folder_args.data = data_dir
     set_log_prefix(data_dir)
     try:
         set_faker_seed(folder_args)
-        return run_data_dir(folder_args, controller=controller)
+        return run_data_dir(
+            folder_args,
+            controller=controller,
+            process=process,
+            resolve_data_path=resolve_data_path,
+        )
     except Exception as e:
         logging.exception("Failed")
         result = 1, run_result_error(e)
@@ -182,7 +189,7 @@ def run_data_dir_parallel(args, data_dir, controller=None):
         set_log_prefix(None)
 
 
-def run(args, session=None):
+def run(args, session=None, process=None, resolve_data_path=None):
     if args.stop:
         args.stop = get_numberless_filename(args.stop)
 
@@ -203,7 +210,14 @@ def run(args, session=None):
             executor = ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="procedure")
             try:
                 futures = {
-                    executor.submit(run_data_dir_parallel, args, data_dir, controller): data_dir
+                    executor.submit(
+                        run_data_dir_parallel,
+                        args,
+                        data_dir,
+                        controller,
+                        process,
+                        resolve_data_path,
+                    ): data_dir
                     for data_dir in data_dirs
                 }
                 for future in as_completed(futures):
@@ -245,7 +259,13 @@ def run(args, session=None):
                     logging.info(f"Starting {data_dir}\n")
                 try:
                     controller.check_pause()
-                    code, error = run_data_dir(args, session=session, controller=controller)
+                    code, error = run_data_dir(
+                        args,
+                        session=session,
+                        controller=controller,
+                        process=process,
+                        resolve_data_path=resolve_data_path,
+                    )
                     results.append((data_dir, code, error))
                 except KeyboardInterrupt:
                     controller.mark_finished(data_dir, None, None)
@@ -278,8 +298,9 @@ def _env_help():
     )
 
 
-def build_parser(env_values=None):
+def build_parser(env_values=None, data_dirs=None, data_dir_default=DATA_DIR_DEFAULT):
     env_values = env_values or {}
+    data_dirs = data_dirs if data_dirs is not None else get_default_data_dirs()
     parser = argparse.ArgumentParser(
         formatter_class=ArgumentParserFormatter,
     )
@@ -368,8 +389,8 @@ def build_parser(env_values=None):
     parser.add_argument(
         "-d",
         "--data",
-        help=f"one or more data folders, custom path or one of (omit to run all; sequential unless --parallel):\n{format_choices(sorted(get_default_data_dirs()))}",
-        metavar=str(DATA_DIR_DEFAULT),
+        help=f"one or more data folders, custom path or one of (omit to run all; sequential unless --parallel):\n{format_choices(sorted(data_dirs))}",
+        metavar=str(data_dir_default),
         action="extend",
         nargs="+",
     )
@@ -470,23 +491,24 @@ def apply_env_values(args, env_values):
             setattr(args, dest, env_values[dest])
 
 
-def parse_args(argv=None, environ=None, search_dirs=None):
+def parse_args(argv=None, environ=None, search_dirs=None, data_dirs=None, data_dir_default=DATA_DIR_DEFAULT):
     argv = sys.argv[1:] if argv is None else argv
+    parser_kwargs = {"data_dirs": data_dirs, "data_dir_default": data_dir_default}
     if any(arg in ("-h", "--help", "-v", "--version") for arg in argv):
-        parser = build_parser()
+        parser = build_parser(**parser_kwargs)
         parser.parse_args(argv)
 
     env_spec = _parse_env_spec(argv)
     try:
         env_file, env_values = load_run_env(env_spec, environ=environ, search_dirs=search_dirs)
     except EnvFileNotFound as e:
-        parser = build_parser()
+        parser = build_parser(**parser_kwargs)
         parser.error(str(e))
     except EnvValueError as e:
-        parser = build_parser()
+        parser = build_parser(**parser_kwargs)
         parser.error(str(e))
 
-    parser = build_parser(env_values)
+    parser = build_parser(env_values, **parser_kwargs)
     args = parser.parse_args(argv)
     apply_env_values(args, env_values)
     args.env_file = env_file
@@ -501,19 +523,27 @@ def parse_args(argv=None, environ=None, search_dirs=None):
     return args
 
 
-def main():
+def main(process=None, get_data_dirs=None, resolve_data_path=None, data_dir_default=DATA_DIR_DEFAULT):
+    """
+    CLI entry point.
+
+    The ``procedure`` command uses the defaults. Other commands (for example ``procedure-tools``)
+    reuse the same argument parsing, env files, parallel execution and summary output by passing
+    their own ``process`` callable and data directory helpers.
+    """
+    get_data_dirs = get_data_dirs or get_default_data_dirs
     try:
-        args = parse_args()
+        args = parse_args(data_dirs=get_data_dirs(), data_dir_default=data_dir_default)
         apply_debug_log_format(args.debug)
         if args.env_file:
             logging.info(f"Using env file {args.env_file}\n")
         if not args.data:
-            args.data = sorted(get_default_data_dirs())
+            args.data = sorted(get_data_dirs())
         session = None
         if args.parallel is None:
             session = requests.Session()
             adapters.mount(session)
-        run(args, session=session)
+        run(args, session=session, process=process, resolve_data_path=resolve_data_path)
     except SystemExit as e:
         sys.exit(e)
     except KeyboardInterrupt:

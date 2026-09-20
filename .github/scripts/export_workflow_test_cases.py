@@ -10,16 +10,23 @@ if str(ROOT_DIR) not in sys.path:
 from procedure.test import (
     WORKFLOW_TEST_CASES,  # pyright: ignore[reportMissingImports]
 )
+from tools.test import (
+    WORKFLOW_TEST_CASES as TOOLS_WORKFLOW_TEST_CASES,  # pyright: ignore[reportMissingImports]
+)
 
 
 def main() -> None:
-    cases = WORKFLOW_TEST_CASES
+    outputs = {
+        "cases": WORKFLOW_TEST_CASES,
+        "tools_cases": TOOLS_WORKFLOW_TEST_CASES,
+    }
     output_path = os.environ.get("GITHUB_OUTPUT")
     if output_path:
         with open(output_path, "a", encoding="utf-8") as f:
-            f.write(f"cases={json.dumps(cases)}\n")
+            for name, cases in outputs.items():
+                f.write(f"{name}={json.dumps(cases)}\n")
     else:
-        print(json.dumps(cases))
+        print(json.dumps(outputs))
 
 
 if __name__ == "__main__":

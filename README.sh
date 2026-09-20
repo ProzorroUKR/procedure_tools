@@ -211,7 +211,7 @@ procedure --env sandbox --data=closeFrameworkAgreementUA
 
 Create with the default data and stop after a specific data file:
 \`\`\`
-procedure --env sandbox --data=closeFrameworkAgreementUA --stop=bid_create_3.json
+procedure --env sandbox --data=closeFrameworkAgreementUA --stop=tender_bid_create_3.json
 \`\`\`
 
 Create with custom data files (relative path):
@@ -238,7 +238,7 @@ procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS
 
 Create with the default data and stop after a specific data file:
 \`\`\`
-procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA --stop=bid_create_3.json
+procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS_PASSWORD} --acceleration=1000000 --path=/api/0/ --data=closeFrameworkAgreementUA --stop=tender_bid_create_3.json
 \`\`\`
 
 Create with custom data files (relative path):
@@ -258,20 +258,109 @@ procedure ${API_HOST} ${FAKE_API_TOKEN} ${DS_HOST} ${FAKE_DS_USERNAME} ${FAKE_DS
 
 ## Output example
 \`\`\`
-procedure --env sandbox --data=closeFrameworkAgreementUA --stop=bid_create_4.json
+procedure --env sandbox --data=closeFrameworkAgreementUA --stop=tender_bid_create_4.json
 \`\`\`
 \`\`\`
 EOM
 
 echo "Generating the command example."
 
-procedure --env readme --data=closeFrameworkAgreementUA --stop=bid_create_3.json >> $FILE
+procedure --env readme --data=closeFrameworkAgreementUA --stop=tender_bid_create_3.json >> $FILE
 
 echo "Command example generated."
 
 cat >> $FILE <<- EOM
 \`\`\`
 
+EOM
+
+cat >> $FILE <<- EOM
+## procedure-tools
+
+\`procedure-tools\` creates the same procedures with the same options (see \`procedure-tools -h\`), but there is no procedure specific code path: the data files define the flow. Every \`.json\` file in a data folder (\`tools/data/<name>\`) is one action:
+
+\`\`\`
+0010_action_name[_part[_part...]].json
+\`\`\`
+
+* the leading number defines the order (files are processed sorted by name); it has no other meaning, so any action can be placed at any point of the flow;
+* \`action_name\` selects the action (see the list below);
+* the remaining underscore separated parts are handed to the action, which decides what they mean (object index, role, change index, ...).
+
+A label may precede the action name for readability, e.g. \`4010_stage2_tender_patch.json\` or \`4020_selection_tender_bid_create_0.json\`: when the stem does not start with a known action, leading \`label_\` tokens are skipped.
+
+Numbers follow the same ranges in every bundled folder, so a step is easy to find across procedures. Files inside a range count up from its start and each sub-group (all bids, one award, ...) starts at the next multiple of 10:
+
+\`\`\`
+0100  plan
+1000  framework, submissions, framework qualifications, agreement
+2000  tender: create, documents, criteria, activation, tender complaints
+2200  bids
+2400  pre-qualification: qualifications, evaluation report, qualification complaints
+2600  awarding: auction, awards, award complaints, stand-still
+3000  contracts
+3300  agreements (closeFrameworkAgreementUA)
+3900  finalization: wait for complete, switch to the next stage
++2000 second stage (stage2_, selection_): 4000 tender, 4200 bids, ... 5900 finalization
+\`\`\`
+
+The runner does not depend on these numbers, they only define the order; a custom folder can use any numbering.
+
+Files with any other extension are resources (documents to upload) that action files reference by title; a resource may carry a number prefix too. When the file on disk is shared by several documents or named differently, the attach file adds \`"file": "<resource name>"\` next to \`"data"\` and the title stays the document title.
+
+Every action updates the shared context: created objects (\`plan\`, \`tender\`, \`bids\`, \`awards\`, \`contracts\`, \`framework\`, \`agreement\`, ...) and their tokens (\`tender_token\`, \`bids_tokens\`, \`contracts_tokens\`, ...). The context is also the template context of the data files, so \`{{ tender.id }}\`, \`{{ contracts[0].dateModified }}\` or \`{{ plans[1].id }}\` resolve to what earlier actions stored. \`fake\`, \`fake_en\`, \`from_now_iso()\` and the other helpers work as in \`procedure\`.
+
+Technical actions (\`tender_wait_status\`, \`tender_wait_next_check\`, \`wait_date\`, \`stop_if\`, \`context_rename\`, ...) replace the waits and branches that \`procedure\` hard-codes. Their parameters live in the data file, for example:
+
+\`\`\`
+2160_tender_wait_status.json    {"status": ["active.qualification", "active.awarded"], "fail_status": "unsuccessful"}
+2500_tender_wait_status.json    {"status": "complete"}
+2150_tender_wait_next_check.json  {}
+\`\`\`
+
+An unknown action name fails before anything is sent to the API and prints the available actions. \`--stop\`, \`--pause\`, \`--wait\`, \`--parallel\` and env files work as for \`procedure\`.
+
+Run:
+
+\`\`\`
+procedure-tools --env sandbox --data reporting
+procedure-tools --env sandbox --data aboveThreshold --stop tender_bid_patch_1.json
+procedure-tools --env sandbox --data customdata/myFlow
+\`\`\`
+
+Example flow (\`tools/data/reporting\`):
+
+\`\`\`
+EOM
+
+ls tools/data/reporting >> $FILE
+
+cat >> $FILE <<- EOM
+\`\`\`
+
+Data folders:
+
+\`\`\`
+EOM
+
+python -c 'import os; print("\n".join(f" - {d}" for d in sorted(os.listdir("tools/data")) if os.path.isdir(f"tools/data/{d}")))' >> $FILE
+
+cat >> $FILE <<- EOM
+\`\`\`
+
+Actions:
+
+\`\`\`
+EOM
+
+python -c 'from tools.actions import format_actions; print(format_actions())' >> $FILE
+
+cat >> $FILE <<- EOM
+\`\`\`
+
+EOM
+
+cat >> $FILE <<- EOM
 ## Update the README
 
 1. Copy the \`.env.readme.example\` file to \`.env.readme\`:

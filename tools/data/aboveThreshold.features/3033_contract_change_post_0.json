@@ -1,0 +1,8 @@
+{
+  "data": {
+    "rationale": "{{ fake.sentence(nb_words=8) }}",
+    "rationaleTypes": [
+      "externalIndicators"
+    ]
+  }
+}

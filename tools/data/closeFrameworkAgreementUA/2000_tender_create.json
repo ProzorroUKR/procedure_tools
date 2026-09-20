@@ -1,0 +1,214 @@
+{
+  "config": {
+    "hasMultiSourcing": false,
+    "awardComplainDuration": 10,
+    "cancellationComplainDuration": 10,
+    "clarificationUntilDuration": 3,
+    "enquiryPeriodRegulation": 10,
+    "hasAuction": true,
+    "hasAwardComplaints": true,
+    "hasAwardingOrder": true,
+    "hasCancellationComplaints": true,
+    "hasEnquiries": false,
+    "hasPreSelectionAgreement": false,
+    "hasPrequalification": true,
+    "hasQualificationComplaints": true,
+    "hasTenderComplaints": true,
+    "hasValueEstimation": true,
+    "hasValueRestriction": true,
+    "minBidsNumber": 3,
+    "minEnquiriesDuration": 0,
+    "minTenderingDuration": 30,
+    "qualificationComplainDuration": 5,
+    "qualificationDuration": 20,
+    "restricted": false,
+    "tenderComplainRegulation": 4,
+    "valueCurrencyEquality": true
+  },
+  "data": {
+    "agreementDuration": "P3Y3M3D",
+    "features": [
+      {
+        "code": "OCDS-123454-AIR-INTAKE",
+        "description": "Ефективна потужність всмоктування пилососа, в ватах (аероватах)",
+        "enum": [
+          {
+            "title": "До 1000 Вт",
+            "value": 0.1
+          },
+          {
+            "title": "Більше 1000 Вт",
+            "value": 0.15
+          }
+        ],
+        "featureOf": "item",
+        "relatedItem": "7fa0fbf85aab4f48a43afb8ccbc944e4",
+        "title": "Потужність всмоктування",
+        "title_en": "Air Intake"
+      }
+    ],
+    "items": [
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "deliveryDate": {
+          "endDate": "2018-06-30T13:39:09.362837",
+          "startDate": "2018-06-27T13:39:09.362837"
+        },
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "id": "7fa0fbf85aab4f48a43afb8ccbc944e4",
+        "quantity": 49,
+        "relatedLot": "ddb35dd0e9904726aafd18baed24863a",
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      },
+      {
+        "additionalClassifications": [
+          {
+            "description": "Техніка конторська/офісна, інша",
+            "id": "28.23.23",
+            "scheme": "ДКПП"
+          }
+        ],
+        "classification": {
+          "description": "Промислова техніка",
+          "id": "42000000-6",
+          "scheme": "ДК021"
+        },
+        "deliveryAddress": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "79000",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "deliveryDate": {
+          "endDate": "2018-06-30T13:39:09.362837",
+          "startDate": "2018-06-27T13:39:09.362837"
+        },
+        "description": "{{ fake.sentence(nb_words=8) }}",
+        "description_en": "{{ fake_en.sentence(nb_words=8) }}",
+        "id": "e30bb60e8df74b85b1da9a4b999654ca",
+        "quantity": 23,
+        "relatedLot": "ddb35dd0e9904726aafd18baed24863a",
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      }
+    ],
+    "lots": [
+      {
+        "description": "{{ fake.sentence(nb_words=6) }}",
+        "id": "ddb35dd0e9904726aafd18baed24863a",
+        "minimalStep": {
+          "amount": 10,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        },
+        "title": "Лот №1: {{ fake.word() }}",
+        "value": {
+          "amount": 500,
+          "currency": "UAH",
+          "valueAddedTaxIncluded": false
+        }
+      }
+    ],
+    "mainProcurementCategory": "goods",
+    "maxAwardsCount": 4,
+    "milestones": [
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 2,
+          "type": "banking"
+        },
+        "percentage": 75,
+        "sequenceNumber": 1,
+        "title": "signingTheContract",
+        "type": "financing"
+      },
+      {
+        "code": "prepayment",
+        "duration": {
+          "days": 55,
+          "type": "working"
+        },
+        "percentage": 25,
+        "sequenceNumber": 2,
+        "title": "executionOfWorks",
+        "type": "financing"
+      },
+      {
+        "code": "standard",
+        "duration": {
+          "days": 2,
+          "type": "calendar"
+        },
+        "percentage": 100,
+        "sequenceNumber": 3,
+        "title": "signingTheContract",
+        "type": "delivery"
+      }
+    ],
+    "mode": "test",
+    "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
+    "procurementMethodType": "closeFrameworkAgreementUA",
+    "procuringEntity": {
+      "address": {
+        "countryName": "Україна",
+        "locality": "м. Київ",
+        "postalCode": "01220",
+        "region": "м. Київ",
+        "streetAddress": "{{ fake.street_address() }}"
+      },
+      "contactPoint": {
+        "name": "{{ fake.company() }}",
+        "name_en": "State administration",
+        "telephone": "{{ fake.prozorro_phone_number() }}"
+      },
+      "identifier": {
+        "id": "00037256",
+        "legalName_en": "dus.gov.ua",
+        "scheme": "UA-EDR",
+        "uri": "http://www.dus.gov.ua/"
+      },
+      "kind": "general",
+      "name": "{{ fake.company() }}",
+      "name_en": "State administration"
+    },
+    "status": "draft",
+    "submissionMethodDetails": "{% if submission %}{{ submission }}{% endif %}",
+    "tenderPeriod": {
+      "endDate": "{{ from_now_iso(days=40) }}",
+      "startDate": "{{ from_now_iso() }}"
+    },
+    "title": "{{ fake.sentence(nb_words=10) }} (created with procedure_tools)",
+    "title_en": "{{ fake_en.sentence(nb_words=10) }} (created with procedure_tools)",
+    "value": {
+      "amount": 0,
+      "currency": "UAH",
+      "valueAddedTaxIncluded": false
+    }
+  }
+}

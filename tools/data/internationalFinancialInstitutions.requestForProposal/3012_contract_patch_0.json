@@ -1,0 +1,9 @@
+{
+  "data": {
+    "value": {
+      "amount": 500.99,
+      "amountNet": 500.99,
+      "valueAddedTaxIncluded": false
+    }
+  }
+}
