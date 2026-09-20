@@ -55,6 +55,33 @@ def test_parse_args_loads_env_file_and_cli_overrides(tmp_path: Path) -> None:
     assert args.debug is True
 
 
+def test_parse_args_disable_complaints_and_claims(tmp_path: Path) -> None:
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "API_HOST=https://from-env\n"
+        "API_TOKEN=env-token\n"
+        "DS_HOST=https://ds-from-env\n"
+        "DS_USERNAME=env-user\n"
+        "DS_PASSWORD=env-pass\n"
+        "DISABLE_COMPLAINTS=true\n"
+        "DISABLE_CLAIMS=false\n",
+        encoding="utf-8",
+    )
+    args = parse_args(["--env", str(env_file), "--data", "belowThreshold"], environ={}, search_dirs=[str(tmp_path)])
+    assert args.disable_complaints is True
+    assert args.disable_claims is False
+    args = parse_args(
+        ["--env", str(env_file), "--data", "belowThreshold", "--disable-claims"],
+        environ={},
+        search_dirs=[str(tmp_path)],
+    )
+    assert args.disable_claims is True
+    args = parse_args(
+        ["--host", "h", "--token", "t", "--ds-host", "d", "--ds-username", "u", "--ds-password", "p"], environ={}
+    )
+    assert args.disable_complaints is False and args.disable_claims is False
+
+
 def test_parse_args_named_flags_override_positionals_and_env(tmp_path: Path) -> None:
     (tmp_path / ".env").write_text(
         "API_HOST=https://from-env\n"

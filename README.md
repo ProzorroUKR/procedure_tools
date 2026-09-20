@@ -132,7 +132,8 @@ usage: procedure-tools [-h] [-v] [-E sandbox] [--host HOST] [--token TOKEN]
                        [--pause tender_create.json [tender_create.json ...]]
                        [-w edr-qualification [edr-qualification ...]]
                        [-e SEED] [--reviewer-token REVIEWER_TOKEN]
-                       [--bot-token BOT_TOKEN] [--debug] [--debug-req]
+                       [--bot-token BOT_TOKEN] [--disable-complaints]
+                       [--disable-claims] [--debug] [--debug-req]
                        [--debug-json-level DEBUG_JSON_LEVEL]
                        [host] [token] [ds_host] [ds_username] [ds_password]
 
@@ -241,6 +242,10 @@ options:
 
   --bot-token BOT_TOKEN
                         bot token
+
+  --disable-complaints  Skip the complaint steps (the bot and reviewer flow)
+
+  --disable-claims      Skip the claim steps (answered by the tender owner)
 
   --debug               Debug log level
 

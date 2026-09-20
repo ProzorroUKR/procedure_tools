@@ -82,6 +82,11 @@ def complaint_label(kind: str, kind_type: str, object_index: int | None, complai
     return f"{prefix} {kind_type} {complaint_index}"
 
 
+def complaints_disabled(context: Context, kind_type: str) -> bool:
+    """True when the --disable-complaints / --disable-claims flag of this type is set."""
+    return bool(getattr(context.args, f"disable_{kind_type}s", False))
+
+
 def complaints_allowed(
     context: Context, kind: str, kind_type: str, object_index: int | None, complaint_index: int
 ) -> bool:
@@ -175,6 +180,9 @@ def object_bid_token(context: Context, kind: str, object_index: int | None) -> s
 def create_complaint(context: Context, step: Step, kind: str, kind_type: str) -> None:
     object_index, complaint_index, _ = complaint_ref(step, kind)
     label = complaint_label(kind, kind_type, object_index, complaint_index)
+    if complaints_disabled(context, kind_type):
+        skip(f"Skipping {label}: {kind_type}s are disabled")
+        return
     if not complaints_allowed(context, kind, kind_type, object_index, complaint_index):
         skip(f"Skipping {label}: bot and reviewer tokens are required")
         return
@@ -210,6 +218,9 @@ def patch_complaint(context: Context, step: Step, kind: str, kind_type: str) -> 
     label = complaint_label(kind, kind_type, object_index, complaint_index)
     if role is None or role not in ROLES:
         error(f"{step.filename}: expected a role part {ROLES}, got {role!r}")
+        return
+    if complaints_disabled(context, kind_type):
+        skip(f"Skipping {label} patch: {kind_type}s are disabled")
         return
     if not complaints_allowed(context, kind, kind_type, object_index, complaint_index):
         skip(f"Skipping {label} patch: bot and reviewer tokens are required")
@@ -248,6 +259,9 @@ def get_complaints(context: Context, step: Step, kind: str, kind_type: str) -> N
     """List the complaints or claims of an object and refresh the stored ones (their status may change server side)."""
     object_index = None if kind == "tender" else step.index(0)
     label = kind if object_index is None else f"{kind} {object_index}"
+    if complaints_disabled(context, kind_type):
+        skip(f"Skipping {label} {kind_type}s listing: {kind_type}s are disabled")
+        return
     logger.info(f"Getting {label} {kind_type}s...\n")
     context.load(step)
     response = context.client.get(complaints_path(context, kind, object_index), auth_token=context.args.token)

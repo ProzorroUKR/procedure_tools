@@ -337,6 +337,8 @@ def make_args(data_dir: str, **overrides: Any) -> argparse.Namespace:
         wait=[],
         reviewer_token="reviewer",
         bot_token="bot",
+        disable_complaints=False,
+        disable_claims=False,
         debug=False,
         debug_request=False,
         debug_json_level=None,
@@ -534,6 +536,24 @@ def test_competitive_ordering_long_offline_complaints(fake_api: tuple[FakeCDBCli
     assert [complaint["type"] for complaint in context["tender_complaints"]] == ["complaint"] * 6
     assert [complaint["type"] for complaint in context["award_complaints"][0]] == ["complaint"] * 6
     assert [claim["status"] for claim in context["award_claims"][0]] == ["resolved", "cancelled"]
+
+
+def test_disable_complaints_and_claims(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args("aboveThreshold", disable_complaints=True))
+    assert "tender_complaints" not in context and "award_complaints" not in context
+    assert [claim["status"] for claim in context["award_claims"][0]] == ["resolved", "cancelled"]
+    posted = [p for m, p in client.calls if m == "POST" and p.endswith("/complaints")]
+    assert posted and all("/awards/" in p for p in posted)  # only the award claims were posted
+    assert context["tender"]["status"] == "complete"
+
+
+def test_disable_claims(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args("belowThreshold", disable_claims=True))
+    assert "award_claims" not in context
+    assert not any("/complaints" in p for _, p in client.calls)
+    assert context["tender"]["status"] == "complete"
 
 
 def test_reporting_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:

@@ -449,6 +449,20 @@ def build_parser(
         default=env_values.get("bot_token"),
     )
     parser.add_argument(
+        "--disable-complaints",
+        dest="disable_complaints",
+        help="Skip the complaint steps (the bot and reviewer flow)",
+        action="store_true",
+        default=bool(env_values.get("disable_complaints")),
+    )
+    parser.add_argument(
+        "--disable-claims",
+        dest="disable_claims",
+        help="Skip the claim steps (answered by the tender owner)",
+        action="store_true",
+        default=bool(env_values.get("disable_claims")),
+    )
+    parser.add_argument(
         "--debug",
         help="Debug log level",
         action="store_true",
