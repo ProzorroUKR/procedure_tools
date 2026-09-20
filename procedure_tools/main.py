@@ -463,6 +463,13 @@ def build_parser(
         default=bool(env_values.get("disable_claims")),
     )
     parser.add_argument(
+        "--disable-questions",
+        dest="disable_questions",
+        help="Skip the tender question steps",
+        action="store_true",
+        default=bool(env_values.get("disable_questions")),
+    )
+    parser.add_argument(
         "--debug",
         help="Debug log level",
         action="store_true",

@@ -64,12 +64,14 @@ def test_parse_args_disable_complaints_and_claims(tmp_path: Path) -> None:
         "DS_USERNAME=env-user\n"
         "DS_PASSWORD=env-pass\n"
         "DISABLE_COMPLAINTS=true\n"
-        "DISABLE_CLAIMS=false\n",
+        "DISABLE_CLAIMS=false\n"
+        "DISABLE_QUESTIONS=true\n",
         encoding="utf-8",
     )
     args = parse_args(["--env", str(env_file), "--data", "belowThreshold"], environ={}, search_dirs=[str(tmp_path)])
     assert args.disable_complaints is True
     assert args.disable_claims is False
+    assert args.disable_questions is True
     args = parse_args(
         ["--env", str(env_file), "--data", "belowThreshold", "--disable-claims"],
         environ={},
@@ -79,7 +81,7 @@ def test_parse_args_disable_complaints_and_claims(tmp_path: Path) -> None:
     args = parse_args(
         ["--host", "h", "--token", "t", "--ds-host", "d", "--ds-username", "u", "--ds-password", "p"], environ={}
     )
-    assert args.disable_complaints is False and args.disable_claims is False
+    assert args.disable_complaints is False and args.disable_claims is False and args.disable_questions is False
 
 
 def test_parse_args_named_flags_override_positionals_and_env(tmp_path: Path) -> None:

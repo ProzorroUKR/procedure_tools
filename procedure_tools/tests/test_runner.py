@@ -355,6 +355,7 @@ def make_args(data_dir: str, **overrides: Any) -> argparse.Namespace:
         bot_token="bot",
         disable_complaints=False,
         disable_claims=False,
+        disable_questions=False,
         debug=False,
         debug_request=False,
         debug_json_level=None,
@@ -593,6 +594,14 @@ def test_questions_and_complaint_posts(fake_api: tuple[FakeCDBClient, FakeDSClie
     ]
     assert [bool(post.get("relatedPost")) for post in posts] == [False, True, False, True]
     assert "posts" not in context["tender_complaints"][1]
+
+
+def test_disable_questions(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args("aboveThreshold", disable_questions=True))
+    assert "questions" not in context
+    assert not any("/questions" in p for _, p in client.calls)
+    assert context["tender"]["status"] == "complete"
 
 
 def test_reporting_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
