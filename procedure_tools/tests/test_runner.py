@@ -509,6 +509,33 @@ def test_competitive_dialogue_offline_claims(fake_api: tuple[FakeCDBClient, Fake
     assert "resolved" in statuses and "answered" in statuses
 
 
+@pytest.mark.parametrize("data_dir", ["negotiation", "negotiation.quick", "negotiation.local"])
+def test_negotiation_offline_complaints(fake_api: tuple[FakeCDBClient, FakeDSClient], data_dir: str) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args(data_dir))
+    # award complaints are filed by the broker: negotiation has no bids, so no bid token is involved
+    assert "tender_complaints" not in context and "bids_tokens" not in context
+    award_complaints = context["award_complaints"][0]
+    assert [complaint["type"] for complaint in award_complaints] == ["complaint"] * 6
+    assert [complaint["status"] for complaint in award_complaints[:5]] == [
+        "resolved",
+        "stopped",
+        "declined",
+        "invalid",
+        "mistaken",
+    ]
+    award_id = context["awards"][0]["id"]
+    assert ("POST", f"tenders/{context['tender']['id']}/awards/{award_id}/complaints") in client.calls
+
+
+def test_competitive_ordering_long_offline_complaints(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    _, _ = fake_api
+    context = process_tools(make_args("dynamicPurchasingSystem.competitiveOrdering.long"))
+    assert [complaint["type"] for complaint in context["tender_complaints"]] == ["complaint"] * 6
+    assert [complaint["type"] for complaint in context["award_complaints"][0]] == ["complaint"] * 6
+    assert [claim["status"] for claim in context["award_claims"][0]] == ["resolved", "cancelled"]
+
+
 def test_reporting_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
     client, _ = fake_api
     context = process_tools(make_args("reporting"))

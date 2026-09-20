@@ -178,14 +178,20 @@ def create_complaint(context: Context, step: Step, kind: str, kind_type: str) ->
     if not complaints_allowed(context, kind, kind_type, object_index, complaint_index):
         skip(f"Skipping {label}: bot and reviewer tokens are required")
         return
+    acc_token: str | None
     if kind == "tender":
         acc_token = tender_token(context)
     else:
         bids_tokens = context.get("bids_tokens") or []
-        if not bids_tokens:
+        if bids_tokens:
+            acc_token = object_bid_token(context, kind, object_index) or bids_tokens[0]
+        elif kind_type == "claim":
+            # a claim must come from a bidder
             skip(f"Skipping {label}: no bid tokens in context")
             return
-        acc_token = object_bid_token(context, kind, object_index) or bids_tokens[0]
+        else:
+            # a complaint is filed by the broker, no bid is needed (limited procedures have none)
+            acc_token = None
     logger.info(f"Creating {label}...\n")
     data = context.load(step)
     data["data"].setdefault("type", kind_type)
