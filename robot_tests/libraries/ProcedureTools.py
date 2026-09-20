@@ -19,9 +19,11 @@ the same environment variables as the ``procedure-tools`` command
 
 from __future__ import annotations
 
+import logging
 import os
 import shutil
 import tempfile
+from collections.abc import Callable
 from typing import Any
 
 import requests
@@ -42,15 +44,75 @@ CONTENTS_KEY = "contents"
 # survive a reset between tests.
 RUN_KEYS = ("acceleration", "submission", "client_timedelta", "constants")
 
+# The logger the actions and the API client write to.
+PROCEDURE_LOGGER = "procedure_tools"
+
+# Environment switch for the console log; on unless it is turned off.
+CONSOLE_LOG_VAR = "ROBOT_CONSOLE_LOG"
+FALSE_VALUES = frozenset({"0", "false", "no", "off"})
+
+
+class ConsoleLogHandler(logging.Handler):
+    """
+    Sends the procedure_tools log to the terminal.
+
+    Robot captures whatever a library writes to stdout and files it away in
+    ``log.html``, so a running suite says nothing beyond a dot per keyword.
+    ``robot.api.logger.console`` writes past that capture, which puts every
+    request the actions make back in front of whoever is watching the run.
+
+    ``break_line`` is asked, before the first message of a test, whether the
+    console is still sitting on the unfinished ``Test name   `` line that
+    Robot printed; the log then starts below it instead of next to it.
+    """
+
+    def __init__(self, break_line: Callable[[], bool] | None = None) -> None:
+        super().__init__()
+        self.break_line = break_line
+
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            message = self.format(record).rstrip()
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001
+            self.handleError(record)
+            return
+        if not message:
+            return
+        if self.break_line is not None and self.break_line():
+            logger.console("")
+        logger.console(message)
+
+
+def console_log_default() -> bool:
+    return os.environ.get(CONSOLE_LOG_VAR, "").strip().lower() not in FALSE_VALUES
+
 
 @library(scope="GLOBAL", version="1.0")
 class ProcedureTools:
     """Drives ``procedure_tools`` actions from Robot Framework."""
 
+    ROBOT_LISTENER_API_VERSION = 3
+
     def __init__(self) -> None:
+        self.ROBOT_LIBRARY_LISTENER = self  # to know when a test starts, see break_console_line
         self._context: Context | None = None
         self._session: requests.Session | None = None
         self._files_dir: str | None = None
+        self._console_handler: logging.Handler | None = None
+        self._console_line_open = False
+
+    # --- console
+
+    def start_test(self, data: Any, result: Any) -> None:  # pylint: disable=unused-argument
+        """Listener hook: Robot has just written the name of a test, unfinished."""
+        self._console_line_open = True
+
+    def break_console_line(self) -> bool:
+        """True once per test, for the first log line that follows the test name."""
+        if not self._console_line_open:
+            return False
+        self._console_line_open = False
+        return True
 
     # --- session
 
@@ -61,7 +123,7 @@ class ProcedureTools:
         return self._context
 
     @keyword("Start Procedure Session")
-    def start_procedure_session(self, **options: Any) -> None:
+    def start_procedure_session(self, console: bool | None = None, **options: Any) -> None:
         """
         Connect to the CDB and the document service.
 
@@ -69,7 +131,13 @@ class ProcedureTools:
         ``DS_HOST``, ``DS_USERNAME``, ``DS_PASSWORD``, ``ACCELERATION``,
         ``SUBMISSION``); ``options`` override any of them by argparse name,
         for example ``acceleration=1000``.
+
+        ``console`` mirrors the procedure log to the terminal, so a run shows
+        the requests it makes instead of one dot per keyword. It is on unless
+        ``ROBOT_CONSOLE_LOG`` says otherwise, and it changes nothing about
+        ``log.html``, which keeps the full log either way.
         """
+        self._start_console_log(console_log_default() if console is None else bool(console))
         args = parse_args([])
         for name, value in options.items():
             setattr(args, name, value)
@@ -90,6 +158,21 @@ class ProcedureTools:
             shutil.rmtree(self._files_dir, ignore_errors=True)
         self._files_dir = None
         self._context = None
+        self._stop_console_log()
+
+    def _start_console_log(self, enabled: bool) -> None:
+        self._stop_console_log()
+        if not enabled:
+            return
+        handler = ConsoleLogHandler(break_line=self.break_console_line)
+        handler.setFormatter(logging.Formatter("%(message)s"))
+        logging.getLogger(PROCEDURE_LOGGER).addHandler(handler)
+        self._console_handler = handler
+
+    def _stop_console_log(self) -> None:
+        if self._console_handler is not None:
+            logging.getLogger(PROCEDURE_LOGGER).removeHandler(self._console_handler)
+            self._console_handler = None
 
     @keyword("Reset Procedure State")
     def reset_procedure_state(self) -> None:

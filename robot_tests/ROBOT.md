@@ -59,6 +59,46 @@ robot --test "Reporting Without A Plan" tests
 robot --include smoke tests
 ```
 
+## Watching a run
+
+A run prints what it is doing - every request, its status and the ids that
+came back - the same log the `procedure-tools` command prints:
+
+```
+Running tender_create
+Creating tender...
+POST http://api.../tenders
+Response status: 201 Created
+Tender created:
+ - data.id              49e08359e573463f9966c13dfd7dfd69
+ - data.status          draft
+```
+
+Robot files whatever a library prints into `log.html`, which is why a suite
+otherwise shows nothing but one dot per keyword, so the session mirrors its
+log past that capture. Turn it off for a quiet console:
+
+```shell
+ROBOT_CONSOLE_LOG=false robot tests
+```
+
+`log.html` has the full log either way, and `--consolemarkers off` drops the
+dots Robot prints per keyword.
+
+For request and response bodies, the CLI debug switches work here too:
+
+```shell
+DEBUG_REQUEST=true DEBUG_JSON_LEVEL=2 robot tests
+```
+
+To keep a plain text trace of a run, including every keyword, use Robot's
+debug file and follow it from another terminal:
+
+```shell
+robot -b debug.txt tests
+tail -f debug.txt
+```
+
 ## Layout
 
 ```
