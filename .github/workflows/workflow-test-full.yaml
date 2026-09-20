@@ -63,4 +63,4 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           python .github/scripts/write_test_env.py
-          pytest tools/test.py::test_${{ matrix.case }}
+          pytest procedure_tools/test.py::test_${{ matrix.case }}

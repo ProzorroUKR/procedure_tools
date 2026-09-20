@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+export NO_COLOR=1
+
 echo "README.md generation started."
 
 FILE='README.md'
@@ -12,7 +14,7 @@ if [ ! -f "${ENV_FILE}" ]; then
 fi
 
 READ_ENV_PY='
-from tools.utils.env import load_env_file
+from procedure_tools.utils.env import load_env_file
 import sys
 
 print(load_env_file(sys.argv[1]).get(sys.argv[2], ""))
@@ -277,7 +279,7 @@ EOM
 cat >> $FILE <<- EOM
 ## procedure-tools
 
-\`procedure-tools\` creates Prozorro CDB procedures from data folders. There is no procedure specific code path: the data files define the flow. Every \`.json\` file in a data folder (\`tools/data/<name>\`) is one action:
+\`procedure-tools\` creates Prozorro CDB procedures from data folders (\`procedure\` is kept as an alias of the command). There is no procedure specific code path: the data files define the flow. Every \`.json\` file in a data folder (\`procedure_tools/data/<name>\`) is one action:
 
 \`\`\`
 0010_action_name[_part[_part...]].json
@@ -328,12 +330,12 @@ procedure-tools --env sandbox --data aboveThreshold --stop tender_bid_patch_1.js
 procedure-tools --env sandbox --data customdata/myFlow
 \`\`\`
 
-Example flow (\`tools/data/reporting\`):
+Example flow (\`procedure_tools/data/reporting\`):
 
 \`\`\`
 EOM
 
-ls tools/data/reporting >> $FILE
+ls procedure_tools/data/reporting >> $FILE
 
 cat >> $FILE <<- EOM
 \`\`\`
@@ -343,7 +345,7 @@ Data folders:
 \`\`\`
 EOM
 
-python -c 'import os; print("\n".join(f" - {d}" for d in sorted(os.listdir("tools/data")) if os.path.isdir(f"tools/data/{d}")))' >> $FILE
+python -c 'import os; print("\n".join(f" - {d}" for d in sorted(os.listdir("procedure_tools/data")) if os.path.isdir(f"procedure_tools/data/{d}")))' >> $FILE
 
 cat >> $FILE <<- EOM
 \`\`\`
@@ -353,7 +355,7 @@ Actions:
 \`\`\`
 EOM
 
-python -c 'from tools.actions import format_actions; print(format_actions())' >> $FILE
+python -c 'from procedure_tools.actions import format_actions; print(format_actions())' >> $FILE
 
 cat >> $FILE <<- EOM
 \`\`\`

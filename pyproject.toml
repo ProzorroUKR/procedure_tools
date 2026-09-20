@@ -34,21 +34,22 @@ dev = [
 ]
 
 [project.scripts]
-procedure-tools = "tools.main:main"
+procedure-tools = "procedure_tools.main:main"
+procedure = "procedure_tools.main:main"
 
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.dynamic]
-version = {attr = "tools.version.__version__"}
+version = {attr = "procedure_tools.version.__version__"}
 
 [tool.setuptools.packages.find]
-include = ["tools*"]
+include = ["procedure_tools*"]
 namespaces = true
 
 [tool.setuptools.package-data]
-tools = ["data/**/*"]
+procedure_tools = ["data/**/*"]
 
 [tool.uv]
 package = true
@@ -56,11 +57,11 @@ package = true
 [tool.pytest.ini_options]
 minversion = "6.0"
 python_files = [
-    "tools/test.py",
+    "procedure_tools/test.py",
     "test_*.py",
 ]
 testpaths = [
-    "tools",
+    "procedure_tools",
 ]
 norecursedirs = [
     "__pycache__",
