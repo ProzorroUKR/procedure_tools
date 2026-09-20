@@ -2,6 +2,6 @@
   "data": {
     "status": "answered",
     "resolutionType": "declined",
-    "resolution": "{{ fake.paragraph(nb_sentences=3) }}"
+    "resolution": "{{ fake.paragraph(nb_sentences=3, variable_nb_sentences=False) }}"
   }
 }

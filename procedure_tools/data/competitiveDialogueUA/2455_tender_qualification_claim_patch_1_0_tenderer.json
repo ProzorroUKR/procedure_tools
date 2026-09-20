@@ -1,7 +1,0 @@
-{
-  "data": {
-    "status": "answered",
-    "resolutionType": "resolved",
-    "resolution": "{{ fake.paragraph(nb_sentences=3) }}"
-  }
-}
