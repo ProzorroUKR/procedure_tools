@@ -1,6 +1,6 @@
 import pytest
 
-from procedure_tools.main import parse_args
+from procedure.main import parse_args
 
 REQUIRED = [
     "https://api.example",

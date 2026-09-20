@@ -1,8 +1,8 @@
 import json
 import logging
 
-from procedure_tools.utils.date import client_timedelta_string
-from procedure_tools.utils.style import fore_error, fore_info, fore_status_code
+from procedure.utils.date import client_timedelta_string
+from procedure.utils.style import fore_error, fore_info, fore_status_code
 
 PAD = 20
 

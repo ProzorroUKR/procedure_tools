@@ -35,4 +35,4 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           python .github/scripts/write_test_env.py
-          pytest procedure_tools/test.py::test_${{ github.event.inputs.case }}
+          pytest procedure/test.py::test_${{ github.event.inputs.case }}

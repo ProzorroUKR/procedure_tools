@@ -1,7 +1,7 @@
 import json
 import os
 
-from procedure_tools.utils.file import get_project_dir
+from procedure.utils.file import get_project_dir
 
 dump_kwargs = {
     "sort_keys": True,

@@ -12,7 +12,7 @@ if [ ! -f "${ENV_FILE}" ]; then
 fi
 
 READ_ENV_PY='
-from procedure_tools.utils.env import load_env_file
+from procedure.utils.env import load_env_file
 import sys
 
 print(load_env_file(sys.argv[1]).get(sys.argv[2], ""))

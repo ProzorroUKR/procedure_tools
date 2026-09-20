@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 from requests import ConnectionError, adapters
 from urllib3 import Retry
 
-from procedure_tools.utils.style import (
+from procedure.utils.style import (
     fore_debug,
     fore_info,
     fore_method,

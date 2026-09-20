@@ -7,17 +7,17 @@ from functools import partial
 from mimetypes import MimeTypes
 from time import sleep as time_sleep
 
-from procedure_tools.client import CDBClient, DSClient
-from procedure_tools.utils.contextmanagers import open_file, read_file
-from procedure_tools.utils.data import SECONDS_BUFFER, get_contracts_bids_ids, get_ids
-from procedure_tools.utils.date import fix_datetime, get_utcnow, parse_date
-from procedure_tools.utils.file import (
+from procedure.client import CDBClient, DSClient
+from procedure.utils.contextmanagers import open_file, read_file
+from procedure.utils.data import SECONDS_BUFFER, get_contracts_bids_ids, get_ids
+from procedure.utils.date import fix_datetime, get_utcnow, parse_date
+from procedure.utils.file import (
     get_data_all_files,
     get_data_file_path,
     get_data_path,
     parse_data_file_parts,
 )
-from procedure_tools.utils.handlers import (
+from procedure.utils.handlers import (
     allow_null_success_handler,
     auction_multilot_participation_url_success_handler,
     auction_participation_url_success_handler,
@@ -46,7 +46,7 @@ from procedure_tools.utils.handlers import (
     tender_post_criteria_success_handler,
     tender_post_plan_success_handler,
 )
-from procedure_tools.utils.runtime import get_controller
+from procedure.utils.runtime import get_controller
 
 EDR_FILENAME = "edr_identification.yaml"
 

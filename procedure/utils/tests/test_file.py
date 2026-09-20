@@ -1,6 +1,6 @@
 import pytest
 
-from procedure_tools.utils.file import parse_data_file_parts
+from procedure.utils.file import parse_data_file_parts
 
 
 def test_parse_data_file_parts_none_prefixes_legacy():

@@ -3,8 +3,8 @@ from unittest import mock
 
 import pytest
 
-from procedure_tools.main import main
-from procedure_tools.utils.env import REQUIRED_ARGS, EnvFileNotFound, load_run_env
+from procedure.main import main
+from procedure.utils.env import REQUIRED_ARGS, EnvFileNotFound, load_run_env
 
 INACTIVE_REASON = "Currently inactive procedure"
 skipinactive = pytest.mark.skip(reason=INACTIVE_REASON)

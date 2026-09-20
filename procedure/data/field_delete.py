@@ -4,8 +4,8 @@ import json
 import os
 import sys
 
-from procedure_tools.data.field_sort import dump_kwargs
-from procedure_tools.utils.file import get_project_dir
+from procedure.data.field_sort import dump_kwargs
+from procedure.utils.file import get_project_dir
 
 
 def delete_field_by_jsonpath(filename, jsonpath):

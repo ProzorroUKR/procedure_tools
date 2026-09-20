@@ -1,8 +1,8 @@
 import threading
 import time
 
-from procedure_tools.utils.handlers import EX_OK
-from procedure_tools.utils.runtime import RunController, get_controller, set_controller
+from procedure.utils.handlers import EX_OK
+from procedure.utils.runtime import RunController, get_controller, set_controller
 
 
 def test_run_controller_summary_states():

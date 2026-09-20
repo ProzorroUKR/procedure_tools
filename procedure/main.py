@@ -8,20 +8,20 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
 
-from procedure_tools.client import API_PATH_PREFIX_DEFAULT
-from procedure_tools.fake import fake, fake_en
-from procedure_tools.procedure import (
+from procedure.client import API_PATH_PREFIX_DEFAULT
+from procedure.fake import fake, fake_en
+from procedure.procedure import (
     WAIT_EDR_PRE_QUAL,
     WAIT_EDR_QUAL,
     process_procedure,
 )
-from procedure_tools.utils import adapters
-from procedure_tools.utils.data import (
+from procedure.utils import adapters
+from procedure.utils.data import (
     ACCELERATION_DEFAULT,
     SUBMISSION_QUICK_NO_AUCTION,
     SUBMISSIONS,
 )
-from procedure_tools.utils.env import (
+from procedure.utils.env import (
     ENV_SELECT_VAR,
     EXTEND_ARGS,
     REQUIRED_ARGS,
@@ -30,21 +30,21 @@ from procedure_tools.utils.env import (
     first_set,
     load_run_env,
 )
-from procedure_tools.utils.file import (
+from procedure.utils.file import (
     DATA_DIR_DEFAULT,
     get_data_path,
     get_default_data_dirs,
     get_numberless_filename,
 )
-from procedure_tools.utils.handlers import EX_DATAERR, EX_OK
-from procedure_tools.utils.runtime import RunController, log_results_summary, set_controller
-from procedure_tools.utils.style import (
+from procedure.utils.handlers import EX_DATAERR, EX_OK
+from procedure.utils.runtime import RunController, log_results_summary, set_controller
+from procedure.utils.style import (
     fore_info,
     fore_log_level,
     get_log_prefix,
     set_log_prefix,
 )
-from procedure_tools.version import __version__
+from procedure.version import __version__
 
 WAIT_EVENTS = (WAIT_EDR_QUAL, WAIT_EDR_PRE_QUAL)
 

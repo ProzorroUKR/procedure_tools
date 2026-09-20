@@ -1,7 +1,7 @@
 import logging
 from os import EX_OK
 
-from procedure_tools.actions import (
+from procedure.actions import (
     change_contracts,
     change_econtract_contracts,
     create_awards,
@@ -60,8 +60,8 @@ from procedure_tools.actions import (
     wait_edr_qual,
     wait_status,
 )
-from procedure_tools.client import CDBClient, DSClient
-from procedure_tools.utils.data import (
+from procedure.client import CDBClient, DSClient
+from procedure.utils.data import (
     get_access,
     get_award_id,
     get_complaint_period_end_dates,

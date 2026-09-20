@@ -1,6 +1,6 @@
 import datetime
 
-from procedure_tools.utils.date import fix_datetime, get_now, parse_date
+from procedure.utils.date import fix_datetime, get_now, parse_date
 
 DEFAULT_ACCELERATION = 1
 

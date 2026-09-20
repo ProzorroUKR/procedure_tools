@@ -6,13 +6,13 @@ from urllib.parse import urljoin
 
 import requests
 
-from procedure_tools.utils import adapters
-from procedure_tools.utils.date import get_utcnow, parse_date_header
-from procedure_tools.utils.handlers import (
+from procedure.utils import adapters
+from procedure.utils.date import get_utcnow, parse_date_header
+from procedure.utils.handlers import (
     client_init_response_handler,
     response_handler,
 )
-from procedure_tools.version import __version__
+from procedure.version import __version__
 
 API_PATH_PREFIX_DEFAULT = "/api/0/"
 

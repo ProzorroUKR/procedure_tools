@@ -3,7 +3,7 @@ import os
 import uuid
 from pathlib import Path
 
-from procedure_tools.data.field_sort import dump_kwargs
+from procedure.data.field_sort import dump_kwargs
 
 
 def add_criteria(data, criteria_file):

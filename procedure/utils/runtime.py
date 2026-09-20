@@ -4,8 +4,8 @@ import sys
 import threading
 import time
 
-from procedure_tools.utils.handlers import EX_OK
-from procedure_tools.utils.style import (
+from procedure.utils.handlers import EX_OK
+from procedure.utils.style import (
     STYLE_DIM,
     fore,
     fore_error,

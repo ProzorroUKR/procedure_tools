@@ -8,12 +8,12 @@ from functools import partial
 
 from jinja2 import Template
 
-from procedure_tools.fake import fake, fake_en
-from procedure_tools.utils import helpers
-from procedure_tools.utils.file import get_actual_file_path
-from procedure_tools.utils.handlers import EX_OK
-from procedure_tools.utils.runtime import get_controller
-from procedure_tools.utils.style import fore_warning
+from procedure.fake import fake, fake_en
+from procedure.utils import helpers
+from procedure.utils.file import get_actual_file_path
+from procedure.utils.handlers import EX_OK
+from procedure.utils.runtime import get_controller
+from procedure.utils.style import fore_warning
 
 _pause_lock = threading.Lock()
 

@@ -1,6 +1,6 @@
 import pytest
 
-from procedure_tools.utils.env import (
+from procedure.utils.env import (
     EnvFileNotFound,
     EnvValueError,
     build_env_values,
