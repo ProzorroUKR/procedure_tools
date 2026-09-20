@@ -819,87 +819,92 @@ Data folders:
 Actions:
 
 ```
- - agreement_get                            Load the agreement (GET agreements/{id}) of the framework, or the last agreement of the tender, into agreement.
- - context_delete                           Delete context keys: {"keys": ["awards", "contracts"]}.
- - context_rename                           Rename context keys, e.g. before a new stage: {"tender": "stage1_tender", "tender_token": "stage1_tender_token"}.
- - context_set                              Merge the data file into the context: {"my_value": "{{ tender.id }}"}.
- - contract_access_post                     Get an econtract token for a role (POST contracts/{id}/access); parts: [contract index, buyer|supplier]; sets contracts_<role>_tokens[i].
- - contract_buyer_signer_info_put           Set the buyer signer info (PUT contracts/{id}/buyer/signer_info); parts: [contract index, (role)].
- - contract_cancellation_post               Cancel a contract (POST contracts/{id}/cancellations); parts: [contract index, (role)].
- - contract_change_cancellation_post        Cancel a contract change (POST contracts/{id}/changes/{id}/cancellations); parts: [contract index, change index, (role)].
- - contract_change_document_attach          Attach a document to a contract change (POST contracts/{id}/changes/{id}/documents); parts: [contract index, change index, (role)].
- - contract_change_patch                    Patch a contract change (PATCH contracts/{id}/changes/{id}); parts: [contract index, change index, (role)].
- - contract_change_post                     Create a contract change (POST contracts/{id}/changes); parts: [contract index, (role)].
- - contract_change_signatories_post         Sign a contract change (POST contracts/{id}/changes/{id}/signatories); parts: [contract index, change index, (role)].
- - contract_credentials_patch               Get the legacy contract token (PATCH contracts/{id}/credentials); parts: [contract index]; sets contracts_tokens[i].
- - contract_document_attach                 Attach a document to a contract (POST contracts/{id}/documents); parts: [contract index, (role)].
- - contract_patch                           Patch a contract (PATCH contracts/{id}); parts: [contract index, (role)].
- - contract_post                            Create a contract (POST contracts) with the token of contract [index]; parts: [contract index, (role)].
- - contract_signatories_post                Sign a contract (POST contracts/{id}/signatories); parts: [contract index, (role)].
- - contract_suppliers_signer_info_put       Set the suppliers signer info (PUT contracts/{id}/suppliers/signer_info) with the winning bid token; parts: [contract index, (role)].
- - framework_create                         Create a framework (POST frameworks); sets framework, framework_token.
- - framework_get                            Refresh the framework in context (GET frameworks/{id}).
- - framework_patch                          Patch the framework (PATCH frameworks/{id}), for example to activate it.
- - framework_qualification_document_attach  Attach a document to a framework qualification (POST qualifications/{id}/documents); parts: [submission index].
- - framework_qualification_patch            Patch a framework qualification (PATCH qualifications/{id}); parts: [submission index].
- - framework_submission_create              Create a submission (POST submissions); parts: [submission index]; sets submissions[i], submissions_tokens[i].
- - framework_submission_patch               Patch a submission (PATCH submissions/{id}); parts: [submission index].
- - pause                                    Pause until Enter is pressed: {"message": "<optional prompt>"}.
- - plan_create                              Create a plan (POST plans); sets plan, plan_token and appends to plans, plans_tokens.
- - plan_patch                               Patch a plan (PATCH plans/{id}); parts: [plan index] (default: the last created plan).
- - skip_if                                  Skip the next steps when a condition holds: {"condition": "{{ tender.status != 'active.pre-qualification' }}", "steps": 2}.
- - stop_if                                  Stop the run successfully when a condition holds: {"condition": "{{ constants.SIGNATURE_VERIFICATION_ENABLED }}", "message": "..."}.
- - tender_agreement_contract_patch          Patch the agreement contract of a bid (PATCH tenders/{id}/agreements/{id}/contracts/{id}); parts: [agreement index, bid index].
- - tender_agreement_document_attach         Attach a document to a tender agreement (POST tenders/{id}/agreements/{id}/documents); parts: [agreement index].
- - tender_agreement_patch                   Patch a tender agreement (PATCH tenders/{id}/agreements/{id}); parts: [agreement index].
- - tender_agreements_get                    Refresh the tender agreements in context (GET tenders/{id}/agreements).
- - tender_award_claim_create                Create an award claim (POST tenders/{id}/awards/{id}/complaints with type claim); parts: [award index, claim index].
- - tender_award_claim_patch                 Patch an award claim as a role; parts: [award index, claim index, tenderer|complainer].
- - tender_award_claims_get                  List the claims of an award (GET tenders/{id}/awards/{id}/complaints, type claim); parts: [award index].
- - tender_award_complaint_create            Create an award complaint (POST tenders/{id}/awards/{id}/complaints); parts: [award index, complaint index].
- - tender_award_complaint_patch             Patch an award complaint as a role; parts: [award index, complaint index, bot|reviewer|tenderer|complainer].
- - tender_award_complaints_get              List the complaints of an award (GET tenders/{id}/awards/{id}/complaints); parts: [award index].
- - tender_award_create                      Create an award (POST tenders/{id}/awards) in limited procedures; parts are a free label.
- - tender_award_document_attach             Attach a document to an award (POST tenders/{id}/awards/{id}/documents); parts: [award index, free label].
- - tender_award_patch                       Patch an award (PATCH tenders/{id}/awards/{id}); parts: [award index]; refreshes awards.
- - tender_awards_get                        Refresh the tender awards in context (GET tenders/{id}/awards).
- - tender_awards_wait_complaint_period      Wait for the end of the complaint period of all awards.
- - tender_awards_wait_edr                   Wait for the EDR identification documents of the awards; runs only with --wait edr-qualification.
- - tender_bid_create                        Create a bid (POST tenders/{id}/bids), uploading the documents listed in it; parts: [bid index]; sets bids[i], bids_tokens[i].
- - tender_bid_document_attach               Attach a document to a bid (POST tenders/{id}/bids/{id}/documents); parts: [bid index, free label].
- - tender_bid_patch                         Patch a bid (PATCH tenders/{id}/bids/{id}); parts: [bid index].
- - tender_bid_res_post                      Post bid requirement responses (POST tenders/{id}/bids/{id}/requirement_responses); parts: [bid index].
- - tender_bids_get                          Load the tender bids into context (GET tenders/{id}/bids) when they were not created in this run.
- - tender_claim_create                      Create a tender claim (POST tenders/{id}/complaints with type claim); parts: [claim index].
- - tender_claim_patch                       Patch a tender claim as a role; parts: [claim index, tenderer|complainer].
- - tender_claims_get                        List the tender claims (GET tenders/{id}/complaints, type claim) and refresh them in context.
- - tender_complaint_create                  Create a tender complaint (POST tenders/{id}/complaints); parts: [complaint index].
- - tender_complaint_patch                   Patch a tender complaint as a role; parts: [complaint index, bot|reviewer|tenderer|complainer].
- - tender_complaints_get                    List the tender complaints (GET tenders/{id}/complaints) and refresh them in context.
- - tender_contracts_get                     Load the tender contracts into contracts (GET tenders/{id}/contracts, then GET contracts/{id} for each).
- - tender_create                            Create a tender (POST tenders, or POST plans/{id}/tenders when a plan is in context); sets tender, tender_token, tender_config.
- - tender_credentials_patch                 Take over the second stage tender (PATCH tenders/{stage2TenderID}/credentials); the previous tender moves to stage1_tender.
- - tender_criteria_post                     Create tender criteria (POST tenders/{id}/criteria); sets criteria.
- - tender_document_attach                   Attach a document to the tender (POST tenders/{id}/documents); parts are a free label; appends to tender_documents.
- - tender_document_put                      Replace a tender document with a new version (PUT tenders/{id}/documents/{id}); parts: [tender_documents index] or a label, then the last attached document with the same title is replaced.
- - tender_get                               Refresh the tender in context (GET tenders/{id}).
- - tender_patch                             Patch the tender (PATCH tenders/{id}), for example to switch its status.
- - tender_plan_post                         Connect a plan to the tender (POST tenders/{id}/plans); the data file holds the plan id, e.g. {{ plans[1].id }}.
- - tender_qualification_claim_create        Create a qualification claim (POST tenders/{id}/qualifications/{id}/complaints with type claim); parts: [qualification index, claim index].
- - tender_qualification_claim_patch         Patch a qualification claim as a role; parts: [qualification index, claim index, tenderer|complainer].
- - tender_qualification_claims_get          List the claims of a qualification (GET tenders/{id}/qualifications/{id}/complaints, type claim); parts: [qualification index].
- - tender_qualification_complaint_create    Create a qualification complaint (POST tenders/{id}/qualifications/{id}/complaints); parts: [qualification index, complaint index].
- - tender_qualification_complaint_patch     Patch a qualification complaint as a role; parts: [qualification index, complaint index, bot|reviewer|tenderer|complainer].
- - tender_qualification_complaints_get      List the complaints of a qualification (GET tenders/{id}/qualifications/{id}/complaints); parts: [qualification index].
- - tender_qualification_document_attach     Attach a document to a tender qualification (POST tenders/{id}/qualifications/{id}/documents); parts: [qualification index].
- - tender_qualification_patch               Patch a tender qualification (PATCH tenders/{id}/qualifications/{id}); parts: [qualification index].
- - tender_qualifications_get                Refresh the tender qualifications in context (GET tenders/{id}/qualifications).
- - tender_qualifications_wait_edr           Wait for the EDR identification documents of the qualifications; runs only with --wait edr-pre-qualification.
- - tender_wait_auction                      Wait for the auction participation urls of the active bids; skipped for mode:no-auction submissions.
- - tender_wait_next_check                   Wait for the next chronograph check of the tender (its next_check date), if any.
- - tender_wait_status                       Wait for a tender status: {"status": "x" or [...], "fail_status": "y" (optional), "delay": seconds (default 1)}.
- - wait_date                                Wait until a date: {"date": "<iso date, templates allowed>", "description": "<optional log text>"}.
- - wait_seconds                             Sleep for a number of seconds: {"seconds": 5}.
+ - agreement_get                               Load the agreement (GET agreements/{id}) of the framework, or the last agreement of the tender, into agreement.
+ - context_delete                              Delete context keys: {"keys": ["awards", "contracts"]}.
+ - context_rename                              Rename context keys, e.g. before a new stage: {"tender": "stage1_tender", "tender_token": "stage1_tender_token"}.
+ - context_set                                 Merge the data file into the context: {"my_value": "{{ tender.id }}"}.
+ - contract_access_post                        Get an econtract token for a role (POST contracts/{id}/access); parts: [contract index, buyer|supplier]; sets contracts_<role>_tokens[i].
+ - contract_buyer_signer_info_put              Set the buyer signer info (PUT contracts/{id}/buyer/signer_info); parts: [contract index, (role)].
+ - contract_cancellation_post                  Cancel a contract (POST contracts/{id}/cancellations); parts: [contract index, (role)].
+ - contract_change_cancellation_post           Cancel a contract change (POST contracts/{id}/changes/{id}/cancellations); parts: [contract index, change index, (role)].
+ - contract_change_document_attach             Attach a document to a contract change (POST contracts/{id}/changes/{id}/documents); parts: [contract index, change index, (role)].
+ - contract_change_patch                       Patch a contract change (PATCH contracts/{id}/changes/{id}); parts: [contract index, change index, (role)].
+ - contract_change_post                        Create a contract change (POST contracts/{id}/changes); parts: [contract index, (role)].
+ - contract_change_signatories_post            Sign a contract change (POST contracts/{id}/changes/{id}/signatories); parts: [contract index, change index, (role)].
+ - contract_credentials_patch                  Get the legacy contract token (PATCH contracts/{id}/credentials); parts: [contract index]; sets contracts_tokens[i].
+ - contract_document_attach                    Attach a document to a contract (POST contracts/{id}/documents); parts: [contract index, (role)].
+ - contract_patch                              Patch a contract (PATCH contracts/{id}); parts: [contract index, (role)].
+ - contract_post                               Create a contract (POST contracts) with the token of contract [index]; parts: [contract index, (role)].
+ - contract_signatories_post                   Sign a contract (POST contracts/{id}/signatories); parts: [contract index, (role)].
+ - contract_suppliers_signer_info_put          Set the suppliers signer info (PUT contracts/{id}/suppliers/signer_info) with the winning bid token; parts: [contract index, (role)].
+ - framework_create                            Create a framework (POST frameworks); sets framework, framework_token.
+ - framework_get                               Refresh the framework in context (GET frameworks/{id}).
+ - framework_patch                             Patch the framework (PATCH frameworks/{id}), for example to activate it.
+ - framework_qualification_document_attach     Attach a document to a framework qualification (POST qualifications/{id}/documents); parts: [submission index].
+ - framework_qualification_patch               Patch a framework qualification (PATCH qualifications/{id}); parts: [submission index].
+ - framework_submission_create                 Create a submission (POST submissions); parts: [submission index]; sets submissions[i], submissions_tokens[i].
+ - framework_submission_patch                  Patch a submission (PATCH submissions/{id}); parts: [submission index].
+ - pause                                       Pause until Enter is pressed: {"message": "<optional prompt>"}.
+ - plan_create                                 Create a plan (POST plans); sets plan, plan_token and appends to plans, plans_tokens.
+ - plan_patch                                  Patch a plan (PATCH plans/{id}); parts: [plan index] (default: the last created plan).
+ - skip_if                                     Skip the next steps when a condition holds: {"condition": "{{ tender.status != 'active.pre-qualification' }}", "steps": 2}.
+ - stop_if                                     Stop the run successfully when a condition holds: {"condition": "{{ constants.SIGNATURE_VERIFICATION_ENABLED }}", "message": "..."}.
+ - tender_agreement_contract_patch             Patch the agreement contract of a bid (PATCH tenders/{id}/agreements/{id}/contracts/{id}); parts: [agreement index, bid index].
+ - tender_agreement_document_attach            Attach a document to a tender agreement (POST tenders/{id}/agreements/{id}/documents); parts: [agreement index].
+ - tender_agreement_patch                      Patch a tender agreement (PATCH tenders/{id}/agreements/{id}); parts: [agreement index].
+ - tender_agreements_get                       Refresh the tender agreements in context (GET tenders/{id}/agreements).
+ - tender_award_claim_create                   Create an award claim (POST tenders/{id}/awards/{id}/complaints with type claim); parts: [award index, claim index].
+ - tender_award_claim_patch                    Patch an award claim as a role; parts: [award index, claim index, tenderer|complainer].
+ - tender_award_claims_get                     List the claims of an award (GET tenders/{id}/awards/{id}/complaints, type claim); parts: [award index].
+ - tender_award_complaint_create               Create an award complaint (POST tenders/{id}/awards/{id}/complaints); parts: [award index, complaint index].
+ - tender_award_complaint_patch                Patch an award complaint as a role; parts: [award index, complaint index, bot|reviewer|tenderer|complainer].
+ - tender_award_complaint_post_create          Post to an award complaint (POST tenders/{id}/awards/{id}/complaints/{id}/posts); parts: [award index, complaint index, post index, reviewer|tenderer|complainer].
+ - tender_award_complaints_get                 List the complaints of an award (GET tenders/{id}/awards/{id}/complaints); parts: [award index].
+ - tender_award_create                         Create an award (POST tenders/{id}/awards) in limited procedures; parts are a free label.
+ - tender_award_document_attach                Attach a document to an award (POST tenders/{id}/awards/{id}/documents); parts: [award index, free label].
+ - tender_award_patch                          Patch an award (PATCH tenders/{id}/awards/{id}); parts: [award index]; refreshes awards.
+ - tender_awards_get                           Refresh the tender awards in context (GET tenders/{id}/awards).
+ - tender_awards_wait_complaint_period         Wait for the end of the complaint period of all awards.
+ - tender_awards_wait_edr                      Wait for the EDR identification documents of the awards; runs only with --wait edr-qualification.
+ - tender_bid_create                           Create a bid (POST tenders/{id}/bids), uploading the documents listed in it; parts: [bid index]; sets bids[i], bids_tokens[i].
+ - tender_bid_document_attach                  Attach a document to a bid (POST tenders/{id}/bids/{id}/documents); parts: [bid index, free label].
+ - tender_bid_patch                            Patch a bid (PATCH tenders/{id}/bids/{id}); parts: [bid index].
+ - tender_bid_res_post                         Post bid requirement responses (POST tenders/{id}/bids/{id}/requirement_responses); parts: [bid index].
+ - tender_bids_get                             Load the tender bids into context (GET tenders/{id}/bids) when they were not created in this run.
+ - tender_claim_create                         Create a tender claim (POST tenders/{id}/complaints with type claim); parts: [claim index].
+ - tender_claim_patch                          Patch a tender claim as a role; parts: [claim index, tenderer|complainer].
+ - tender_claims_get                           List the tender claims (GET tenders/{id}/complaints, type claim) and refresh them in context.
+ - tender_complaint_create                     Create a tender complaint (POST tenders/{id}/complaints); parts: [complaint index].
+ - tender_complaint_patch                      Patch a tender complaint as a role; parts: [complaint index, bot|reviewer|tenderer|complainer].
+ - tender_complaint_post_create                Post to a tender complaint (POST tenders/{id}/complaints/{id}/posts); parts: [complaint index, post index, reviewer|tenderer|complainer].
+ - tender_complaints_get                       List the tender complaints (GET tenders/{id}/complaints) and refresh them in context.
+ - tender_contracts_get                        Load the tender contracts into contracts (GET tenders/{id}/contracts, then GET contracts/{id} for each).
+ - tender_create                               Create a tender (POST tenders, or POST plans/{id}/tenders when a plan is in context); sets tender, tender_token, tender_config.
+ - tender_credentials_patch                    Take over the second stage tender (PATCH tenders/{stage2TenderID}/credentials); the previous tender moves to stage1_tender.
+ - tender_criteria_post                        Create tender criteria (POST tenders/{id}/criteria); sets criteria.
+ - tender_document_attach                      Attach a document to the tender (POST tenders/{id}/documents); parts are a free label; appends to tender_documents.
+ - tender_document_put                         Replace a tender document with a new version (PUT tenders/{id}/documents/{id}); parts: [tender_documents index] or a label, then the last attached document with the same title is replaced.
+ - tender_get                                  Refresh the tender in context (GET tenders/{id}).
+ - tender_patch                                Patch the tender (PATCH tenders/{id}), for example to switch its status.
+ - tender_plan_post                            Connect a plan to the tender (POST tenders/{id}/plans); the data file holds the plan id, e.g. {{ plans[1].id }}.
+ - tender_qualification_claim_create           Create a qualification claim (POST tenders/{id}/qualifications/{id}/complaints with type claim); parts: [qualification index, claim index].
+ - tender_qualification_claim_patch            Patch a qualification claim as a role; parts: [qualification index, claim index, tenderer|complainer].
+ - tender_qualification_claims_get             List the claims of a qualification (GET tenders/{id}/qualifications/{id}/complaints, type claim); parts: [qualification index].
+ - tender_qualification_complaint_create       Create a qualification complaint (POST tenders/{id}/qualifications/{id}/complaints); parts: [qualification index, complaint index].
+ - tender_qualification_complaint_patch        Patch a qualification complaint as a role; parts: [qualification index, complaint index, bot|reviewer|tenderer|complainer].
+ - tender_qualification_complaint_post_create  Post to a qualification complaint (POST tenders/{id}/qualifications/{id}/complaints/{id}/posts); parts: [qualification index, complaint index, post index, reviewer|tenderer|complainer].
+ - tender_qualification_complaints_get         List the complaints of a qualification (GET tenders/{id}/qualifications/{id}/complaints); parts: [qualification index].
+ - tender_qualification_document_attach        Attach a document to a tender qualification (POST tenders/{id}/qualifications/{id}/documents); parts: [qualification index].
+ - tender_qualification_patch                  Patch a tender qualification (PATCH tenders/{id}/qualifications/{id}); parts: [qualification index].
+ - tender_qualifications_get                   Refresh the tender qualifications in context (GET tenders/{id}/qualifications).
+ - tender_qualifications_wait_edr              Wait for the EDR identification documents of the qualifications; runs only with --wait edr-pre-qualification.
+ - tender_question_create                      Ask a tender question (POST tenders/{id}/questions); parts: [question index]; sets questions[i].
+ - tender_question_patch                       Answer a tender question (PATCH tenders/{id}/questions/{id}) as the tender owner; parts: [question index].
+ - tender_wait_auction                         Wait for the auction participation urls of the active bids; skipped for mode:no-auction submissions.
+ - tender_wait_next_check                      Wait for the next chronograph check of the tender (its next_check date), if any.
+ - tender_wait_status                          Wait for a tender status: {"status": "x" or [...], "fail_status": "y" (optional), "delay": seconds (default 1)}.
+ - wait_date                                   Wait until a date: {"date": "<iso date, templates allowed>", "description": "<optional log text>"}.
+ - wait_seconds                                Sleep for a number of seconds: {"seconds": 5}.
 ```
 
 ## Update the README

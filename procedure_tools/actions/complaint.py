@@ -9,6 +9,8 @@ Complaint and claim actions for the tender, its awards and its qualifications.
     2624_tender_award_claim_create_0_0.json           claim 0 of award 0
     2626_tender_award_claim_patch_0_0_tenderer.json   answered by the tender owner
     2639_tender_award_claims_get_1.json               list the claims of award 1
+    2060_tender_complaint_post_create_0_0_reviewer.json   post 0 of complaint 0, written by the reviewer
+    2061_tender_complaint_post_create_0_1_complainer.json the complaint owner's reply (``relatedPost``)
 
 Complaints (``"type": "complaint"``) are reviewed by the bot and the reviewer;
 claims (``"type": "claim"``) are answered by the tender owner and closed by
@@ -36,6 +38,7 @@ from procedure_tools.context import Context
 from procedure_tools.steps import Step
 from procedure_tools.utils.data import get_data, get_token
 from procedure_tools.utils.handlers import (
+    complaint_post_success_handler,
     complaints_get_success_handler,
     error,
     item_patch_success_handler,
@@ -60,6 +63,13 @@ def complaint_action(kind: str, kind_type: str, verb: str) -> str:
     """Action name of a step: tender_complaint_patch, tender_award_claim_create, tender_award_claims_get, ..."""
     name = f"{kind_type}s_get" if verb == "get" else f"{kind_type}_{verb}"
     return f"tender_{name}" if kind == "tender" else f"tender_{kind}_{name}"
+
+
+def complaint_post_ref(step: Step, kind: str) -> tuple[int | None, int, int, str | None]:
+    """(object index, complaint index, post index, role) from the parts of a post step."""
+    object_index, complaint_index, _ = complaint_ref(step, kind)
+    offset = 1 if kind == "tender" else 2
+    return object_index, complaint_index, step.index(offset), step.part(offset + 1)
 
 
 def complaint_ref(step: Step, kind: str) -> tuple[int | None, int, str | None]:
@@ -93,9 +103,12 @@ def complaints_allowed(
     """False when a patch step of this complaint needs a bot or reviewer token that was not provided."""
     roles: set[str | None] = set()
     for step in context.steps:
-        if step.action != complaint_action(kind, kind_type, "patch"):
+        if step.action == complaint_action(kind, kind_type, "patch"):
+            step_object_index, step_complaint_index, role = complaint_ref(step, kind)
+        elif step.action == complaint_action(kind, kind_type, "post_create"):
+            step_object_index, step_complaint_index, _, role = complaint_post_ref(step, kind)
+        else:
             continue
-        step_object_index, step_complaint_index, role = complaint_ref(step, kind)
         if step_object_index == object_index and step_complaint_index == complaint_index:
             roles.add(role)
     missing_bot = "bot" in roles and not context.args.bot_token
@@ -229,6 +242,23 @@ def patch_complaint(context: Context, step: Step, kind: str, kind_type: str) -> 
     if complaint is None:
         skip(f"Skipping {label} patch: the {kind_type} was not created")
         return
+    auth_token, acc_token = role_tokens(context, role, complaint_token)
+    if not auth_token:
+        error(f"{step.filename}: no auth token for role {role!r}")
+    logger.info(f"Patching {label} as {role}...\n")
+    data = context.load(step)
+    response = context.client.patch(
+        f"{complaints_path(context, kind, object_index)}/{complaint['id']}",
+        json=data,
+        acc_token=acc_token,
+        auth_token=auth_token,
+        success_handler=item_patch_success_handler,
+    )
+    set_complaint(context, kind, kind_type, object_index, complaint_index, get_data(response))
+
+
+def role_tokens(context: Context, role: str, complaint_token: str | None) -> tuple[str | None, str | None]:
+    """(auth token, acc token) of a complaint role."""
     auth_tokens = {
         "bot": context.args.bot_token,
         "reviewer": context.args.reviewer_token,
@@ -241,18 +271,45 @@ def patch_complaint(context: Context, step: Step, kind: str, kind_type: str) -> 
         "tenderer": tender_token(context),
         "complainer": complaint_token,
     }
-    if not auth_tokens[role]:
+    return auth_tokens[role], acc_tokens[role]
+
+
+def create_complaint_post(context: Context, step: Step, kind: str, kind_type: str) -> None:
+    """Add a post to a complaint (POST .../complaints/{id}/posts) as a role and refresh the complaint."""
+    object_index, complaint_index, post_index, role = complaint_post_ref(step, kind)
+    label = complaint_label(kind, kind_type, object_index, complaint_index)
+    if role is None or role not in ROLES:
+        error(f"{step.filename}: expected a role part {ROLES}, got {role!r}")
+        return
+    if complaints_disabled(context, kind_type):
+        skip(f"Skipping {label} post {post_index}: {kind_type}s are disabled")
+        return
+    if not complaints_allowed(context, kind, kind_type, object_index, complaint_index):
+        skip(f"Skipping {label} post {post_index}: bot and reviewer tokens are required")
+        return
+    complaint, complaint_token = get_complaint(context, kind, kind_type, object_index, complaint_index)
+    if complaint is None:
+        skip(f"Skipping {label} post {post_index}: the {kind_type} was not created")
+        return
+    auth_token, acc_token = role_tokens(context, role, complaint_token)
+    if not auth_token:
         error(f"{step.filename}: no auth token for role {role!r}")
-    logger.info(f"Patching {label} as {role}...\n")
+    logger.info(f"Posting to {label} as {role}...\n")
     data = context.load(step)
-    response = context.client.patch(
-        f"{complaints_path(context, kind, object_index)}/{complaint['id']}",
+    complaint_path = f"{complaints_path(context, kind, object_index)}/{complaint['id']}"
+    post_response = context.client.post(
+        f"{complaint_path}/posts",
         json=data,
-        acc_token=acc_tokens[role],
-        auth_token=auth_tokens[role],
-        success_handler=item_patch_success_handler,
+        acc_token=acc_token,
+        auth_token=auth_token,
+        success_handler=complaint_post_success_handler,
     )
-    set_complaint(context, kind, kind_type, object_index, complaint_index, get_data(response))
+    posts: list[dict[str, Any]] = complaint.get("posts") or []
+    posts.append(get_data(post_response))
+    response = context.client.get(complaint_path, auth_token=context.args.token)
+    refreshed = get_data(response)
+    refreshed.setdefault("posts", posts)
+    set_complaint(context, kind, kind_type, object_index, complaint_index, refreshed)
 
 
 def get_complaints(context: Context, step: Step, kind: str, kind_type: str) -> None:
@@ -296,6 +353,12 @@ def tender_complaints_get(context: Context, step: Step) -> None:
     get_complaints(context, step, "tender", "complaint")
 
 
+@action("tender_complaint_post_create")
+def tender_complaint_post_create(context: Context, step: Step) -> None:
+    """Post to a tender complaint (POST tenders/{id}/complaints/{id}/posts); parts: [complaint index, post index, reviewer|tenderer|complainer]."""
+    create_complaint_post(context, step, "tender", "complaint")
+
+
 @action("tender_award_complaint_create")
 def tender_award_complaint_create(context: Context, step: Step) -> None:
     """Create an award complaint (POST tenders/{id}/awards/{id}/complaints); parts: [award index, complaint index]."""
@@ -314,6 +377,12 @@ def tender_award_complaints_get(context: Context, step: Step) -> None:
     get_complaints(context, step, "award", "complaint")
 
 
+@action("tender_award_complaint_post_create")
+def tender_award_complaint_post_create(context: Context, step: Step) -> None:
+    """Post to an award complaint (POST tenders/{id}/awards/{id}/complaints/{id}/posts); parts: [award index, complaint index, post index, reviewer|tenderer|complainer]."""
+    create_complaint_post(context, step, "award", "complaint")
+
+
 @action("tender_qualification_complaint_create")
 def tender_qualification_complaint_create(context: Context, step: Step) -> None:
     """Create a qualification complaint (POST tenders/{id}/qualifications/{id}/complaints); parts: [qualification index, complaint index]."""
@@ -330,6 +399,12 @@ def tender_qualification_complaint_patch(context: Context, step: Step) -> None:
 def tender_qualification_complaints_get(context: Context, step: Step) -> None:
     """List the complaints of a qualification (GET tenders/{id}/qualifications/{id}/complaints); parts: [qualification index]."""
     get_complaints(context, step, "qualification", "complaint")
+
+
+@action("tender_qualification_complaint_post_create")
+def tender_qualification_complaint_post_create(context: Context, step: Step) -> None:
+    """Post to a qualification complaint (POST tenders/{id}/qualifications/{id}/complaints/{id}/posts); parts: [qualification index, complaint index, post index, reviewer|tenderer|complainer]."""
+    create_complaint_post(context, step, "qualification", "complaint")
 
 
 # --- claims

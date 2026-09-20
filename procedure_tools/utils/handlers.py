@@ -592,6 +592,34 @@ def complaints_get_success_handler(kind_type: str, complaints: list[dict[str, An
         logger.info(msg)
 
 
+def question_success_handler(response: requests.Response) -> None:
+    msg = "Question:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.id",
+            "data.questionOf",
+            "data.title",
+            "data.answer",
+        ],
+    )
+    logger.info(msg)
+
+
+def complaint_post_success_handler(response: requests.Response) -> None:
+    msg = "Complaint post created:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.id",
+            "data.recipient",
+            "data.relatedPost",
+            "data.title",
+        ],
+    )
+    logger.info(msg)
+
+
 def document_attach_success_handler(response: requests.Response) -> None:
     msg = "Document attached:\n"
     msg += format_log_fields(

@@ -109,6 +109,7 @@ class FakeCDBClient:
         self.bids: list[str] = []
         self.awards: list[dict[str, Any]] = []
         self.complaints: dict[str, list[dict[str, Any]]] = {}
+        self.questions: dict[str, dict[str, Any]] = {}
         self.contracts: dict[str, dict[str, Any]] = {}
         self.changes: dict[str, list[dict[str, Any]]] = {}
         self.contracts_count = 12
@@ -278,6 +279,21 @@ class FakeCDBClient:
             return {"data": [{"id": f"qualification{i}", "status": "pending"} for i in range(8)]}
         if re.fullmatch(r"tenders/[^/]+/qualifications/[^/]+", path):
             return self.obj("qualification", body, path=path)
+        if re.fullmatch(r"tenders/[^/]+/questions", path):
+            payload = self.obj("question", body)
+            self.questions[payload["data"]["id"]] = payload["data"]
+            return payload
+        if re.fullmatch(r"tenders/[^/]+/questions/[^/]+", path):
+            question = self.questions.setdefault(path.rsplit("/", 1)[-1], self.obj("question", path=path)["data"])
+            question.update(body.get("data", {}))
+            return {"data": question}
+        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications)/[^/]+/)?complaints/[^/]+/posts", path):
+            collection, _, complaint_id = path.rsplit("/", 1)[0].rpartition("/")
+            post = self.obj("post", body)["data"]
+            for complaint in self.complaints.get(collection, []):
+                if complaint["id"] == complaint_id:
+                    complaint.setdefault("posts", []).append(post)
+            return {"data": post}
         if re.fullmatch(r"tenders/[^/]+/((awards|qualifications)/[^/]+/)?complaints", path):
             if method == "GET":
                 return {"data": self.complaints.get(path, [])}
@@ -554,6 +570,29 @@ def test_disable_claims(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
     assert "award_claims" not in context
     assert not any("/complaints" in p for _, p in client.calls)
     assert context["tender"]["status"] == "complete"
+
+
+def test_questions_and_complaint_posts(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args("aboveThreshold"))
+    tender_path = f"tenders/{context['tender']['id']}"
+    # two questions asked by the broker and answered by the tender owner, before the complaints
+    assert [question["questionOf"] for question in context["questions"]] == ["tender", "item"]
+    assert all(question["answer"] for question in context["questions"])
+    question_index = client.calls.index(("POST", f"{tender_path}/questions"))
+    complaint_index = client.calls.index(("POST", f"{tender_path}/complaints"))
+    assert question_index < complaint_index
+    # every complaint carries an objection; complaint 0 got two reviewer threads with replies while pending
+    assert all(complaint["objections"] for complaint in context["tender_complaints"])
+    posts = context["tender_complaints"][0]["posts"]
+    assert [post["recipient"] for post in posts] == [
+        "complaint_owner",
+        "aboveThresholdReviewers",
+        "tender_owner",
+        "aboveThresholdReviewers",
+    ]
+    assert [bool(post.get("relatedPost")) for post in posts] == [False, True, False, True]
+    assert "posts" not in context["tender_complaints"][1]
 
 
 def test_reporting_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:

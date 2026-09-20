@@ -7,6 +7,7 @@ from procedure_tools.actions import (  # noqa: F401  (importing registers the ac
     framework,
     plan,
     qualification,
+    question,
     technical,
     tender,
     wait,

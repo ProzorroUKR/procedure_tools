@@ -24,6 +24,31 @@
     "description": "{{ fake.paragraph(nb_sentences=2) }}",
     "status": "draft",
     "title": "{{ fake.sentence(nb_words=4) }}",
-    "type": "complaint"
+    "type": "complaint",
+    "objections": [
+      {
+        "title": "{{ fake.sentence(nb_words=4) }}",
+        "description": "{{ fake.paragraph(nb_sentences=2) }}",
+        "relatesTo": "tender",
+        "relatedItem": "{{ tender.id }}",
+        "classification": {
+          "scheme": "violation_amcu",
+          "id": "corruptionDescription",
+          "description": "Опис порушення"
+        },
+        "requestedRemedies": [
+          {
+            "type": "setAsideAward",
+            "description": "{{ fake.sentence(nb_words=6) }}"
+          }
+        ],
+        "arguments": [
+          {
+            "description": "{{ fake.paragraph(nb_sentences=2) }}"
+          }
+        ],
+        "sequenceNumber": 1
+      }
+    ]
   }
 }
