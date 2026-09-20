@@ -11,6 +11,6 @@ from procedure_tools.actions import (  # noqa: F401  (importing registers the ac
     tender,
     wait,
 )
-from procedure_tools.actions.registry import ACTIONS, action, format_actions
+from procedure_tools.actions.registry import ACTIONS, Action, action, format_actions
 
-__all__ = ["ACTIONS", "action", "format_actions"]
+__all__ = ["ACTIONS", "Action", "action", "format_actions"]

@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from procedure_tools.actions.common import (
     attach_document,
@@ -9,6 +10,8 @@ from procedure_tools.actions.common import (
     upload_ds,
 )
 from procedure_tools.actions.registry import action
+from procedure_tools.context import Context
+from procedure_tools.steps import Step
 from procedure_tools.utils.data import get_data, get_token
 from procedure_tools.utils.handlers import (
     bid_create_success_handler,
@@ -26,17 +29,18 @@ BID_DOCUMENT_CONTAINERS = (
 )
 
 
-def refresh_bid(context, index):
+def refresh_bid(context: Context, index: int) -> dict[str, Any]:
     response = context.client.get(
         f"tenders/{tender_id(context)}/bids/{bid(context, index)['id']}",
         acc_token=bid_token(context, index),
         auth_token=context.args.token,
     )
-    return context.set_item("bids", index, get_data(response))
+    item: dict[str, Any] = context.set_item("bids", index, get_data(response))
+    return item
 
 
 @action("tender_bid_create")
-def tender_bid_create(context, step):
+def tender_bid_create(context: Context, step: Step) -> None:
     """Create a bid (POST tenders/{id}/bids), uploading the documents listed in it; parts: [bid index]; sets bids[i], bids_tokens[i]."""
     logger.info("Creating bid...\n")
     index = step.index(0)
@@ -61,7 +65,7 @@ def tender_bid_create(context, step):
 
 
 @action("tender_bid_patch")
-def tender_bid_patch(context, step):
+def tender_bid_patch(context: Context, step: Step) -> None:
     """Patch a bid (PATCH tenders/{id}/bids/{id}); parts: [bid index]."""
     logger.info("Patching bid...\n")
     index = step.index(0)
@@ -77,7 +81,7 @@ def tender_bid_patch(context, step):
 
 
 @action("tender_bid_document_attach")
-def tender_bid_document_attach(context, step):
+def tender_bid_document_attach(context: Context, step: Step) -> None:
     """Attach a document to a bid (POST tenders/{id}/bids/{id}/documents); parts: [bid index, free label]."""
     logger.info("Uploading bid document...\n")
     index = step.index(0)
@@ -91,7 +95,7 @@ def tender_bid_document_attach(context, step):
 
 
 @action("tender_bid_res_post")
-def tender_bid_res_post(context, step):
+def tender_bid_res_post(context: Context, step: Step) -> None:
     """Post bid requirement responses (POST tenders/{id}/bids/{id}/requirement_responses); parts: [bid index]."""
     logger.info("Posting bid requirement responses...\n")
     index = step.index(0)
@@ -113,7 +117,7 @@ def tender_bid_res_post(context, step):
 
 
 @action("tender_bids_get")
-def tender_bids_get(context, step):
+def tender_bids_get(context: Context, step: Step) -> None:
     """Load the tender bids into context (GET tenders/{id}/bids) when they were not created in this run."""
     context.load(step)
     context.pop("bids", None)

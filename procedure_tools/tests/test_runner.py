@@ -7,23 +7,26 @@ hand-over between steps are exercised without a CDB instance.
 # fakes mirror the real client and action signatures
 # pylint: disable=redefined-outer-name,unused-argument
 
+import argparse
 import copy
 import json
 import re
+from collections.abc import Callable
 from datetime import timedelta
-from types import SimpleNamespace
+from typing import Any
 
 import pytest
 
 from procedure_tools import runner
 from procedure_tools.actions import wait as wait_actions
+from procedure_tools.context import Context
 from procedure_tools.runner import process_tools
 from procedure_tools.utils.file import get_default_data_dirs
 
 DATE = "2026-01-01T10:00:00+02:00"
 
 
-def item(index, lot="lot"):
+def item(index: int, lot: str = "lot") -> dict[str, Any]:
     return {
         "id": f"item{index}",
         "description": f"item {index}",
@@ -48,7 +51,7 @@ def item(index, lot="lot"):
     }
 
 
-ORGANIZATION = {
+ORGANIZATION: dict[str, Any] = {
     "name": "org",
     "name_en": "org en",
     "kind": "general",
@@ -74,21 +77,21 @@ ORGANIZATION = {
 
 
 class FakeResponse:
-    def __init__(self, payload, status_code=200):
+    def __init__(self, payload: dict[str, Any], status_code: int = 200) -> None:
         self._payload = payload
         self.status_code = status_code
         self.text = json.dumps(payload)
-        self.headers = {}
+        self.headers: dict[str, str] = {}
 
-    def json(self):
+    def json(self) -> dict[str, Any]:
         return copy.deepcopy(self._payload)
 
 
 class FakeDSClient:
-    def __init__(self):
-        self.uploads = []
+    def __init__(self) -> None:
+        self.uploads: list[str] = []
 
-    def post_document_upload(self, files):
+    def post_document_upload(self, files: dict[str, Any]) -> FakeResponse:
         title = files["file"][0]
         self.uploads.append(title)
         return FakeResponse({"data": {"id": f"doc{len(self.uploads)}", "title": title, "url": "http://ds/doc"}})
@@ -99,21 +102,30 @@ class FakeCDBClient:
 
     client_timedelta = timedelta()
 
-    def __init__(self):
-        self.calls = []
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, str]] = []
         self.counter = 0
-        self.tender = None
-        self.bids = []
-        self.awards = []
-        self.contracts = {}
-        self.changes = {}
+        self.tender: dict[str, Any] | None = None
+        self.bids: list[str] = []
+        self.awards: list[dict[str, Any]] = []
+        self.contracts: dict[str, dict[str, Any]] = {}
+        self.changes: dict[str, list[dict[str, Any]]] = {}
         self.contracts_count = 12
 
-    def new_id(self, prefix):
+    def new_id(self, prefix: str) -> str:
         self.counter += 1
         return f"{prefix}{self.counter}"
 
-    def request(self, method, path, json=None, acc_token=None, auth_token=None, success_handler=None, **kwargs):
+    def request(
+        self,
+        method: str,
+        path: str,
+        json: dict[str, Any] | None = None,
+        acc_token: str | None = None,
+        auth_token: str | None = None,
+        success_handler: Callable[[FakeResponse], None] | None = None,
+        **kwargs: Any,
+    ) -> FakeResponse:
         self.calls.append((method, path))
         payload = self.respond(method, path, json or {})
         response = FakeResponse(payload)
@@ -121,21 +133,23 @@ class FakeCDBClient:
             success_handler(response)
         return response
 
-    def get(self, path, **kwargs):
+    def get(self, path: str, **kwargs: Any) -> FakeResponse:
         return self.request("GET", path, **kwargs)
 
-    def post(self, path, json=None, **kwargs):
+    def post(self, path: str, json: dict[str, Any] | None = None, **kwargs: Any) -> FakeResponse:
         return self.request("POST", path, json=json, **kwargs)
 
-    def put(self, path, json=None, **kwargs):
+    def put(self, path: str, json: dict[str, Any] | None = None, **kwargs: Any) -> FakeResponse:
         return self.request("PUT", path, json=json, **kwargs)
 
-    def patch(self, path, json=None, **kwargs):
+    def patch(self, path: str, json: dict[str, Any] | None = None, **kwargs: Any) -> FakeResponse:
         return self.request("PATCH", path, json=json, **kwargs)
 
     # --- objects
 
-    def obj(self, prefix, body=None, path=None, **fields):
+    def obj(
+        self, prefix: str, body: dict[str, Any] | None = None, path: str | None = None, **fields: Any
+    ) -> dict[str, Any]:
         """A plausible object; an existing object keeps the id taken from the last path segment."""
         object_id = path.rsplit("/", 1)[-1] if path else self.new_id(prefix)
         data = {"id": object_id, "status": "draft", "dateModified": DATE}
@@ -145,7 +159,7 @@ class FakeCDBClient:
             data.update(body_data)
         return {"data": data, "access": {"token": f"{prefix}-token"}}
 
-    def make_tender(self, body):
+    def make_tender(self, body: dict[str, Any]) -> dict[str, Any]:
         payload = self.obj(
             "tender",
             body,
@@ -159,7 +173,7 @@ class FakeCDBClient:
         self.tender = payload["data"]
         return payload
 
-    def make_awards(self):
+    def make_awards(self) -> list[dict[str, Any]]:
         if not self.awards:
             bids = self.bids or ["bid-none"]
             self.awards = [
@@ -173,7 +187,7 @@ class FakeCDBClient:
             ]
         return self.awards
 
-    def make_contract(self, contract_id):
+    def make_contract(self, contract_id: str) -> dict[str, Any]:
         if contract_id not in self.contracts:
             index = int(contract_id[len("contract") :])
             award = self.make_awards()[[0, 1, 3, 2, 4, 5, 6, 7, 8, 9, 10, 11][index % 12]]
@@ -191,7 +205,7 @@ class FakeCDBClient:
             }
         return {"data": self.contracts[contract_id]}
 
-    def respond(self, method, path, body):
+    def respond(self, method: str, path: str, body: dict[str, Any]) -> dict[str, Any]:
         if path == "constants":
             return {"SIGNATURE_VERIFICATION_ENABLED": False}
         if path == "plans":
@@ -215,6 +229,7 @@ class FakeCDBClient:
         if re.fullmatch(r"agreements/[^/]+", path):
             return self.obj("agreement", body, path=path, items=[item(i) for i in range(8)])
         if re.fullmatch(r"tenders/[^/]+", path):
+            assert self.tender is not None, "tender was not created"
             self.tender.update(body.get("data", {}))
             return {"data": self.tender, "config": {"hasAuction": True}}
         if re.fullmatch(r"tenders/[^/]+/credentials", path):
@@ -300,8 +315,8 @@ class FakeCDBClient:
         raise AssertionError(f"unexpected request {method} {path}")
 
 
-def make_args(data_dir, **overrides):
-    args = SimpleNamespace(
+def make_args(data_dir: str, **overrides: Any) -> argparse.Namespace:
+    args = argparse.Namespace(
         host="http://cdb",
         token="token",
         path="/api/0/",
@@ -326,14 +341,23 @@ def make_args(data_dir, **overrides):
 
 
 @pytest.fixture
-def fake_api(monkeypatch):
+def fake_api(monkeypatch: pytest.MonkeyPatch) -> tuple[FakeCDBClient, FakeDSClient]:
     client, ds_client = FakeCDBClient(), FakeDSClient()
     monkeypatch.setattr(runner, "build_clients", lambda args, session=None: (client, ds_client))
     monkeypatch.setattr(wait_actions, "wait_until_date", lambda *args, **kwargs: None)
     monkeypatch.setattr(wait_actions, "wait_auction_participation_urls", lambda *args, **kwargs: None)
     monkeypatch.setattr(wait_actions, "sleep", lambda seconds: None)
 
-    def wait_tender_status(client, args, context, tender_id, delay, status, fail_status=None):
+    def wait_tender_status(
+        client: FakeCDBClient,
+        args: argparse.Namespace,
+        context: Context,
+        tender_id: str,
+        delay: float,
+        status: str | list[str],
+        fail_status: str | list[str] | None = None,
+    ) -> FakeResponse:
+        assert client.tender is not None, "tender was not created"
         client.tender["status"] = status[0] if isinstance(status, list) else status
         return client.get(f"tenders/{tender_id}")
 
@@ -342,16 +366,17 @@ def fake_api(monkeypatch):
 
 
 @pytest.mark.parametrize("data_dir", sorted(get_default_data_dirs()))
-def test_bundled_data_dirs_run_offline(fake_api, data_dir):
+def test_bundled_data_dirs_run_offline(fake_api: tuple[FakeCDBClient, FakeDSClient], data_dir: str) -> None:
     client, ds_client = fake_api
     context = process_tools(make_args(data_dir))
+    assert context.step is not None
     assert context.step.action == "tender_wait_status"
     assert context["tender"]["status"] == "complete"
     assert any(path.startswith("contracts") for _, path in client.calls)
     assert ds_client.uploads
 
 
-def test_above_threshold_offline_flow(fake_api):
+def test_above_threshold_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
     client, ds_client = fake_api
     context = process_tools(make_args("aboveThreshold"))
     calls = client.calls
@@ -387,7 +412,7 @@ def test_above_threshold_offline_flow(fake_api):
     assert context["contracts"][0]["status"] == "terminated"
 
 
-def test_reporting_offline_flow(fake_api):
+def test_reporting_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
     client, _ = fake_api
     context = process_tools(make_args("reporting"))
     calls = client.calls
@@ -398,7 +423,7 @@ def test_reporting_offline_flow(fake_api):
     assert context["contracts"][0]["status"] == "terminated"
 
 
-def test_ifi_offline_flow(fake_api):
+def test_ifi_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
     client, ds_client = fake_api
     context = process_tools(make_args("internationalFinancialInstitutions.requestForProposal"))
     calls = client.calls
@@ -413,15 +438,16 @@ def test_ifi_offline_flow(fake_api):
     assert ("PATCH", "contracts/contract2/credentials") in calls
 
 
-def test_stop_after_step(fake_api):
+def test_stop_after_step(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
     client, _ = fake_api
     with pytest.raises(SystemExit) as e:
         process_tools(make_args("reporting", stop="tender_patch.json"))
     assert e.value.code == 0
+    assert client.tender is not None
     assert client.calls[-1] == ("PATCH", f"tenders/{client.tender['id']}")
 
 
-def test_complaints_skipped_without_role_tokens(fake_api):
+def test_complaints_skipped_without_role_tokens(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
     client, _ = fake_api
     context = process_tools(make_args("aboveThreshold", bot_token=None, reviewer_token=None))
     assert not any("/complaints" in p for _, p in client.calls)

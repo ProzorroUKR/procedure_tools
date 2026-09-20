@@ -2,9 +2,11 @@ import json
 import logging
 import os
 import sys
+from collections.abc import Collection, Iterable, Mapping
+from typing import Any
 from urllib.parse import urlsplit
 
-from requests import adapters
+from requests import PreparedRequest, Response, Session, adapters
 from requests.exceptions import ConnectionError as RequestsConnectionError
 from urllib3 import Retry
 
@@ -21,10 +23,10 @@ try:
     from pygments import highlight
     from pygments.formatters import TerminalFormatter
     from pygments.lexers import JsonLexer
-except ImportError:
-    highlight = None
-    TerminalFormatter = None
-    JsonLexer = None
+
+    PYGMENTS_AVAILABLE = True
+except ImportError:  # pragma: no cover - optional dependency
+    PYGMENTS_AVAILABLE = False
 
 
 logger = logging.getLogger(__name__)
@@ -51,13 +53,13 @@ HTTP_LOG_PAD = 3
 
 
 class RetryingHTTPAdapter(adapters.HTTPAdapter):
-    def __init__(self, timeout, max_retries):
+    def __init__(self, timeout: float | None, max_retries: Retry | int | None) -> None:
         self.timeout = timeout
 
         super().__init__(max_retries=max_retries)
 
-    def send(self, request, *args, **kwargs):
-        last_exc = None
+    def send(self, request: PreparedRequest, *args: Any, **kwargs: Any) -> Response:
+        last_exc: RequestsConnectionError | None = None
         for attempt in range(max(1, 1 + DEFAULT_MAX_RETRIES)):
             if attempt > 0:
                 logger.info("Retrying after connection error")
@@ -67,29 +69,35 @@ class RetryingHTTPAdapter(adapters.HTTPAdapter):
             except RequestsConnectionError as err:
                 last_exc = err
                 logger.info("Connection error: %s", err)
+        assert last_exc is not None  # the loop always runs at least once
         raise last_exc
 
 
 class LoggingHTTPAdapter(adapters.HTTPAdapter):
     def __init__(
         self,
-        transport_adapter,
-        debug_request=False,
-        debug_json_level=None,
-        debug_exclude_paths=(),
-    ):
+        transport_adapter: adapters.HTTPAdapter,
+        debug_request: bool = False,
+        debug_json_level: int | None = None,
+        debug_exclude_paths: Iterable[str] = (),
+    ) -> None:
         self.transport_adapter = transport_adapter
         self.debug_request = debug_request
         self.debug_json_level = debug_json_level
         self.debug_exclude_paths = tuple(debug_exclude_paths)
         super().__init__()
 
-    def set_debug_options(self, enabled=False, json_level=None, exclude_paths=()):
+    def set_debug_options(
+        self,
+        enabled: bool = False,
+        json_level: int | None = None,
+        exclude_paths: Iterable[str] | None = (),
+    ) -> None:
         self.debug_request = enabled
         self.debug_json_level = json_level
         self.debug_exclude_paths = tuple(exclude_paths or ())
 
-    def fold_json(self, data, max_level, current_level=0):
+    def fold_json(self, data: Any, max_level: int | None, current_level: int = 0) -> Any:
         if max_level is None:
             return data
 
@@ -110,8 +118,8 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
 
         return data
 
-    def colorize_json_text(self, text):
-        if not (highlight and TerminalFormatter and JsonLexer):
+    def colorize_json_text(self, text: str) -> str:
+        if not PYGMENTS_AVAILABLE:
             return text
         if os.getenv("NO_COLOR"):
             return text
@@ -125,7 +133,7 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         except Exception:  # noqa: BLE001  # pylint: disable=broad-exception-caught
             return text
 
-    def format_data(self, data):
+    def format_data(self, data: Any) -> str:
         data = self.fold_json(data, self.debug_json_level)
         try:
             text = json.dumps(data, ensure_ascii=False, indent=4)
@@ -133,23 +141,23 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
             text = str(data)
         return self.colorize_json_text(text)
 
-    def format_headers(self, headers):
+    def format_headers(self, headers: Mapping[str, Any]) -> str:
         return "\n".join(f"{header}: {fore_info(str(value))}" for header, value in headers.items())
 
-    def format_cookies(self, cookies):
+    def format_cookies(self, cookies: Mapping[str, Any]) -> str:
         return "; ".join(f"{name}={fore_info(str(value))}" for name, value in cookies.items())
 
-    def format_http_request_start_line(self, request):
+    def format_http_request_start_line(self, request: PreparedRequest) -> str:
         parsed_url = urlsplit(request.url or "")
         target = parsed_url.path or "/"
         if parsed_url.query:
             target = f"{target}?{parsed_url.query}"
-        method_text = fore_method(request.method)
+        method_text = fore_method(request.method or "")
         target_text = fore_info(target)
         protocol_text = fore_debug("HTTP/1.1")
         return f"{method_text} {target_text} {protocol_text}"
 
-    def get_http_host_header(self, url):
+    def get_http_host_header(self, url: str | None) -> str:
         parsed_url = urlsplit(url or "")
         hostname = parsed_url.hostname
         if not hostname:
@@ -161,7 +169,7 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
             return f"{hostname}:{port}"
         return hostname
 
-    def format_http_response_start_line(self, response):
+    def format_http_response_start_line(self, response: Response) -> str:
         status_text = fore_status_code(response.status_code)
         reason_text = fore_warning(response.reason) if response.reason else ""
         protocol_text = fore_debug("HTTP/1.1")
@@ -169,13 +177,13 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
             return f"{protocol_text} {status_text} {reason_text}"
         return f"{protocol_text} {status_text}"
 
-    def should_log_exchange(self, url):
+    def should_log_exchange(self, url: str | None) -> bool:
         if not self.debug_request:
             return False
         return not any(fragment and fragment in (url or "") for fragment in self.debug_exclude_paths)
 
-    def format_request_body(self, request):
-        content_type = (request.headers or {}).get("Content-Type", "")
+    def format_request_body(self, request: PreparedRequest) -> str | None:
+        content_type = request.headers.get("Content-Type", "") if request.headers else ""
         body = request.body
         if body is None:
             return None
@@ -195,10 +203,10 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
                 return body_text
         return body_text
 
-    def pad_log_lines(self, text, pad=HTTP_LOG_PAD):
+    def pad_log_lines(self, text: str | None, pad: int = HTTP_LOG_PAD) -> str:
         return "\n".join(f"{'':<{pad}}{line}" for line in (text or "").splitlines())
 
-    def get_debug_request(self, request):
+    def get_debug_request(self, request: PreparedRequest) -> str:
         log_lines = [self.format_http_request_start_line(request)]
         request_headers = dict(request.headers or {})
         if "Host" not in request_headers:
@@ -213,7 +221,7 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
             log_lines.append(request_body)
         return "\n".join(log_lines)
 
-    def get_debug_response(self, response):
+    def get_debug_response(self, response: Response) -> str:
         log_lines = [self.format_http_response_start_line(response)]
         if response.headers:
             log_lines.append(self.format_headers(dict(response.headers)))
@@ -229,7 +237,7 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
             log_lines.append("(empty body)")
         return "\n".join(log_lines)
 
-    def send(self, request, *args, **kwargs):
+    def send(self, request: PreparedRequest, *args: Any, **kwargs: Any) -> Response:
         request_line = f"{request.method} {request.url}"
         if get_log_prefix():
             request_line += "\n"
@@ -247,23 +255,23 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
             logger.info(f"Response status: {status_text} {reason_text}\n")
         return response
 
-    def close(self):
+    def close(self) -> None:
         self.transport_adapter.close()
         super().close()
 
 
 def mount(
-    session,
-    timeout=DEFAULT_TIMEOUT,
-    max_retries_total=DEFAULT_MAX_RETRIES,
-    status_forcelist=DEFAULT_RETRY_FORCELIST,
-    allowed_methods=DEFAULT_RETRY_ALLOWED_METHODS,
-    backoff_factor=DEFAULT_RETRY_BACKOFF_FACTOR,
-    backoff_max=DEFAULT_RETRY_BACKOFF_MAX,
-    debug_request=False,
-    debug_json_level=None,
-    debug_exclude_paths=(),
-):
+    session: Session,
+    timeout: float | None = DEFAULT_TIMEOUT,
+    max_retries_total: int = DEFAULT_MAX_RETRIES,
+    status_forcelist: Collection[int] = DEFAULT_RETRY_FORCELIST,
+    allowed_methods: Collection[str] = DEFAULT_RETRY_ALLOWED_METHODS,
+    backoff_factor: float = DEFAULT_RETRY_BACKOFF_FACTOR,
+    backoff_max: float = DEFAULT_RETRY_BACKOFF_MAX,
+    debug_request: bool = False,
+    debug_json_level: int | None = None,
+    debug_exclude_paths: Iterable[str] = (),
+) -> None:
     max_retries = Retry(
         total=max_retries_total,
         status_forcelist=status_forcelist,
@@ -287,13 +295,18 @@ def mount(
     session.mount("http://", adapter)
 
 
-def configure_debug_logging(session, enabled=False, json_level=None, exclude_paths=()):
+def configure_debug_logging(
+    session: Session,
+    enabled: bool = False,
+    json_level: int | None = None,
+    exclude_paths: Iterable[str] = (),
+) -> None:
     for adapter in set(session.adapters.values()):
         if isinstance(adapter, LoggingHTTPAdapter):
             adapter.set_debug_options(enabled=enabled, json_level=json_level, exclude_paths=exclude_paths)
 
 
-def configure_urllib3_logging(debug):
+def configure_urllib3_logging(debug: bool) -> None:
     level = logging.DEBUG if debug else logging.WARNING
     logging.getLogger("urllib3").setLevel(level)
     for name in logging.root.manager.loggerDict:  # pylint: disable=no-member

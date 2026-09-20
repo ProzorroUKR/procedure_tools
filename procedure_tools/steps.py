@@ -26,21 +26,27 @@ files reference by title. A resource can carry a number prefix too, it is looked
 up by its numberless name.
 """
 
+from __future__ import annotations
+
 import os
 import re
+from collections.abc import Collection
 from dataclasses import dataclass
+from typing import Any, TypeVar, overload
 
 NUMBER_PREFIX_PATTERN = re.compile(r"^(\d+)_(.+)$")
 ACTION_FILE_EXTENSION = ".json"
 
 _MISSING = object()
 
+_T = TypeVar("_T")
+
 
 class StepError(ValueError):
     pass
 
 
-def get_numberless_filename(filename):
+def get_numberless_filename(filename: str) -> str:
     """
     >>> get_numberless_filename("0010_tender_create.json")
     'tender_create.json'
@@ -51,7 +57,7 @@ def get_numberless_filename(filename):
     return match.group(2) if match else filename
 
 
-def is_action_file(filename):
+def is_action_file(filename: str) -> bool:
     return filename.endswith(ACTION_FILE_EXTENSION) and not filename.startswith(".")
 
 
@@ -59,27 +65,33 @@ def is_action_file(filename):
 class Step:
     number: str
     action: str
-    parts: list
+    parts: list[str]
     filename: str
     path: str
     prefix: str = ""
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Filename without the number prefix."""
         return get_numberless_filename(self.filename)
 
     @property
-    def stem(self):
+    def stem(self) -> str:
         """Prefix, action name and parts joined back together."""
         return self.prefix + "_".join([self.action, *self.parts])
 
-    def part(self, position, default=None):
+    def part(self, position: int, default: str | None = None) -> str | None:
         if position < len(self.parts):
             return self.parts[position]
         return default
 
-    def index(self, position, default=_MISSING):
+    @overload
+    def index(self, position: int) -> int: ...
+
+    @overload
+    def index(self, position: int, default: _T) -> int | _T: ...
+
+    def index(self, position: int, default: Any = _MISSING) -> Any:
         """Integer part at ``position``; error when missing (unless ``default`` given) or not a number."""
         value = self.part(position)
         if value is None:
@@ -90,14 +102,14 @@ class Step:
             raise StepError(f"{self.filename}: part #{position + 1} must be an index, got {value!r}")
         return int(value)
 
-    def matches(self, filename):
+    def matches(self, filename: str | None) -> bool:
         """True when ``filename`` names this step, with or without the number prefix."""
         if not filename:
             return False
         return filename == self.filename or get_numberless_filename(filename) == self.name
 
 
-def split_action(stem, action_names):
+def split_action(stem: str, action_names: Collection[str]) -> tuple[str, list[str], str]:
     """
     Split a numberless file stem into the action name and its parts.
 
@@ -131,9 +143,9 @@ def split_action(stem, action_names):
     return action, parts, prefix
 
 
-def discover_steps(data_path, action_names):
+def discover_steps(data_path: str, action_names: Collection[str]) -> list[Step]:
     """Build the ordered list of steps from the action files of ``data_path``."""
-    steps = []
+    steps: list[Step] = []
     for filename in sorted(os.listdir(data_path)):
         path = os.path.join(data_path, filename)
         if not is_action_file(filename) or not os.path.isfile(path):
@@ -155,7 +167,7 @@ def discover_steps(data_path, action_names):
     return steps
 
 
-def find_resource_path(data_path, title):
+def find_resource_path(data_path: str, title: str) -> str | None:
     """Find a resource file by its title, ignoring an optional number prefix on disk."""
     exact_path = os.path.join(data_path, title)
     if os.path.isfile(exact_path):

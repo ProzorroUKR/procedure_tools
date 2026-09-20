@@ -14,6 +14,7 @@ entirely when a role needed by their patch steps has no token.
 """
 
 import logging
+from typing import Any
 
 from procedure_tools.actions.common import (
     award,
@@ -23,6 +24,8 @@ from procedure_tools.actions.common import (
     tender_token,
 )
 from procedure_tools.actions.registry import action
+from procedure_tools.context import Context
+from procedure_tools.steps import Step
 from procedure_tools.utils.data import get_data, get_token
 from procedure_tools.utils.handlers import (
     error,
@@ -35,20 +38,21 @@ logger = logging.getLogger(__name__)
 
 ROLES = ("bot", "reviewer", "tenderer", "complainer")
 
-KINDS = {
+KINDS: dict[str, dict[str, Any]] = {
     "tender": {"collection": None, "resolve": None},
     "award": {"collection": "awards", "resolve": award},
     "qualification": {"collection": "qualifications", "resolve": qualification},
 }
 
 
-def complaint_action(kind, verb):
+def complaint_action(kind: str, verb: str) -> str:
     """Action name of a complaint step: tender_complaint_patch, tender_award_complaint_patch, ..."""
     return f"tender_complaint_{verb}" if kind == "tender" else f"tender_{kind}_complaint_{verb}"
 
 
-def complaint_ref(step, kind):
+def complaint_ref(step: Step, kind: str) -> tuple[int | None, int, str | None]:
     """(object index, complaint index, role) from the step parts."""
+    object_index: int | None
     if kind == "tender":
         object_index = None
         complaint_index = step.index(0)
@@ -60,9 +64,9 @@ def complaint_ref(step, kind):
     return object_index, complaint_index, role
 
 
-def complaints_allowed(context, kind, object_index):
+def complaints_allowed(context: Context, kind: str, object_index: int | None) -> bool:
     """False when a patch step of these complaints needs a bot or reviewer token that was not provided."""
-    roles = set()
+    roles: set[str | None] = set()
     for step in context.steps:
         if step.action != complaint_action(kind, "patch"):
             continue
@@ -74,14 +78,14 @@ def complaints_allowed(context, kind, object_index):
     return not (missing_bot or missing_reviewer)
 
 
-def complaints_path(context, kind, object_index):
+def complaints_path(context: Context, kind: str, object_index: int | None) -> str:
     if kind == "tender":
         return f"tenders/{tender_id(context)}/complaints"
     object_data = KINDS[kind]["resolve"](context, object_index)
     return f"tenders/{tender_id(context)}/{kind}s/{object_data['id']}/complaints"
 
 
-def complaint_store(context, kind, object_index):
+def complaint_store(context: Context, kind: str, object_index: int | None) -> tuple[list[Any], list[Any]]:
     """(complaints, tokens) lists of the object; stored under <kind>_complaints[(object index)]."""
     if kind == "tender":
         complaints = context.setdefault("tender_complaints", [])
@@ -92,7 +96,14 @@ def complaint_store(context, kind, object_index):
     return complaints, tokens
 
 
-def set_complaint(context, kind, object_index, complaint_index, complaint, token=None):
+def set_complaint(
+    context: Context,
+    kind: str,
+    object_index: int | None,
+    complaint_index: int,
+    complaint: dict[str, Any],
+    token: str | None = None,
+) -> None:
     complaints, tokens = complaint_store(context, kind, object_index)
     for items in (complaints, tokens):
         while len(items) <= complaint_index:
@@ -102,14 +113,19 @@ def set_complaint(context, kind, object_index, complaint_index, complaint, token
         tokens[complaint_index] = token
 
 
-def get_complaint(context, kind, object_index, complaint_index):
+def get_complaint(
+    context: Context,
+    kind: str,
+    object_index: int | None,
+    complaint_index: int,
+) -> tuple[dict[str, Any] | None, str | None]:
     complaints, tokens = complaint_store(context, kind, object_index)
     if complaint_index >= len(complaints) or complaints[complaint_index] is None:
         return None, None
     return complaints[complaint_index], tokens[complaint_index]
 
 
-def create_complaint(context, step, kind):
+def create_complaint(context: Context, step: Step, kind: str) -> None:
     object_index, complaint_index, _ = complaint_ref(step, kind)
     label = kind if object_index is None else f"{kind} {object_index}"
     if not complaints_allowed(context, kind, object_index):
@@ -136,11 +152,12 @@ def create_complaint(context, step, kind):
     set_complaint(context, kind, object_index, complaint_index, get_data(response), get_token(response))
 
 
-def patch_complaint(context, step, kind):
+def patch_complaint(context: Context, step: Step, kind: str) -> None:
     object_index, complaint_index, role = complaint_ref(step, kind)
     label = kind if object_index is None else f"{kind} {object_index}"
-    if role not in ROLES:
+    if role is None or role not in ROLES:
         error(f"{step.filename}: expected a role part {ROLES}, got {role!r}")
+        return
     if not complaints_allowed(context, kind, object_index):
         skip(f"Skipping {label} complaint {complaint_index} patch: bot and reviewer tokens are required")
         return
@@ -175,36 +192,36 @@ def patch_complaint(context, step, kind):
 
 
 @action("tender_complaint_create")
-def tender_complaint_create(context, step):
+def tender_complaint_create(context: Context, step: Step) -> None:
     """Create a tender complaint (POST tenders/{id}/complaints); parts: [complaint index]."""
     create_complaint(context, step, "tender")
 
 
 @action("tender_complaint_patch")
-def tender_complaint_patch(context, step):
+def tender_complaint_patch(context: Context, step: Step) -> None:
     """Patch a tender complaint as a role; parts: [complaint index, bot|reviewer|tenderer|complainer]."""
     patch_complaint(context, step, "tender")
 
 
 @action("tender_award_complaint_create")
-def tender_award_complaint_create(context, step):
+def tender_award_complaint_create(context: Context, step: Step) -> None:
     """Create an award complaint (POST tenders/{id}/awards/{id}/complaints); parts: [award index, complaint index]."""
     create_complaint(context, step, "award")
 
 
 @action("tender_award_complaint_patch")
-def tender_award_complaint_patch(context, step):
+def tender_award_complaint_patch(context: Context, step: Step) -> None:
     """Patch an award complaint as a role; parts: [award index, complaint index, bot|reviewer|tenderer|complainer]."""
     patch_complaint(context, step, "award")
 
 
 @action("tender_qualification_complaint_create")
-def tender_qualification_complaint_create(context, step):
+def tender_qualification_complaint_create(context: Context, step: Step) -> None:
     """Create a qualification complaint (POST tenders/{id}/qualifications/{id}/complaints); parts: [qualification index, complaint index]."""
     create_complaint(context, step, "qualification")
 
 
 @action("tender_qualification_complaint_patch")
-def tender_qualification_complaint_patch(context, step):
+def tender_qualification_complaint_patch(context: Context, step: Step) -> None:
     """Patch a qualification complaint as a role; parts: [qualification index, complaint index, bot|reviewer|tenderer|complainer]."""
     patch_complaint(context, step, "qualification")

@@ -8,6 +8,8 @@ from procedure_tools.actions.common import (
     tender_token,
 )
 from procedure_tools.actions.registry import action
+from procedure_tools.context import Context
+from procedure_tools.steps import Step
 from procedure_tools.utils.data import get_data
 from procedure_tools.utils.handlers import (
     error,
@@ -21,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 @action("tender_create")
-def tender_create(context, step):
+def tender_create(context: Context, step: Step) -> None:
     """Create a tender (POST tenders, or POST plans/{id}/tenders when a plan is in context); sets tender, tender_token, tender_config."""
     logger.info("Creating tender...\n")
     data = context.load(step)
@@ -38,7 +40,7 @@ def tender_create(context, step):
 
 
 @action("tender_patch")
-def tender_patch(context, step):
+def tender_patch(context: Context, step: Step) -> None:
     """Patch the tender (PATCH tenders/{id}), for example to switch its status."""
     logger.info("Patching tender...\n")
     data = context.load(step)
@@ -53,14 +55,14 @@ def tender_patch(context, step):
 
 
 @action("tender_get")
-def tender_get(context, step):
+def tender_get(context: Context, step: Step) -> None:
     """Refresh the tender in context (GET tenders/{id})."""
     context.load(step)
     refresh_tender(context)
 
 
 @action("tender_document_attach")
-def tender_document_attach(context, step):
+def tender_document_attach(context: Context, step: Step) -> None:
     """Attach a document to the tender (POST tenders/{id}/documents); parts are a free label; appends to tender_documents."""
     logger.info("Uploading tender document...\n")
     response = attach_document(
@@ -73,7 +75,7 @@ def tender_document_attach(context, step):
 
 
 @action("tender_document_put")
-def tender_document_put(context, step):
+def tender_document_put(context: Context, step: Step) -> None:
     """Replace a tender document with a new version (PUT tenders/{id}/documents/{id}); parts: [tender_documents index] or a label, then the last attached document with the same title is replaced."""
     logger.info("Re-uploading tender document...\n")
     data = context.load(step)
@@ -100,7 +102,7 @@ def tender_document_put(context, step):
 
 
 @action("tender_criteria_post")
-def tender_criteria_post(context, step):
+def tender_criteria_post(context: Context, step: Step) -> None:
     """Create tender criteria (POST tenders/{id}/criteria); sets criteria."""
     logger.info("Creating tender criteria...\n")
     data = context.load(step)
@@ -115,7 +117,7 @@ def tender_criteria_post(context, step):
 
 
 @action("tender_plan_post")
-def tender_plan_post(context, step):
+def tender_plan_post(context: Context, step: Step) -> None:
     """Connect a plan to the tender (POST tenders/{id}/plans); the data file holds the plan id, e.g. {{ plans[1].id }}."""
     logger.info("Connecting plan to tender...\n")
     data = context.load(step)
@@ -130,7 +132,7 @@ def tender_plan_post(context, step):
 
 
 @action("tender_credentials_patch")
-def tender_credentials_patch(context, step):
+def tender_credentials_patch(context: Context, step: Step) -> None:
     """Take over the second stage tender (PATCH tenders/{stage2TenderID}/credentials); the previous tender moves to stage1_tender."""
     logger.info("Getting credentials for second stage...\n")
     stage2_tender_id = context.require("tender").get("stage2TenderID")

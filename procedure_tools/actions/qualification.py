@@ -8,13 +8,15 @@ from procedure_tools.actions.common import (
     tender_token,
 )
 from procedure_tools.actions.registry import action
+from procedure_tools.context import Context
+from procedure_tools.steps import Step
 from procedure_tools.utils.handlers import item_patch_success_handler
 
 logger = logging.getLogger(__name__)
 
 
 @action("tender_qualification_patch")
-def tender_qualification_patch(context, step):
+def tender_qualification_patch(context: Context, step: Step) -> None:
     """Patch a tender qualification (PATCH tenders/{id}/qualifications/{id}); parts: [qualification index]."""
     logger.info("Patching qualification...\n")
     index = step.index(0)
@@ -30,7 +32,7 @@ def tender_qualification_patch(context, step):
 
 
 @action("tender_qualification_document_attach")
-def tender_qualification_document_attach(context, step):
+def tender_qualification_document_attach(context: Context, step: Step) -> None:
     """Attach a document to a tender qualification (POST tenders/{id}/qualifications/{id}/documents); parts: [qualification index]."""
     logger.info("Uploading qualification document...\n")
     index = step.index(0)
@@ -44,7 +46,7 @@ def tender_qualification_document_attach(context, step):
 
 
 @action("tender_qualifications_get")
-def tender_qualifications_get(context, step):
+def tender_qualifications_get(context: Context, step: Step) -> None:
     """Refresh the tender qualifications in context (GET tenders/{id}/qualifications)."""
     context.load(step)
     refresh_qualifications(context)

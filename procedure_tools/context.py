@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+import argparse
 import datetime
 import json
 import logging
 from functools import partial
+from typing import TYPE_CHECKING, Any
 
 from jinja2 import Template
 
@@ -10,10 +14,14 @@ from procedure_tools.steps import find_resource_path
 from procedure_tools.utils import helpers
 from procedure_tools.utils.handlers import error
 
+if TYPE_CHECKING:
+    from procedure_tools.client import CDBClient, DSClient
+    from procedure_tools.steps import Step
+
 logger = logging.getLogger(__name__)
 
 
-class Context(dict):
+class Context(dict[str, Any]):
     """
     State shared between actions.
 
@@ -25,19 +33,26 @@ class Context(dict):
     resolve to whatever the previous actions stored.
     """
 
-    def __init__(self, args, client, ds_client, data_path, steps):
+    def __init__(
+        self,
+        args: argparse.Namespace,
+        client: CDBClient,
+        ds_client: DSClient,
+        data_path: str,
+        steps: list[Step],
+    ) -> None:
         super().__init__()
         self.args = args
         self.client = client
         self.ds_client = ds_client
         self.data_path = data_path
         self.steps = steps
-        self.step = None
+        self.step: Step | None = None
         self.skip_steps = 0
 
     # --- templates
 
-    def template_context(self):
+    def template_context(self) -> dict[str, Any]:
         now_kwargs = {
             "acceleration": self.get("acceleration", 1),
             "client_timedelta": self.get("client_timedelta"),
@@ -53,12 +68,15 @@ class Context(dict):
             "datetime": datetime,
         }
 
-    def render(self, content):
-        return Template(content).render(self.template_context())
+    def render(self, content: str) -> str:
+        template: Template = Template(content)
+        return template.render(self.template_context())
 
-    def load(self, step=None):
+    def load(self, step: Step | None = None) -> dict[str, Any]:
         """Render the step data file as a template and parse it as JSON (empty file means ``{}``)."""
         step = step or self.step
+        if step is None:
+            raise ValueError("no step to load: pass a step or set context.step first")
         logger.info(f"Processing data file: {step.filename}\n")
         with open(step.path, encoding="utf-8") as file:
             content = file.read()
@@ -66,22 +84,24 @@ class Context(dict):
         if not rendered.strip():
             return {}
         try:
-            return json.loads(rendered)
+            data: dict[str, Any] = json.loads(rendered)
         except json.JSONDecodeError as e:
             error(f"{step.filename}: invalid JSON after rendering: {e}")
-            return None
+            raise
+        return data
 
-    def resource(self, title):
+    def resource(self, title: str) -> str:
         """Path of a resource file (document to upload) referenced by an action file."""
         path = find_resource_path(self.data_path, title)
-        if not path:
+        if path is None:
             step = self.step.filename if self.step else "context"
             error(f"{step}: resource file {title!r} not found in {self.data_path}")
+            raise FileNotFoundError(title)
         return path
 
     # --- lists
 
-    def set_item(self, key, index, value):
+    def set_item(self, key: str, index: int, value: Any) -> Any:
         """Store ``value`` at ``index`` of the ``key`` list, growing the list with ``None`` when needed."""
         items = self.setdefault(key, [])
         while len(items) <= index:
@@ -89,7 +109,7 @@ class Context(dict):
         items[index] = value
         return value
 
-    def item(self, key, index, hint=None):
+    def item(self, key: str, index: int, hint: str | None = None) -> Any:
         """Item at ``index`` of the ``key`` list; error when missing."""
         items = self.get(key) or []
         if index >= len(items) or items[index] is None:
@@ -100,7 +120,7 @@ class Context(dict):
             error(message)
         return items[index]
 
-    def require(self, key, hint=None):
+    def require(self, key: str, hint: str | None = None) -> Any:
         """Value of ``key``; error when missing."""
         if self.get(key) is None:
             step = self.step.filename if self.step else "context"

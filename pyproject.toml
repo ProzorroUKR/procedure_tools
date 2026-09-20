@@ -26,9 +26,13 @@ test = [
     "pytest",
 ]
 dev = [
+    "mypy",
     "pylint",
     "pylint-pytest",
     "ruff",
+    "types-Pygments",
+    "types-python-dateutil",
+    "types-requests",
 ]
 
 [project.scripts]
@@ -81,6 +85,25 @@ quote-style = "double"
 
 [tool.ruff.lint]
 ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+packages = ["procedure_tools"]
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+strict_equality = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+
+[[tool.mypy.overrides]]
+module = [
+    "colorama.*",
+    "jsonpath_ng.*",
+]
+ignore_missing_imports = true
 
 [tool.pylint]
 [tool.pylint.main]

@@ -9,8 +9,12 @@ the parameters, an empty file (or ``{}``) uses the defaults.
 
 import logging
 import math
+from argparse import Namespace
 from datetime import timedelta
 from functools import partial
+from typing import Any
+
+from requests import Response
 
 from procedure_tools.actions.common import (
     ensure_awards,
@@ -24,6 +28,9 @@ from procedure_tools.actions.common import (
     tender_id as get_tender_id,
 )
 from procedure_tools.actions.registry import action
+from procedure_tools.client import CDBClient
+from procedure_tools.context import Context
+from procedure_tools.steps import Step
 from procedure_tools.utils.data import (
     EDR_FILENAME,
     SECONDS_BUFFER,
@@ -50,7 +57,7 @@ logger = logging.getLogger(__name__)
 # --- waiting primitives
 
 
-def wait_until_date(date_str, client_timedelta=timedelta(), date_info_str=None):
+def wait_until_date(date_str: str, client_timedelta: timedelta = timedelta(), date_info_str: str | None = None) -> None:
     now = fix_datetime(get_utcnow(), client_timedelta)
     delta_seconds = (parse_date(date_str) - now).total_seconds()
     date_seconds = math.ceil(delta_seconds) if delta_seconds > 0 else 0
@@ -62,7 +69,15 @@ def wait_until_date(date_str, client_timedelta=timedelta(), date_info_str=None):
     sleep(date_seconds)
 
 
-def wait_tender_status(client, args, context, tender_id, delay, status, fail_status=None):  # pylint: disable=unused-argument
+def wait_tender_status(  # pylint: disable=unused-argument
+    client: CDBClient,
+    args: Namespace,
+    context: Context,
+    tender_id: str,
+    delay: float,
+    status: str | list[str],
+    fail_status: str | list[str] | None = None,
+) -> Response:
     logger.info(f"Waiting for {status}...\n")
     status = [status] if not isinstance(status, list) else status
     fail_status = [fail_status] if fail_status and not isinstance(fail_status, list) else fail_status
@@ -81,11 +96,16 @@ def wait_tender_status(client, args, context, tender_id, delay, status, fail_sta
         sleep(delay)
 
 
-def wait_auction_participation_urls(client, args, tender_id, bids):
+def wait_auction_participation_urls(
+    client: CDBClient,
+    args: Namespace,
+    tender_id: str,
+    bids: list[dict[str, Any]],
+) -> None:
     logger.info("Waiting for the auction participation urls...\n")
     active_bids = [bid for bid in bids if bid["data"].get("status") != "unsuccessful"]
     active_bids_ids = [bid["data"]["id"] for bid in active_bids]
-    success_bids_ids = []
+    success_bids_ids: list[str] = []
     while True:
         tender_data = client.get(f"tenders/{tender_id}").json()["data"]
         if set(success_bids_ids) == set(active_bids_ids):
@@ -120,7 +140,7 @@ def wait_auction_participation_urls(client, args, tender_id, bids):
         sleep(SECONDS_BUFFER)
 
 
-def wait_edr_documents(context, path, items):
+def wait_edr_documents(context: Context, path: str, items: list[dict[str, Any]]) -> None:
     """Wait until every item (award or qualification) has the EDR identification document."""
     logger.info(f"Waiting for {EDR_FILENAME} in {path} documents...\n")
     for item in items:
@@ -133,12 +153,13 @@ def wait_edr_documents(context, path, items):
 
 
 @action("tender_wait_status")
-def tender_wait_status(context, step):
+def tender_wait_status(context: Context, step: Step) -> None:
     """Wait for a tender status: {"status": "x" or [...], "fail_status": "y" (optional), "delay": seconds (default 1)}."""
     data = context.load(step)
     status = data.get("status")
     if not status:
         error(f'{step.filename}: "status" is required, e.g. {{"status": "active.tendering"}}')
+        return
     response = wait_tender_status(
         context.client,
         context.args,
@@ -152,7 +173,7 @@ def tender_wait_status(context, step):
 
 
 @action("tender_wait_next_check")
-def tender_wait_next_check(context, step):
+def tender_wait_next_check(context: Context, step: Step) -> None:
     """Wait for the next chronograph check of the tender (its next_check date), if any."""
     context.load(step)
     response = refresh_tender(context)
@@ -168,12 +189,13 @@ def tender_wait_next_check(context, step):
 
 
 @action("wait_date")
-def wait_date(context, step):
+def wait_date(context: Context, step: Step) -> None:
     """Wait until a date: {"date": "<iso date, templates allowed>", "description": "<optional log text>"}."""
     data = context.load(step)
     date = data.get("date")
     if not date:
         error(f'{step.filename}: "date" is required, e.g. {{"date": "{{{{ tender.tenderPeriod.endDate }}}}"}}')
+        return
     wait_until_date(
         date,
         client_timedelta=context["client_timedelta"],
@@ -182,7 +204,7 @@ def wait_date(context, step):
 
 
 @action("wait_seconds")
-def wait_seconds(context, step):
+def wait_seconds(context: Context, step: Step) -> None:
     """Sleep for a number of seconds: {"seconds": 5}."""
     data = context.load(step)
     seconds = data.get("seconds", 0)
@@ -191,7 +213,7 @@ def wait_seconds(context, step):
 
 
 @action("tender_awards_wait_complaint_period")
-def tender_awards_wait_complaint_period(context, step):
+def tender_awards_wait_complaint_period(context: Context, step: Step) -> None:
     """Wait for the end of the complaint period of all awards."""
     context.load(step)
     refresh_awards(context)
@@ -208,7 +230,7 @@ def tender_awards_wait_complaint_period(context, step):
 
 
 @action("tender_wait_auction")
-def tender_wait_auction(context, step):
+def tender_wait_auction(context: Context, step: Step) -> None:
     """Wait for the auction participation urls of the active bids; skipped for mode:no-auction submissions."""
     context.load(step)
     tender = refresh_tender(context).json()["data"]
@@ -230,7 +252,7 @@ def tender_wait_auction(context, step):
 
 
 @action("tender_qualifications_wait_edr")
-def tender_qualifications_wait_edr(context, step):
+def tender_qualifications_wait_edr(context: Context, step: Step) -> None:
     """Wait for the EDR identification documents of the qualifications; runs only with --wait edr-pre-qualification."""
     context.load(step)
     if WAIT_EDR_PRE_QUAL not in (context.args.wait or []):
@@ -240,7 +262,7 @@ def tender_qualifications_wait_edr(context, step):
 
 
 @action("tender_awards_wait_edr")
-def tender_awards_wait_edr(context, step):
+def tender_awards_wait_edr(context: Context, step: Step) -> None:
     """Wait for the EDR identification documents of the awards; runs only with --wait edr-qualification."""
     context.load(step)
     if WAIT_EDR_QUAL not in (context.args.wait or []):

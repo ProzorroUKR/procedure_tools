@@ -5,16 +5,16 @@ DATA_DIR_DEFAULT = "aboveThreshold"
 DATA_SUB_DIR_DEFAULT = "data"
 
 
-def get_project_dir():
+def get_project_dir() -> str:
     this_dir = os.path.dirname(os.path.abspath(__file__))
     return os.path.dirname(this_dir)
 
 
-def get_default_data_path(data_dir):
+def get_default_data_path(data_dir: str) -> str:
     return os.path.join(get_project_dir(), DATA_SUB_DIR_DEFAULT, data_dir)
 
 
-def get_default_data_dirs():
+def get_default_data_dirs() -> list[str]:
     data_path = os.path.join(get_project_dir(), DATA_SUB_DIR_DEFAULT)
     return [
         item
@@ -23,7 +23,7 @@ def get_default_data_dirs():
     ]
 
 
-def get_data_path(path):
+def get_data_path(path: str) -> str | None:
     """
     Resolve a data folder: an existing directory, a path relative to the current
     directory or the name of one of the bundled data folders.

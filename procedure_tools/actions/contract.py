@@ -12,6 +12,7 @@ Parts: ``[contract index, (change index,) (role)]``. The optional role
 """
 
 import logging
+from typing import Any
 
 from procedure_tools.actions.common import (
     attach_document,
@@ -25,6 +26,8 @@ from procedure_tools.actions.common import (
     tender_token,
 )
 from procedure_tools.actions.registry import action
+from procedure_tools.context import Context
+from procedure_tools.steps import Step
 from procedure_tools.utils.data import get_token
 from procedure_tools.utils.handlers import (
     contract_access_success_handler,
@@ -40,14 +43,14 @@ from procedure_tools.utils.handlers import (
 logger = logging.getLogger(__name__)
 
 
-def contract_ref(context, step):
+def contract_ref(context: Context, step: Step) -> tuple[int, dict[str, Any], str]:
     """(index, contract, token) for steps with parts [contract index, (role)]."""
     index = step.index(0)
     role = contract_role(step, 1)
     return index, contract(context, index), contract_token(context, index, role)
 
 
-def change_ref(context, step):
+def change_ref(context: Context, step: Step) -> tuple[int, dict[str, Any], dict[str, Any], str]:
     """(index, contract, change, token) for steps with parts [contract index, change index, (role)]."""
     index = step.index(0)
     change_index = step.index(1)
@@ -59,7 +62,7 @@ def change_ref(context, step):
     return index, contract_data, changes[change_index], contract_token(context, index, role)
 
 
-def supplier_token(context, index, role):
+def supplier_token(context: Context, index: int, role: str | None) -> str | None:
     """Token of the supplier of contract ``index``: econtract role token or the token of the winning bid."""
     if role:
         return contract_token(context, index, role)
@@ -68,20 +71,24 @@ def supplier_token(context, index, role):
         if award["id"] == award_id:
             for bid_index, bid in enumerate(ensure_bids(context)):
                 if bid["id"] == award.get("bid_id"):
-                    return context.item("bids_tokens", bid_index, hint=f"bid {bid_index} was not created in this run")
-    error(f"{context.step.filename}: no bid token found for the supplier of contract {index}")
+                    token: str = context.item(
+                        "bids_tokens", bid_index, hint=f"bid {bid_index} was not created in this run"
+                    )
+                    return token
+    step_name = context.step.filename if context.step else "context"
+    error(f"{step_name}: no bid token found for the supplier of contract {index}")
     return None
 
 
 @action("tender_contracts_get")
-def tender_contracts_get(context, step):
+def tender_contracts_get(context: Context, step: Step) -> None:
     """Load the tender contracts into contracts (GET tenders/{id}/contracts, then GET contracts/{id} for each)."""
     context.load(step)
     refresh_contracts(context)
 
 
 @action("contract_credentials_patch")
-def contract_credentials_patch(context, step):
+def contract_credentials_patch(context: Context, step: Step) -> None:
     """Get the legacy contract token (PATCH contracts/{id}/credentials); parts: [contract index]; sets contracts_tokens[i]."""
     logger.info("Getting credentials for contract...\n")
     index = step.index(0)
@@ -98,12 +105,13 @@ def contract_credentials_patch(context, step):
 
 
 @action("contract_access_post")
-def contract_access_post(context, step):
+def contract_access_post(context: Context, step: Step) -> None:
     """Get an econtract token for a role (POST contracts/{id}/access); parts: [contract index, buyer|supplier]; sets contracts_<role>_tokens[i]."""
     index = step.index(0)
     role = contract_role(step, 1)
     if not role:
         error(f"{step.filename}: contract_access_post needs a role part: buyer or supplier")
+        return
     contract_data = contract(context, index)
     data = context.load(step)
     if not data:
@@ -124,7 +132,7 @@ def contract_access_post(context, step):
 
 
 @action("contract_patch")
-def contract_patch(context, step):
+def contract_patch(context: Context, step: Step) -> None:
     """Patch a contract (PATCH contracts/{id}); parts: [contract index, (role)]."""
     logger.info("Patching contract...\n")
     index, contract_data, token = contract_ref(context, step)
@@ -140,7 +148,7 @@ def contract_patch(context, step):
 
 
 @action("contract_post")
-def contract_post(context, step):
+def contract_post(context: Context, step: Step) -> None:
     """Create a contract (POST contracts) with the token of contract [index]; parts: [contract index, (role)]."""
     logger.info("Creating contract...\n")
     index, _, token = contract_ref(context, step)
@@ -156,7 +164,7 @@ def contract_post(context, step):
 
 
 @action("contract_document_attach")
-def contract_document_attach(context, step):
+def contract_document_attach(context: Context, step: Step) -> None:
     """Attach a document to a contract (POST contracts/{id}/documents); parts: [contract index, (role)]."""
     logger.info("Uploading contract document...\n")
     index, contract_data, token = contract_ref(context, step)
@@ -165,7 +173,7 @@ def contract_document_attach(context, step):
 
 
 @action("contract_buyer_signer_info_put")
-def contract_buyer_signer_info_put(context, step):
+def contract_buyer_signer_info_put(context: Context, step: Step) -> None:
     """Set the buyer signer info (PUT contracts/{id}/buyer/signer_info); parts: [contract index, (role)]."""
     logger.info("Setting contract buyer signer info...\n")
     index, contract_data, token = contract_ref(context, step)
@@ -181,7 +189,7 @@ def contract_buyer_signer_info_put(context, step):
 
 
 @action("contract_suppliers_signer_info_put")
-def contract_suppliers_signer_info_put(context, step):
+def contract_suppliers_signer_info_put(context: Context, step: Step) -> None:
     """Set the suppliers signer info (PUT contracts/{id}/suppliers/signer_info) with the winning bid token; parts: [contract index, (role)]."""
     logger.info("Setting contract suppliers signer info...\n")
     index = step.index(0)
@@ -200,7 +208,7 @@ def contract_suppliers_signer_info_put(context, step):
 
 
 @action("contract_signatories_post")
-def contract_signatories_post(context, step):
+def contract_signatories_post(context: Context, step: Step) -> None:
     """Sign a contract (POST contracts/{id}/signatories); parts: [contract index, (role)]."""
     logger.info("Signing contract...\n")
     index, contract_data, token = contract_ref(context, step)
@@ -216,7 +224,7 @@ def contract_signatories_post(context, step):
 
 
 @action("contract_cancellation_post")
-def contract_cancellation_post(context, step):
+def contract_cancellation_post(context: Context, step: Step) -> None:
     """Cancel a contract (POST contracts/{id}/cancellations); parts: [contract index, (role)]."""
     logger.info("Cancelling contract...\n")
     index, contract_data, token = contract_ref(context, step)
@@ -232,7 +240,7 @@ def contract_cancellation_post(context, step):
 
 
 @action("contract_change_post")
-def contract_change_post(context, step):
+def contract_change_post(context: Context, step: Step) -> None:
     """Create a contract change (POST contracts/{id}/changes); parts: [contract index, (role)]."""
     logger.info("Creating contract change...\n")
     index, contract_data, token = contract_ref(context, step)
@@ -248,7 +256,7 @@ def contract_change_post(context, step):
 
 
 @action("contract_change_patch")
-def contract_change_patch(context, step):
+def contract_change_patch(context: Context, step: Step) -> None:
     """Patch a contract change (PATCH contracts/{id}/changes/{id}); parts: [contract index, change index, (role)]."""
     logger.info("Patching contract change...\n")
     index, contract_data, change, token = change_ref(context, step)
@@ -264,7 +272,7 @@ def contract_change_patch(context, step):
 
 
 @action("contract_change_document_attach")
-def contract_change_document_attach(context, step):
+def contract_change_document_attach(context: Context, step: Step) -> None:
     """Attach a document to a contract change (POST contracts/{id}/changes/{id}/documents); parts: [contract index, change index, (role)]."""
     logger.info("Uploading contract change document...\n")
     index, contract_data, change, token = change_ref(context, step)
@@ -278,7 +286,7 @@ def contract_change_document_attach(context, step):
 
 
 @action("contract_change_signatories_post")
-def contract_change_signatories_post(context, step):
+def contract_change_signatories_post(context: Context, step: Step) -> None:
     """Sign a contract change (POST contracts/{id}/changes/{id}/signatories); parts: [contract index, change index, (role)]."""
     logger.info("Signing contract change...\n")
     index, contract_data, change, token = change_ref(context, step)
@@ -294,7 +302,7 @@ def contract_change_signatories_post(context, step):
 
 
 @action("contract_change_cancellation_post")
-def contract_change_cancellation_post(context, step):
+def contract_change_cancellation_post(context: Context, step: Step) -> None:
     """Cancel a contract change (POST contracts/{id}/changes/{id}/cancellations); parts: [contract index, change index, (role)]."""
     logger.info("Cancelling contract change...\n")
     index, contract_data, change, token = change_ref(context, step)

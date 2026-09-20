@@ -1,13 +1,17 @@
 # pylint: disable=unbalanced-tuple-unpacking
+import argparse
 import json
 import os
-from types import SimpleNamespace
+from collections.abc import Iterable
+from pathlib import Path
+from typing import Any
 
 import pytest
 
 from procedure_tools.actions import ACTIONS
 from procedure_tools.context import Context
 from procedure_tools.steps import (
+    Step,
     StepError,
     discover_steps,
     find_resource_path,
@@ -26,17 +30,17 @@ ACTION_NAMES = [
 ]
 
 
-def test_get_numberless_filename():
+def test_get_numberless_filename() -> None:
     assert get_numberless_filename("0010_tender_create.json") == "tender_create.json"
     assert get_numberless_filename("10_tender_create.json") == "tender_create.json"
     assert get_numberless_filename("tender_create.json") == "tender_create.json"
 
 
-def test_split_action_without_parts():
+def test_split_action_without_parts() -> None:
     assert split_action("tender_create", ACTION_NAMES) == ("tender_create", [], "")
 
 
-def test_split_action_with_parts():
+def test_split_action_with_parts() -> None:
     assert split_action("tender_award_patch_0", ACTION_NAMES) == ("tender_award_patch", ["0"], "")
     assert split_action("tender_award_complaint_patch_0_1_bot", ACTION_NAMES) == (
         "tender_award_complaint_patch",
@@ -45,12 +49,12 @@ def test_split_action_with_parts():
     )
 
 
-def test_split_action_prefers_longest_action_name():
+def test_split_action_prefers_longest_action_name() -> None:
     assert split_action("framework_patch_0", ACTION_NAMES) == ("framework_patch", ["0"], "")
     assert split_action("framework_0", ACTION_NAMES) == ("framework", ["0"], "")
 
 
-def test_split_action_skips_stage_prefix():
+def test_split_action_skips_stage_prefix() -> None:
     assert split_action("stage2_tender_create", ACTION_NAMES) == ("tender_create", [], "stage2_")
     assert split_action("selection_tender_award_patch_1", ACTION_NAMES) == ("tender_award_patch", ["1"], "selection_")
     assert split_action("a_b_tender_award_complaint_patch_0_1_bot", ACTION_NAMES) == (
@@ -60,7 +64,7 @@ def test_split_action_skips_stage_prefix():
     )
 
 
-def test_split_action_unknown():
+def test_split_action_unknown() -> None:
     with pytest.raises(StepError):
         split_action("tender", ACTION_NAMES)
     with pytest.raises(StepError):
@@ -69,12 +73,12 @@ def test_split_action_unknown():
         split_action("stage2_", ACTION_NAMES)
 
 
-def write(path, name, content="{}"):
+def write(path: Path, name: str, content: str = "{}") -> None:
     with open(os.path.join(path, name), "w", encoding="utf-8") as f:
         f.write(content)
 
 
-def test_discover_steps_orders_by_number_and_skips_resources(tmp_path):
+def test_discover_steps_orders_by_number_and_skips_resources(tmp_path: Path) -> None:
     write(tmp_path, "0020_tender_patch.json")
     write(tmp_path, "0010_tender_create.json")
     write(tmp_path, "0010_tender_document_file.txt", "document")
@@ -87,20 +91,20 @@ def test_discover_steps_orders_by_number_and_skips_resources(tmp_path):
     assert steps[0].name == "tender_create.json"
 
 
-def test_discover_steps_requires_number_prefix(tmp_path):
+def test_discover_steps_requires_number_prefix(tmp_path: Path) -> None:
     write(tmp_path, "tender_create.json")
     with pytest.raises(StepError, match="number prefix"):
         discover_steps(str(tmp_path), ACTION_NAMES)
 
 
-def test_discover_steps_unknown_action_lists_available(tmp_path):
+def test_discover_steps_unknown_action_lists_available(tmp_path: Path) -> None:
     write(tmp_path, "0010_tender_creat.json")
     with pytest.raises(StepError, match="unknown action 'tender_creat'") as e:
         discover_steps(str(tmp_path), ACTION_NAMES)
     assert " - tender_create" in str(e.value)
 
 
-def test_step_parts(tmp_path):
+def test_step_parts(tmp_path: Path) -> None:
     write(tmp_path, "0010_tender_award_complaint_patch_0_1_bot.json")
     (step,) = discover_steps(str(tmp_path), ACTION_NAMES)
     assert step.index(0) == 0
@@ -114,7 +118,7 @@ def test_step_parts(tmp_path):
         step.index(2)
 
 
-def test_discover_steps_keeps_prefix(tmp_path):
+def test_discover_steps_keeps_prefix(tmp_path: Path) -> None:
     write(tmp_path, "4010_stage2_tender_patch.json")
     (step,) = discover_steps(str(tmp_path), ACTION_NAMES)
     assert (step.action, step.parts, step.prefix) == ("tender_patch", [], "stage2_")
@@ -122,7 +126,7 @@ def test_discover_steps_keeps_prefix(tmp_path):
     assert step.matches("stage2_tender_patch.json")
 
 
-def test_step_matches_with_or_without_number(tmp_path):
+def test_step_matches_with_or_without_number(tmp_path: Path) -> None:
     write(tmp_path, "0010_tender_create.json")
     (step,) = discover_steps(str(tmp_path), ACTION_NAMES)
     assert step.matches("0010_tender_create.json")
@@ -132,7 +136,7 @@ def test_step_matches_with_or_without_number(tmp_path):
     assert not step.matches(None)
 
 
-def test_find_resource_path_ignores_number_prefix(tmp_path):
+def test_find_resource_path_ignores_number_prefix(tmp_path: Path) -> None:
     write(tmp_path, "0010_tender_document_file.txt", "document")
     write(tmp_path, "plain.txt", "document")
     assert find_resource_path(str(tmp_path), "tender_document_file.txt") == str(
@@ -142,12 +146,13 @@ def test_find_resource_path_ignores_number_prefix(tmp_path):
     assert find_resource_path(str(tmp_path), "missing.txt") is None
 
 
-def make_context(data_path, steps=()):
-    args = SimpleNamespace(token="token", bot_token=None, reviewer_token=None, stop=None, pause=None, wait=[])
-    return Context(args, client=None, ds_client=None, data_path=data_path, steps=list(steps))
+def make_context(data_path: str, steps: Iterable[Step] = ()) -> Context:
+    args = argparse.Namespace(token="token", bot_token=None, reviewer_token=None, stop=None, pause=None, wait=[])
+    no_client: Any = None
+    return Context(args, client=no_client, ds_client=no_client, data_path=data_path, steps=list(steps))
 
 
-def test_context_load_renders_templates(tmp_path):
+def test_context_load_renders_templates(tmp_path: Path) -> None:
     write(tmp_path, "0010_tender_patch.json", '{"data": {"id": "{{ tender.id }}", "n": {{ acceleration }}}}')
     (step,) = discover_steps(str(tmp_path), ACTION_NAMES)
     context = make_context(str(tmp_path), [step])
@@ -156,13 +161,13 @@ def test_context_load_renders_templates(tmp_path):
     assert context.load(step) == {"data": {"id": "abc", "n": 5}}
 
 
-def test_context_load_empty_file_is_empty_object(tmp_path):
+def test_context_load_empty_file_is_empty_object(tmp_path: Path) -> None:
     write(tmp_path, "0010_tender_patch.json", "\n")
     (step,) = discover_steps(str(tmp_path), ACTION_NAMES)
     assert make_context(str(tmp_path), [step]).load(step) == {}
 
 
-def test_context_lists():
+def test_context_lists() -> None:
     context = make_context(".")
     context.set_item("bids", 2, {"id": "b"})
     assert context["bids"] == [None, None, {"id": "b"}]
@@ -174,7 +179,7 @@ def test_context_lists():
 
 
 @pytest.mark.parametrize("data_dir", sorted(get_default_data_dirs()))
-def test_bundled_data_dirs_discover(data_dir):
+def test_bundled_data_dirs_discover(data_dir: str) -> None:
     """Every bundled data folder resolves to known actions, valid JSON and existing resources."""
     data_path = get_default_data_path(data_dir)
     steps = discover_steps(data_path, ACTIONS)

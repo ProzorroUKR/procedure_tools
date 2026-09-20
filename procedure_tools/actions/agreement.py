@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from procedure_tools.actions.common import (
     attach_document,
@@ -12,6 +13,8 @@ from procedure_tools.actions.common import (
     tender_token,
 )
 from procedure_tools.actions.registry import action
+from procedure_tools.context import Context
+from procedure_tools.steps import Step
 from procedure_tools.utils.data import get_data
 from procedure_tools.utils.handlers import (
     default_success_handler,
@@ -22,26 +25,27 @@ from procedure_tools.utils.handlers import (
 logger = logging.getLogger(__name__)
 
 
-def framework_agreement_id(context):
+def framework_agreement_id(context: Context) -> str:
     """Agreement id of the framework in context, waiting until the framework has one."""
     framework_id = context["framework"]["id"]
     logger.info("Waiting for the framework agreement...\n")
     while True:
         response = context.client.get(f"frameworks/{framework_id}")
         context["framework"] = get_data(response)
-        agreement_id = context["framework"].get("agreementID")
+        agreement_id: str | None = context["framework"].get("agreementID")
         if agreement_id:
             return agreement_id
         sleep(1)
 
 
-def agreement(context, index):
+def agreement(context: Context, index: int) -> dict[str, Any]:
     ensure_agreements(context)
-    return context.item("agreements", index)
+    item: dict[str, Any] = context.item("agreements", index)
+    return item
 
 
 @action("agreement_get")
-def agreement_get(context, step):
+def agreement_get(context: Context, step: Step) -> None:
     """Load the agreement (GET agreements/{id}) of the framework, or the last agreement of the tender, into agreement."""
     data = context.load(step)
     agreement_id = data.get("data", {}).get("id")
@@ -67,14 +71,14 @@ def agreement_get(context, step):
 
 
 @action("tender_agreements_get")
-def tender_agreements_get(context, step):
+def tender_agreements_get(context: Context, step: Step) -> None:
     """Refresh the tender agreements in context (GET tenders/{id}/agreements)."""
     context.load(step)
     refresh_agreements(context)
 
 
 @action("tender_agreement_patch")
-def tender_agreement_patch(context, step):
+def tender_agreement_patch(context: Context, step: Step) -> None:
     """Patch a tender agreement (PATCH tenders/{id}/agreements/{id}); parts: [agreement index]."""
     logger.info("Patching agreement...\n")
     index = step.index(0)
@@ -90,7 +94,7 @@ def tender_agreement_patch(context, step):
 
 
 @action("tender_agreement_document_attach")
-def tender_agreement_document_attach(context, step):
+def tender_agreement_document_attach(context: Context, step: Step) -> None:
     """Attach a document to a tender agreement (POST tenders/{id}/agreements/{id}/documents); parts: [agreement index]."""
     logger.info("Uploading agreement document...\n")
     index = step.index(0)
@@ -104,7 +108,7 @@ def tender_agreement_document_attach(context, step):
 
 
 @action("tender_agreement_contract_patch")
-def tender_agreement_contract_patch(context, step):
+def tender_agreement_contract_patch(context: Context, step: Step) -> None:
     """Patch the agreement contract of a bid (PATCH tenders/{id}/agreements/{id}/contracts/{id}); parts: [agreement index, bid index]."""
     logger.info("Patching agreement contract...\n")
     agreement_index = step.index(0)

@@ -1,12 +1,15 @@
+import argparse
 import logging
 import threading
+
+import requests
 
 from procedure_tools.actions import ACTIONS
 from procedure_tools.client import CDBClient, DSClient
 from procedure_tools.context import Context
-from procedure_tools.steps import StepError, discover_steps
+from procedure_tools.steps import Step, StepError, discover_steps
 from procedure_tools.utils.file import get_data_path
-from procedure_tools.utils.handlers import EX_OK, error
+from procedure_tools.utils.handlers import EX_DATAERR, EX_OK, ProcedureExit, error
 from procedure_tools.utils.runtime import get_controller
 
 logger = logging.getLogger(__name__)
@@ -15,7 +18,7 @@ logger = logging.getLogger(__name__)
 _pause_lock = threading.Lock()
 
 
-def load_steps(data_path):
+def load_steps(data_path: str) -> list[Step] | None:
     try:
         return discover_steps(data_path, ACTIONS)
     except StepError as e:
@@ -23,7 +26,7 @@ def load_steps(data_path):
         return None
 
 
-def build_clients(args, session=None):
+def build_clients(args: argparse.Namespace, session: requests.Session | None = None) -> tuple[CDBClient, DSClient]:
     client = CDBClient(
         args.host,
         args.token,
@@ -45,14 +48,16 @@ def build_clients(args, session=None):
     return client, ds_client
 
 
-def process_tools(args, session=None):
+def process_tools(args: argparse.Namespace, session: requests.Session | None = None) -> Context:
     """
     Run the data folder: discover the steps from the file names and execute
     them one by one. There is no procedure specific logic here, the data files
     define the flow.
     """
     data_path = get_data_path(args.data)
-    steps = load_steps(data_path)
+    if data_path is None:
+        raise ProcedureExit(EX_DATAERR, f"Data path not found: {args.data}")
+    steps = load_steps(data_path) or []
     if not steps:
         error(f"No action files found in {data_path}")
     logger.info(f"Discovered {len(steps)} steps in {data_path}\n")
@@ -70,7 +75,7 @@ def process_tools(args, session=None):
     return context
 
 
-def run_step(context, step, position):
+def run_step(context: Context, step: Step, position: int) -> None:
     controller = get_controller()
     if controller:
         controller.check_pause()

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from procedure_tools.main import parse_args
@@ -11,7 +13,7 @@ REQUIRED = [
 ]
 
 
-def test_parse_args_positional_cli_still_works():
+def test_parse_args_positional_cli_still_works() -> None:
     args = parse_args(REQUIRED + ["--data", "aboveThreshold"], environ={}, search_dirs=["/nonexistent"])
     assert args.host == "https://api.example"
     assert args.token == "api-token"
@@ -22,7 +24,7 @@ def test_parse_args_positional_cli_still_works():
     assert args.env_file is None
 
 
-def test_parse_args_loads_env_file_and_cli_overrides(tmp_path):
+def test_parse_args_loads_env_file_and_cli_overrides(tmp_path: Path) -> None:
     env_file = tmp_path / ".env.sandbox"
     env_file.write_text(
         "API_HOST=https://from-env\n"
@@ -53,7 +55,7 @@ def test_parse_args_loads_env_file_and_cli_overrides(tmp_path):
     assert args.debug is True
 
 
-def test_parse_args_named_flags_override_positionals_and_env(tmp_path):
+def test_parse_args_named_flags_override_positionals_and_env(tmp_path: Path) -> None:
     (tmp_path / ".env").write_text(
         "API_HOST=https://from-env\n"
         "API_TOKEN=env-token\n"
@@ -71,12 +73,12 @@ def test_parse_args_named_flags_override_positionals_and_env(tmp_path):
     assert args.token == "env-token"
 
 
-def test_parse_args_requires_connection_settings(tmp_path):
+def test_parse_args_requires_connection_settings(tmp_path: Path) -> None:
     with pytest.raises(SystemExit):
         parse_args([], environ={}, search_dirs=[str(tmp_path)])
 
 
-def test_parse_args_cli_env_overrides_procedure_env(tmp_path):
+def test_parse_args_cli_env_overrides_procedure_env(tmp_path: Path) -> None:
     for name, host in (("dev", "https://dev.example"), ("sandbox", "https://sandbox.example")):
         (tmp_path / f".env.{name}").write_text(
             "\n".join(
@@ -100,6 +102,6 @@ def test_parse_args_cli_env_overrides_procedure_env(tmp_path):
     assert args.env_file.endswith(".env.sandbox")
 
 
-def test_parse_args_missing_env_file(tmp_path):
+def test_parse_args_missing_env_file(tmp_path: Path) -> None:
     with pytest.raises(SystemExit):
         parse_args(["--env", "missing"], environ={}, search_dirs=[str(tmp_path)])

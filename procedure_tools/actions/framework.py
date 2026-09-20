@@ -1,7 +1,10 @@
 import logging
+from typing import Any
 
 from procedure_tools.actions.common import attach_document, get_until, has_data
 from procedure_tools.actions.registry import action
+from procedure_tools.context import Context
+from procedure_tools.steps import Step
 from procedure_tools.utils.data import get_data, get_token
 from procedure_tools.utils.handlers import (
     error,
@@ -15,26 +18,31 @@ from procedure_tools.utils.handlers import (
 logger = logging.getLogger(__name__)
 
 
-def framework_id(context):
-    return context.require("framework", "run framework_create first")["id"]
+def framework_id(context: Context) -> str:
+    value: str = context.require("framework", "run framework_create first")["id"]
+    return value
 
 
-def framework_token(context):
-    return context.require("framework_token", "run framework_create first")
+def framework_token(context: Context) -> str:
+    value: str = context.require("framework_token", "run framework_create first")
+    return value
 
 
-def submission(context, index):
-    return context.item("submissions", index, hint=f"run framework_submission_create_{index} first")
+def submission(context: Context, index: int) -> dict[str, Any]:
+    item: dict[str, Any] = context.item("submissions", index, hint=f"run framework_submission_create_{index} first")
+    return item
 
 
-def framework_qualification(context, index):
+def framework_qualification(context: Context, index: int) -> dict[str, Any]:
     """Framework qualification created by the activation of submission ``index``."""
     qualifications = context.get("framework_qualifications") or []
     if index < len(qualifications) and qualifications[index]:
-        return qualifications[index]
+        existing: dict[str, Any] = qualifications[index]
+        return existing
     qualification_id = submission(context, index).get("qualificationID")
     if not qualification_id:
-        error(f"{context.step.filename}: submission {index} has no qualificationID yet, activate it first")
+        step_name = context.step.filename if context.step else "context"
+        error(f"{step_name}: submission {index} has no qualificationID yet, activate it first")
     response = get_until(
         context,
         f"qualifications/{qualification_id}",
@@ -42,11 +50,12 @@ def framework_qualification(context, index):
         info="Check qualification...",
         auth_token=context.args.token,
     )
-    return context.set_item("framework_qualifications", index, get_data(response))
+    item: dict[str, Any] = context.set_item("framework_qualifications", index, get_data(response))
+    return item
 
 
 @action("framework_create")
-def framework_create(context, step):
+def framework_create(context: Context, step: Step) -> None:
     """Create a framework (POST frameworks); sets framework, framework_token."""
     logger.info("Creating framework...\n")
     data = context.load(step)
@@ -61,7 +70,7 @@ def framework_create(context, step):
 
 
 @action("framework_patch")
-def framework_patch(context, step):
+def framework_patch(context: Context, step: Step) -> None:
     """Patch the framework (PATCH frameworks/{id}), for example to activate it."""
     logger.info("Patching framework...\n")
     data = context.load(step)
@@ -76,7 +85,7 @@ def framework_patch(context, step):
 
 
 @action("framework_get")
-def framework_get(context, step):
+def framework_get(context: Context, step: Step) -> None:
     """Refresh the framework in context (GET frameworks/{id})."""
     context.load(step)
     response = context.client.get(
@@ -87,7 +96,7 @@ def framework_get(context, step):
 
 
 @action("framework_submission_create")
-def framework_submission_create(context, step):
+def framework_submission_create(context: Context, step: Step) -> None:
     """Create a submission (POST submissions); parts: [submission index]; sets submissions[i], submissions_tokens[i]."""
     logger.info("Creating submission...\n")
     index = step.index(0)
@@ -103,7 +112,7 @@ def framework_submission_create(context, step):
 
 
 @action("framework_submission_patch")
-def framework_submission_patch(context, step):
+def framework_submission_patch(context: Context, step: Step) -> None:
     """Patch a submission (PATCH submissions/{id}); parts: [submission index]."""
     logger.info("Patching submission...\n")
     index = step.index(0)
@@ -119,7 +128,7 @@ def framework_submission_patch(context, step):
 
 
 @action("framework_qualification_document_attach")
-def framework_qualification_document_attach(context, step):
+def framework_qualification_document_attach(context: Context, step: Step) -> None:
     """Attach a document to a framework qualification (POST qualifications/{id}/documents); parts: [submission index]."""
     logger.info("Uploading qualification document...\n")
     index = step.index(0)
@@ -133,7 +142,7 @@ def framework_qualification_document_attach(context, step):
 
 
 @action("framework_qualification_patch")
-def framework_qualification_patch(context, step):
+def framework_qualification_patch(context: Context, step: Step) -> None:
     """Patch a framework qualification (PATCH qualifications/{id}); parts: [submission index]."""
     logger.info("Patching qualification...\n")
     index = step.index(0)
