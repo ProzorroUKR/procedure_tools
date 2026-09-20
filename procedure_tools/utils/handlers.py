@@ -24,8 +24,34 @@ class ProcedureExit(SystemExit):
         self.message = message
 
 
-def format_log_entry(label: str, value: str) -> str:
-    return f" - {label:<{PAD}} {fore_info(value)}\n"
+def format_log_entry(label: str, value: str, pad: int = PAD) -> str:
+    return f" - {label:<{pad}} {fore_info(value)}\n"
+
+
+def flatten_payload(payload: Any, prefix: str = "") -> list[tuple[str, Any]]:
+    """(path, value) pairs of every leaf of a JSON payload: errors[0].name, data.id, ..."""
+    if isinstance(payload, dict) and payload:
+        pairs: list[tuple[str, Any]] = []
+        for key, value in payload.items():
+            pairs.extend(flatten_payload(value, f"{prefix}.{key}" if prefix else str(key)))
+        return pairs
+    if isinstance(payload, list) and payload:
+        pairs = []
+        for index, value in enumerate(payload):
+            pairs.extend(flatten_payload(value, f"{prefix}[{index}]"))
+        return pairs
+    return [(prefix or "value", payload)]
+
+
+def format_log_all_fields(payload: Any) -> str:
+    """Every field of a payload, one line each, in the same layout as the success handlers."""
+    pairs = flatten_payload(payload)
+    pad = max([PAD, *(len(label) for label, _ in pairs)])
+    msg = ""
+    for label, value in pairs:
+        text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
+        msg += format_log_entry(label, text, pad)
+    return msg
 
 
 def parse_json_path(path: str) -> list[tuple[str, str | int | None]]:
@@ -195,6 +221,40 @@ def format_response_text(text: str) -> str:
         return text
 
 
+def parse_response_payload(response: requests.Response) -> Any:
+    """The JSON payload of a response, or None when the body is not JSON."""
+    try:
+        return response.json()
+    except ValueError:
+        return None
+
+
+def format_error_summary(payload: Any, text: str) -> str:
+    """One line for the raised error: ``body.tendererAction: Rogue field; ...`` or the compact response text."""
+    errors = payload.get("errors") if isinstance(payload, dict) else None
+    if isinstance(errors, list) and errors and all(isinstance(item, dict) for item in errors):
+        parts = []
+        for item in errors:
+            where = ".".join(str(item[key]) for key in ("location", "name") if item.get(key))
+            description = item.get("description", "")
+            if not isinstance(description, str):
+                description = json.dumps(description, ensure_ascii=False)
+            parts.append(f"{where}: {description}" if where else description)
+        return "; ".join(parts)
+    return format_response_text(text)
+
+
+def log_error_response(response: requests.Response, allow_error: bool) -> None:
+    """Log every field of an error response like the success handlers do, then raise (unless allowed)."""
+    payload = parse_response_payload(response)
+    if payload is None or payload == {}:
+        logger.info("Response text:\n")
+        error(format_response_text(response.text), allow_error=allow_error)
+        return
+    logger.info("Response error:\n" + format_log_all_fields(payload))
+    error(format_error_summary(payload, response.text), allow_error=allow_error)
+
+
 def error(text: str, allow_error: bool = False) -> None:
     msg = fore_error(text)
     msg += "\n"
@@ -204,15 +264,11 @@ def error(text: str, allow_error: bool = False) -> None:
 
 
 def default_error_handler(response: requests.Response) -> None:
-    msg = "Response text:\n"
-    logger.info(msg)
-    error(format_response_text(response.text))
+    log_error_response(response, allow_error=False)
 
 
 def allow_error_handler(response: requests.Response) -> None:
-    msg = "Response text:\n"
-    logger.info(msg)
-    error(format_response_text(response.text), allow_error=True)
+    log_error_response(response, allow_error=True)
 
 
 def default_success_handler(_response: requests.Response) -> None:
