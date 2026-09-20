@@ -1,13 +1,14 @@
-version: '3.8'
-
 services:
   robot:
     build:
       context: ..
       dockerfile: robot_tests/Dockerfile
     env_file:
-      - .dev.env
+      - .env
     volumes:
-      - ../procedure_tools:/opt/robotframework/procedure_tools
-      - ./tests:/opt/robotframework/tests
-      - ./reports:/opt/robotframework/reports
+      # The sources are mounted so that a run picks up edits without a rebuild.
+      - ../procedure_tools:/opt/procedure_tools/procedure_tools:ro
+      - ./libraries:/opt/robot/libraries:ro
+      - ./resources:/opt/robot/resources:ro
+      - ./tests:/opt/robot/tests:ro
+      - ./reports:/opt/robot/reports
