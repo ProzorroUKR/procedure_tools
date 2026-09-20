@@ -1,3 +1,4 @@
+# pylint: disable=unbalanced-tuple-unpacking
 import json
 import os
 from types import SimpleNamespace

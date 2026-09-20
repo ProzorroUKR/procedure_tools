@@ -4,6 +4,9 @@ folder is executed, so the action code paths, the templates and the context
 hand-over between steps are exercised without a CDB instance.
 """
 
+# fakes mirror the real client and action signatures
+# pylint: disable=redefined-outer-name,unused-argument
+
 import copy
 import json
 import re

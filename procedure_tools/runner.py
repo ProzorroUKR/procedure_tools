@@ -20,6 +20,7 @@ def load_steps(data_path):
         return discover_steps(data_path, ACTIONS)
     except StepError as e:
         error(str(e))
+        return None
 
 
 def build_clients(args, session=None):

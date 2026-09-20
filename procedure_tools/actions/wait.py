@@ -19,7 +19,9 @@ from procedure_tools.actions.common import (
     refresh_tender,
     skip,
     sleep,
-    tender_id,
+)
+from procedure_tools.actions.common import (
+    tender_id as get_tender_id,
 )
 from procedure_tools.actions.registry import action
 from procedure_tools.utils.data import (
@@ -60,7 +62,7 @@ def wait_until_date(date_str, client_timedelta=timedelta(), date_info_str=None):
     sleep(date_seconds)
 
 
-def wait_tender_status(client, args, context, tender_id, delay, status, fail_status=None):
+def wait_tender_status(client, args, context, tender_id, delay, status, fail_status=None):  # pylint: disable=unused-argument
     logger.info(f"Waiting for {status}...\n")
     status = [status] if not isinstance(status, list) else status
     fail_status = [fail_status] if fail_status and not isinstance(fail_status, list) else fail_status
@@ -124,7 +126,7 @@ def wait_edr_documents(context, path, items):
     for item in items:
         while EDR_FILENAME not in [doc["title"] for doc in item.get("documents", [])]:
             sleep(SECONDS_BUFFER)
-            item = context.client.get(f"tenders/{tender_id(context)}/{path}/{item['id']}").json()["data"]
+            item = context.client.get(f"tenders/{get_tender_id(context)}/{path}/{item['id']}").json()["data"]
 
 
 # --- actions
@@ -141,7 +143,7 @@ def tender_wait_status(context, step):
         context.client,
         context.args,
         context,
-        tender_id(context),
+        get_tender_id(context),
         delay=data.get("delay", 1),
         status=status,
         fail_status=data.get("fail_status"),
@@ -193,7 +195,7 @@ def tender_awards_wait_complaint_period(context, step):
     """Wait for the end of the complaint period of all awards."""
     context.load(step)
     refresh_awards(context)
-    response = context.client.get(f"tenders/{tender_id(context)}/awards")
+    response = context.client.get(f"tenders/{get_tender_id(context)}/awards")
     end_dates = get_complaint_period_end_dates(response)
     if not end_dates:
         logger.info("No award complaint periods, nothing to wait for\n")
@@ -223,7 +225,7 @@ def tender_wait_auction(context, step):
         skip("Skipping auction: no bids with tokens in context")
         return
     bids_jsons = [{"data": bid, "access": {"token": token}} for bid, token in zip(bids, tokens) if bid and token]
-    wait_auction_participation_urls(context.client, context.args, tender_id(context), bids_jsons)
+    wait_auction_participation_urls(context.client, context.args, get_tender_id(context), bids_jsons)
     ensure_awards(context)
 
 

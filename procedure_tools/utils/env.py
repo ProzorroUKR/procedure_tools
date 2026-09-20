@@ -219,8 +219,8 @@ def _parse_int(dest, value):
         return 0
     try:
         return int(stripped)
-    except (TypeError, ValueError):
-        raise EnvValueError(f"invalid integer value for {dest}: {value!r}")
+    except (TypeError, ValueError) as exc:
+        raise EnvValueError(f"invalid integer value for {dest}: {value!r}") from exc
 
 
 def _parse_list(value):

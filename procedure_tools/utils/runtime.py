@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 STDIN_ERRORS = (ValueError, OSError, termios.error) if termios else (ValueError, OSError)
 
-_controller = None
+_controller = None  # pylint: disable=invalid-name
 _PAUSE_HINT = "Press P to pause and show summary, S to show summary"
 _thread_data_dir = threading.local()
 _QUIET_SETTLE_SECONDS = 0.05
@@ -38,7 +38,7 @@ def get_controller():
 
 
 def set_controller(controller):
-    global _controller
+    global _controller  # pylint: disable=global-statement
     _controller = controller
 
 
@@ -237,7 +237,7 @@ class RunController:
             if not self._resume.is_set():
                 time.sleep(0.1)
                 continue
-            if not self._stdin_lock.acquire(blocking=False):
+            if not self._stdin_lock.acquire(blocking=False):  # pylint: disable=consider-using-with
                 time.sleep(0.1)
                 continue
             try:

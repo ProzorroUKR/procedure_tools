@@ -102,7 +102,7 @@ class CDBClient(BaseApiClient):
 
     SPORE_PATH = "spore"
 
-    def __init__(
+    def __init__(  # pylint: disable=unused-argument
         self,
         host,
         auth_token=None,

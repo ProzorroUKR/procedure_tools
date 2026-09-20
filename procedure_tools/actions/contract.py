@@ -70,6 +70,7 @@ def supplier_token(context, index, role):
                 if bid["id"] == award.get("bid_id"):
                     return context.item("bids_tokens", bid_index, hint=f"bid {bid_index} was not created in this run")
     error(f"{context.step.filename}: no bid token found for the supplier of contract {index}")
+    return None
 
 
 @action("tender_contracts_get")

@@ -69,6 +69,7 @@ class Context(dict):
             return json.loads(rendered)
         except json.JSONDecodeError as e:
             error(f"{step.filename}: invalid JSON after rendering: {e}")
+            return None
 
     def resource(self, title):
         """Path of a resource file (document to upload) referenced by an action file."""

@@ -170,7 +170,7 @@ def allow_null_success_handler(handler):
     def wrapper(response):
         if response.text == "null":
             return default_success_handler(response)
-        handler(response)
+        return handler(response)
 
     return wrapper
 
@@ -204,7 +204,7 @@ def allow_error_handler(response):
     error(format_response_text(response.text), allow_error=True)
 
 
-def default_success_handler(response):
+def default_success_handler(_response):
     pass
 
 

@@ -4,7 +4,8 @@ import os
 import sys
 from urllib.parse import urlsplit
 
-from requests import ConnectionError, adapters
+from requests import adapters
+from requests.exceptions import ConnectionError as RequestsConnectionError
 from urllib3 import Retry
 
 from procedure_tools.utils.style import (
@@ -63,12 +64,10 @@ class RetryingHTTPAdapter(adapters.HTTPAdapter):
             try:
                 kwargs["timeout"] = self.timeout
                 return super().send(request, *args, **kwargs)
-            except ConnectionError as err:
+            except RequestsConnectionError as err:
                 last_exc = err
                 logger.info("Connection error: %s", err)
-                continue
-        if last_exc:
-            raise last_exc
+        raise last_exc
 
 
 class LoggingHTTPAdapter(adapters.HTTPAdapter):
@@ -123,7 +122,7 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
             return text
         try:
             return highlight(text, JsonLexer(), TerminalFormatter()).rstrip("\n")
-        except Exception:  # noqa: BLE001 - colorizing is best effort
+        except Exception:  # noqa: BLE001  # pylint: disable=broad-exception-caught
             return text
 
     def format_data(self, data):
@@ -297,6 +296,6 @@ def configure_debug_logging(session, enabled=False, json_level=None, exclude_pat
 def configure_urllib3_logging(debug):
     level = logging.DEBUG if debug else logging.WARNING
     logging.getLogger("urllib3").setLevel(level)
-    for name in logging.root.manager.loggerDict:
+    for name in logging.root.manager.loggerDict:  # pylint: disable=no-member
         if name == "urllib3" or (isinstance(name, str) and name.startswith("urllib3.")):
             logging.getLogger(name).setLevel(level)

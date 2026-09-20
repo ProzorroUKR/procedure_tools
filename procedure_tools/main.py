@@ -83,9 +83,9 @@ OUTPUT_FILTER = OutputFilter()
 OUTPUT_FORMATTER = OutputFormatter(LOG_FORMAT_DEFAULT, datefmt=LOG_DATEFMT)
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-for handler in logging.root.handlers:
-    handler.addFilter(OUTPUT_FILTER)
-    handler.setFormatter(OUTPUT_FORMATTER)
+for root_handler in logging.root.handlers:
+    root_handler.addFilter(OUTPUT_FILTER)
+    root_handler.setFormatter(OUTPUT_FORMATTER)
 
 
 def apply_debug_log_format(debug: bool):
@@ -157,7 +157,7 @@ def run_data_dir(args, session=None, controller=None):
             result = code, None
         else:
             result = code, run_result_error(e)
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         logger.exception("Failed")
         result = 1, run_result_error(e)
     finally:
@@ -175,7 +175,7 @@ def run_data_dir_parallel(args, data_dir, controller=None):
     try:
         set_faker_seed(folder_args)
         return run_data_dir(folder_args, controller=controller)
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         logger.exception("Failed")
         result = 1, run_result_error(e)
         if controller:
@@ -215,7 +215,7 @@ def run(args, session=None):
                         codes[data_dir] = future.result()
                     except KeyboardInterrupt:
                         raise
-                    except BaseException as e:  # noqa: BLE001 - worker failure becomes a run result
+                    except BaseException as e:  # noqa: BLE001  # pylint: disable=broad-exception-caught
                         result = (1, run_result_error(e))
                         codes[data_dir] = result
                         controller.mark_finished(data_dir, *result)
@@ -228,7 +228,7 @@ def run(args, session=None):
                     if future.done() and not future.cancelled():
                         try:
                             codes[data_dir] = future.result()
-                        except BaseException as e:  # noqa: BLE001 - worker failure becomes a run result
+                        except BaseException as e:  # noqa: BLE001  # pylint: disable=broad-exception-caught
                             result = (1, run_result_error(e))
                             codes[data_dir] = result
                             controller.mark_finished(data_dir, *result)
