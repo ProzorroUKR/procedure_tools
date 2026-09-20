@@ -848,8 +848,12 @@ Actions:
  - tender_agreement_document_attach         Attach a document to a tender agreement (POST tenders/{id}/agreements/{id}/documents); parts: [agreement index].
  - tender_agreement_patch                   Patch a tender agreement (PATCH tenders/{id}/agreements/{id}); parts: [agreement index].
  - tender_agreements_get                    Refresh the tender agreements in context (GET tenders/{id}/agreements).
+ - tender_award_claim_create                Create an award claim (POST tenders/{id}/awards/{id}/complaints with type claim); parts: [award index, claim index].
+ - tender_award_claim_patch                 Patch an award claim as a role; parts: [award index, claim index, tenderer|complainer].
+ - tender_award_claims_get                  List the claims of an award (GET tenders/{id}/awards/{id}/complaints, type claim); parts: [award index].
  - tender_award_complaint_create            Create an award complaint (POST tenders/{id}/awards/{id}/complaints); parts: [award index, complaint index].
  - tender_award_complaint_patch             Patch an award complaint as a role; parts: [award index, complaint index, bot|reviewer|tenderer|complainer].
+ - tender_award_complaints_get              List the complaints of an award (GET tenders/{id}/awards/{id}/complaints); parts: [award index].
  - tender_award_create                      Create an award (POST tenders/{id}/awards) in limited procedures; parts are a free label.
  - tender_award_document_attach             Attach a document to an award (POST tenders/{id}/awards/{id}/documents); parts: [award index, free label].
  - tender_award_patch                       Patch an award (PATCH tenders/{id}/awards/{id}); parts: [award index]; refreshes awards.
@@ -861,8 +865,12 @@ Actions:
  - tender_bid_patch                         Patch a bid (PATCH tenders/{id}/bids/{id}); parts: [bid index].
  - tender_bid_res_post                      Post bid requirement responses (POST tenders/{id}/bids/{id}/requirement_responses); parts: [bid index].
  - tender_bids_get                          Load the tender bids into context (GET tenders/{id}/bids) when they were not created in this run.
+ - tender_claim_create                      Create a tender claim (POST tenders/{id}/complaints with type claim); parts: [claim index].
+ - tender_claim_patch                       Patch a tender claim as a role; parts: [claim index, tenderer|complainer].
+ - tender_claims_get                        List the tender claims (GET tenders/{id}/complaints, type claim) and refresh them in context.
  - tender_complaint_create                  Create a tender complaint (POST tenders/{id}/complaints); parts: [complaint index].
  - tender_complaint_patch                   Patch a tender complaint as a role; parts: [complaint index, bot|reviewer|tenderer|complainer].
+ - tender_complaints_get                    List the tender complaints (GET tenders/{id}/complaints) and refresh them in context.
  - tender_contracts_get                     Load the tender contracts into contracts (GET tenders/{id}/contracts, then GET contracts/{id} for each).
  - tender_create                            Create a tender (POST tenders, or POST plans/{id}/tenders when a plan is in context); sets tender, tender_token, tender_config.
  - tender_credentials_patch                 Take over the second stage tender (PATCH tenders/{stage2TenderID}/credentials); the previous tender moves to stage1_tender.
@@ -872,8 +880,12 @@ Actions:
  - tender_get                               Refresh the tender in context (GET tenders/{id}).
  - tender_patch                             Patch the tender (PATCH tenders/{id}), for example to switch its status.
  - tender_plan_post                         Connect a plan to the tender (POST tenders/{id}/plans); the data file holds the plan id, e.g. {{ plans[1].id }}.
+ - tender_qualification_claim_create        Create a qualification claim (POST tenders/{id}/qualifications/{id}/complaints with type claim); parts: [qualification index, claim index].
+ - tender_qualification_claim_patch         Patch a qualification claim as a role; parts: [qualification index, claim index, tenderer|complainer].
+ - tender_qualification_claims_get          List the claims of a qualification (GET tenders/{id}/qualifications/{id}/complaints, type claim); parts: [qualification index].
  - tender_qualification_complaint_create    Create a qualification complaint (POST tenders/{id}/qualifications/{id}/complaints); parts: [qualification index, complaint index].
  - tender_qualification_complaint_patch     Patch a qualification complaint as a role; parts: [qualification index, complaint index, bot|reviewer|tenderer|complainer].
+ - tender_qualification_complaints_get      List the complaints of a qualification (GET tenders/{id}/qualifications/{id}/complaints); parts: [qualification index].
  - tender_qualification_document_attach     Attach a document to a tender qualification (POST tenders/{id}/qualifications/{id}/documents); parts: [qualification index].
  - tender_qualification_patch               Patch a tender qualification (PATCH tenders/{id}/qualifications/{id}); parts: [qualification index].
  - tender_qualifications_get                Refresh the tender qualifications in context (GET tenders/{id}/qualifications).

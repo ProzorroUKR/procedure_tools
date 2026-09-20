@@ -108,6 +108,7 @@ class FakeCDBClient:
         self.tender: dict[str, Any] | None = None
         self.bids: list[str] = []
         self.awards: list[dict[str, Any]] = []
+        self.complaints: dict[str, list[dict[str, Any]]] = {}
         self.contracts: dict[str, dict[str, Any]] = {}
         self.changes: dict[str, list[dict[str, Any]]] = {}
         self.contracts_count = 12
@@ -277,13 +278,18 @@ class FakeCDBClient:
             return {"data": [{"id": f"qualification{i}", "status": "pending"} for i in range(8)]}
         if re.fullmatch(r"tenders/[^/]+/qualifications/[^/]+", path):
             return self.obj("qualification", body, path=path)
-        if re.fullmatch(r"tenders/[^/]+/(awards|qualifications)/[^/]+/complaints", path):
-            return self.obj("complaint", body)
-        if re.fullmatch(r"tenders/[^/]+/(awards|qualifications)/[^/]+/complaints/[^/]+", path):
-            return self.obj("complaint", body, path=path)
-        if re.fullmatch(r"tenders/[^/]+/complaints", path):
-            return self.obj("complaint", body)
-        if re.fullmatch(r"tenders/[^/]+/complaints/[^/]+", path):
+        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications)/[^/]+/)?complaints", path):
+            if method == "GET":
+                return {"data": self.complaints.get(path, [])}
+            payload = self.obj("complaint", body)
+            self.complaints.setdefault(path, []).append(payload["data"])
+            return payload
+        if re.fullmatch(r"tenders/[^/]+/((awards|qualifications)/[^/]+/)?complaints/[^/]+", path):
+            collection, _, complaint_id = path.rpartition("/")
+            for complaint in self.complaints.get(collection, []):
+                if complaint["id"] == complaint_id:
+                    complaint.update(body.get("data", {}))
+                    return {"data": complaint}
             return self.obj("complaint", body, path=path)
         if path == "contracts":
             self.contracts_count += 1
@@ -390,10 +396,20 @@ def test_above_threshold_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClien
         "tender_document_notice.p7s",
     ]
     assert len(context["bids"]) == 2 and len(context["bids_tokens"]) == 2
-    # tender and award complaints were created and patched by roles
+    # tender and award complaints were created and patched by roles; claims were added on awards 0, 1 and 2
     assert len(context["tender_complaints"]) == 6
     assert len(context["award_complaints"][0]) == 6
-    assert sum(1 for m, p in calls if m == "PATCH" and "/complaints/" in p) == 26
+    assert sum(1 for m, p in calls if m == "PATCH" and "/complaints/" in p) == 33
+    assert [len(context["award_claims"][index]) for index in (0, 1, 2)] == [2, 1, 1]
+    award0_claims = context["award_claims"][0]
+    assert [claim["type"] for claim in award0_claims] == ["claim", "claim"]
+    assert [claim["status"] for claim in award0_claims] == ["resolved", "cancelled"]
+    assert context["award_claims"][1][0]["status"] == "answered"
+    assert context["award_claims"][2][0]["status"] == "answered"
+    assert context["award_claims"][2][0]["satisfied"] is False
+    # the claims of the cancelled award 1 and the unsuccessful award 2 are listed after their last patch
+    for award_id in ("award1", "award2"):
+        assert ("GET", f"tenders/{context['tender']['id']}/awards/{award_id}/complaints") in calls
     # award complaints follow the last step of award 0 and precede the award 1 steps
     award_paths = [p for m, p in calls if m == "PATCH" and re.fullmatch(r"tenders/[^/]+/awards/award[01]$", p)]
     complaint_index = next(i for i, (m, p) in enumerate(calls) if "/awards/award0/complaints" in p)
@@ -410,6 +426,87 @@ def test_above_threshold_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClien
         "contracts/contract0/changes/change" + str(context["contracts"][0]["changes"][0]["id"][6:]),
     ) in calls
     assert context["contracts"][0]["status"] == "terminated"
+
+
+def test_below_threshold_offline_claims(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args("belowThreshold", bot_token=None, reviewer_token=None))
+    calls = client.calls
+    # claims need no bot or reviewer token: two on award 0, two on award 1, one on award 2
+    assert "award_complaints" not in context
+    assert [len(context["award_claims"][index]) for index in (0, 1, 2)] == [2, 2, 1]
+    assert all(claim["type"] == "claim" for claims in context["award_claims"].values() for claim in claims)
+    assert context["award_claims"][0][0]["status"] == "resolved"
+    assert context["award_claims"][0][1]["status"] == "cancelled"
+    assert context["award_claims"][2][0]["satisfied"] is False
+    # the claims of award 1 are listed again after the award is cancelled
+    cancel_index = next(i for i, (m, p) in enumerate(calls) if m == "PATCH" and p.endswith("/awards/award1"))
+    get_index = next(i for i, (m, p) in enumerate(calls) if m == "GET" and p.endswith("/awards/award1/complaints"))
+    assert cancel_index < get_index
+
+
+def test_above_threshold_eu_offline_claims(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args("aboveThresholdEU", bot_token=None, reviewer_token=None))
+    calls = client.calls
+    # qualification claims: one on an active qualification, one on the unsuccessful one
+    assert context["qualification_claims"][1][0]["status"] == "resolved"
+    assert context["qualification_claims"][5][0]["satisfied"] is False
+    # award claims: two on award 3, one each on award 1 (cancelled later) and award 2 (unsuccessful)
+    assert [len(context["award_claims"][index]) for index in (1, 2, 3)] == [1, 1, 2]
+    assert context["award_claims"][3][0]["status"] == "resolved"
+    assert context["award_claims"][3][1]["status"] == "cancelled"
+    assert context["award_claims"][1][0]["status"] == "answered"
+    cancel_index = next(i for i, (m, p) in enumerate(calls) if m == "PATCH" and p.endswith("/awards/award1"))
+    get_index = next(i for i, (m, p) in enumerate(calls) if m == "GET" and p.endswith("/awards/award1/complaints"))
+    assert cancel_index < get_index
+
+
+def test_close_framework_agreement_offline_claims(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
+    client, _ = fake_api
+    process_tools(make_args("closeFrameworkAgreementUA", bot_token=None, reviewer_token=None))
+    # the context is cleared before the selection stage, so check what the fake API stored
+    stored = {path.split("/", 2)[-1]: claims for path, claims in client.complaints.items()}
+    # qualification claims on qualification 1 in the pre-qualification stand-still
+    qualification_claims = stored["qualifications/qualification1/complaints"]
+    assert [claim["status"] for claim in qualification_claims] == ["resolved", "answered"]
+    assert qualification_claims[1]["satisfied"] is False
+    # award claims on awards 1 and 2 in the awarding stand-still
+    assert [claim["status"] for claim in stored["awards/award1/complaints"]] == ["resolved", "cancelled"]
+    assert [claim["status"] for claim in stored["awards/award2/complaints"]] == ["answered"]
+    claim_collections = (
+        "qualifications/qualification1/complaints",
+        "awards/award1/complaints",
+        "awards/award2/complaints",
+    )
+    assert all(claim["type"] == "claim" for key in claim_collections for claim in stored[key])
+    assert any(m == "GET" and p.endswith("qualifications/qualification1/complaints") for m, p in client.calls)
+    assert any(m == "GET" and p.endswith("awards/award2/complaints") for m, p in client.calls)
+
+
+@pytest.mark.parametrize("data_dir", ["competitiveDialogueEU", "competitiveDialogueUA"])
+def test_competitive_dialogue_offline_claims(fake_api: tuple[FakeCDBClient, FakeDSClient], data_dir: str) -> None:
+    client, _ = fake_api
+    context = process_tools(make_args(data_dir, bot_token=None, reviewer_token=None))
+    calls = client.calls
+    # stage 2 award claims: award 1 (cancelled later), award 2 (unsuccessful), award 3 (active)
+    assert [len(context["award_claims"][index]) for index in (1, 2, 3)] == [1, 1, 2]
+    assert context["award_claims"][1][0]["status"] == "answered"
+    assert context["award_claims"][2][0]["satisfied"] is False
+    assert [claim["status"] for claim in context["award_claims"][3]] == ["resolved", "cancelled"]
+    cancel_index = next(i for i, (m, p) in enumerate(calls) if m == "PATCH" and p.endswith("/awards/award1"))
+    get_index = next(i for i, (m, p) in enumerate(calls) if m == "GET" and p.endswith("/awards/award1/complaints"))
+    assert cancel_index < get_index
+    # qualification claims: stage 1 in both procedures, stage 2 only in EU (the context is reset between stages)
+    qualification_claims = {
+        path: [claim for claim in complaints if claim.get("type") == "claim"]
+        for path, complaints in client.complaints.items()
+        if "/qualifications/" in path
+    }
+    qualification_claims = {path: claims for path, claims in qualification_claims.items() if claims}
+    assert len(qualification_claims) == (3 if data_dir == "competitiveDialogueEU" else 2)
+    statuses = [claim["status"] for claims in qualification_claims.values() for claim in claims]
+    assert "resolved" in statuses and "answered" in statuses
 
 
 def test_reporting_offline_flow(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
@@ -450,6 +547,18 @@ def test_stop_after_step(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
 def test_complaints_skipped_without_role_tokens(fake_api: tuple[FakeCDBClient, FakeDSClient]) -> None:
     client, _ = fake_api
     context = process_tools(make_args("aboveThreshold", bot_token=None, reviewer_token=None))
-    assert not any("/complaints" in p for _, p in client.calls)
-    assert "tender_complaints" not in context
+    # complaints whose patch steps need the bot or reviewer are skipped, one by one
+    tender_complaints = context["tender_complaints"]
+    assert [complaint is None for complaint in tender_complaints] == [True, True, True, True, False, False]
+    assert all(complaint["type"] == "complaint" for complaint in tender_complaints if complaint is not None)
+    tender_complaint_patches = [
+        p for m, p in client.calls if m == "PATCH" and re.fullmatch(r"tenders/[^/]+/complaints/[^/]+", p)
+    ]
+    assert len(tender_complaint_patches) == 1  # complaint 4 set to mistaken by the complainer
+    # claims only involve the tenderer and the complainer, so they run
+    award_complaints = context["award_complaints"][0]
+    assert [complaint is None for complaint in award_complaints] == [True] * 4 + [False] * 2
+    award_claims = context["award_claims"][0]
+    assert [claim["type"] for claim in award_claims] == ["claim", "claim"]
+    assert [claim["status"] for claim in award_claims] == ["resolved", "cancelled"]
     assert context["tender"]["status"] == "complete"

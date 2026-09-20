@@ -572,6 +572,26 @@ def tender_post_complaint_success_handler(response: requests.Response) -> None:
     logger.info(msg)
 
 
+def complaints_get_success_handler(kind_type: str, complaints: list[dict[str, Any]]) -> None:
+    """Log the listed complaints or claims of an object."""
+    if not complaints:
+        logger.info(f"No {kind_type}s found\n")
+        return
+    for complaint in complaints:
+        msg = f"{kind_type.capitalize()} found:\n"
+        msg += format_log_fields(
+            {"data": complaint},
+            [
+                "data.id",
+                "data.status",
+                "data.resolutionType",
+                "data.satisfied",
+                "data.cancellationReason",
+            ],
+        )
+        logger.info(msg)
+
+
 def document_attach_success_handler(response: requests.Response) -> None:
     msg = "Document attached:\n"
     msg += format_log_fields(
