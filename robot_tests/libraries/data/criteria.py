@@ -22,6 +22,11 @@ from data.utils import apply_overrides, new_id
 # Criteria the procuring entity answers, never the bidder.
 PROCURING_ENTITY_SOURCE = "procuringEntity"
 
+# Criteria the bidder answers while the tender is open. The rest are answered
+# by the winner later on, and the API only accepts evidences for them once the
+# tender has reached qualification, so a bid sends none for those.
+TENDERER_SOURCE = "tenderer"
+
 # Criteria bound to a lot: one copy of each is needed per lot of the tender.
 LOT_RELATED = tuple(key for key, template in TEMPLATES.items() if template.get("relatesTo") == "lot")
 
@@ -156,22 +161,25 @@ def requirement_responses_data(
     first requirement group of each criterion is answered - that is what
     picking one group means - and criteria the procuring entity answers are
     left out. Pass ``document_title`` to also send evidences pointing at a
-    document of the bid.
+    document of the bid; they go only to the criteria the bidder answers now,
+    since the API rejects evidences for the ones the winner answers later.
     """
     if isinstance(criteria, dict):
         criteria = criteria.get("data", [])
     responses: list[dict[str, Any]] = []
     for item in criteria:
-        if item.get("source") == PROCURING_ENTITY_SOURCE:
+        source = item.get("source")
+        if source == PROCURING_ENTITY_SOURCE:
             continue
         groups = item.get("requirementGroups") or []
         if not groups:
             continue
+        with_evidences = bool(document_title) and source == TENDERER_SOURCE
         for requirement in groups[0].get("requirements") or []:
             response: dict[str, Any] = {"requirement": {"id": requirement["id"]}}
             response.update(requirement_value(requirement))
-            if document_title:
-                evidences = requirement_evidences(requirement, document_title)
+            if with_evidences:
+                evidences = requirement_evidences(requirement, document_title or "")
                 if evidences:
                     response["evidences"] = evidences
             responses.append(response)

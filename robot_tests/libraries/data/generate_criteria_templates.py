@@ -19,8 +19,12 @@ from typing import Any
 SOURCE = Path("procedure_tools/data/aboveThreshold/2014_tender_criteria_post.json")
 TARGET = Path("robot_tests/libraries/data/criteria_templates.py")
 
-# Assigned per build, never carried over from the catalogue.
-DROPPED_KEYS = ("id", "relatedItem")
+# Assigned per build, never carried over from the catalogue. Only the ids the
+# client generates are dropped: the ones on the requirements, and the lot a
+# criterion is bound to. The ids that are part of the content - the law a
+# legislation entry points at, the classification - are kept.
+DROPPED_CRITERION_KEYS = ("id", "relatedItem")
+DROPPED_REQUIREMENT_KEYS = ("id",)
 
 HEADER = '''"""
 Criterion templates, keyed by classification id.
@@ -39,12 +43,20 @@ from typing import Any
 TEMPLATES: dict[str, dict[str, Any]] = '''
 
 
-def strip(node: Any) -> Any:
-    if isinstance(node, dict):
-        return {key: strip(value) for key, value in node.items() if key not in DROPPED_KEYS}
-    if isinstance(node, list):
-        return [strip(item) for item in node]
-    return node
+def strip(criterion: dict[str, Any]) -> dict[str, Any]:
+    """The criterion without the ids that are generated when it is built."""
+    data = {key: value for key, value in criterion.items() if key not in DROPPED_CRITERION_KEYS}
+    data["requirementGroups"] = [
+        {
+            **group,
+            "requirements": [
+                {key: value for key, value in requirement.items() if key not in DROPPED_REQUIREMENT_KEYS}
+                for requirement in group.get("requirements", [])
+            ],
+        }
+        for group in criterion.get("requirementGroups", [])
+    ]
+    return data
 
 
 def build_templates(criteria: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:

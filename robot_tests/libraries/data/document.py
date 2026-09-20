@@ -54,3 +54,13 @@ def signature_document_data(title: str = "sign.p7s", **kwargs: Any) -> dict[str,
 def contract_proforma_document_data(title: str = "contract_proforma.txt", **kwargs: Any) -> dict[str, Any]:
     """The draft contract published with the tender."""
     return document_data(title=title, document_type="contractProforma", **kwargs)
+
+
+def proposal_document_data(title: str = "bid_proposal.p7s", **kwargs: Any) -> dict[str, Any]:
+    """
+    The signed proposal a bid has to carry before it can be submitted.
+
+    The API asks for a pkcs7 signature here and reads the format off the file
+    name, so the title has to keep its ``.p7s`` ending.
+    """
+    return document_data(title=title, document_type="proposal", content=SIGNATURE_CONTENT, **kwargs)

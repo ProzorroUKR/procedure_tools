@@ -122,7 +122,9 @@ ${responses}=    Requirement Responses Data    ${criteria}    document_title=bid
 An answer satisfies its requirement by construction: a boolean answers what is
 expected, a choice answers with an allowed value, a number answers with the
 highest value it may take. Only the first requirement group of each criterion
-is answered, and criteria the procuring entity answers are skipped.
+is answered, and criteria the procuring entity answers are skipped. Evidences
+go only to the criteria the bidder answers during tendering (``source:
+tenderer``); the API rejects them for the ones the winner answers later.
 
 The criterion shapes live in `libraries/data/criteria_templates.py`, lifted
 from the CDB criteria catalogue. Regenerate them from the repository root after

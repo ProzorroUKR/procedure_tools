@@ -42,33 +42,50 @@ def budget_data(
     )
 
 
+def plan_organization_data(identifier_id: str = "21725150", **kwargs: Any) -> dict[str, Any]:
+    """A buyer or procuring entity of a plan; unlike a tender, a plan takes no contact point."""
+    organization = organization_data(identifier_id=identifier_id, address=address_data())
+    organization.pop("contactPoint", None)
+    return build(organization, **kwargs)
+
+
+def plan_item_data(quantity: float = 1000, **kwargs: Any) -> dict[str, Any]:
+    """An item of a plan: no delivery address, no lot and no English description."""
+    item = item_data(quantity=quantity)
+    for field in ("deliveryAddress", "additionalClassifications", "description_en"):
+        item.pop(field, None)
+    item["deliveryDate"] = {"endDate": "2019-10-16T01:00:00+03:00"}
+    return build(item, **kwargs)
+
+
 def plan_data(
     procurement_method_type: str = "aboveThreshold",
     procurement_method: str = "open",
     budget: dict[str, Any] | None = None,
     buyers: list[dict[str, Any]] | None = None,
     items: list[dict[str, Any]] | None = None,
+    procuring_entity: dict[str, Any] | None = None,
+    acceleration: float | None = None,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    """A draft plan for ``procurement_method_type``."""
-    item = item_data(quantity=1000)
-    # a plan item carries no delivery address and no lot
-    item.pop("deliveryAddress", None)
-    item.pop("additionalClassifications", None)
-    item.pop("description_en", None)
-    item["deliveryDate"] = {"endDate": "2019-10-16T01:00:00+03:00"}
+    """
+    A draft plan for ``procurement_method_type``.
+
+    ``acceleration`` only shortens the dates of the plan, it is not a field of
+    its own; the API rejects anything it does not know.
+    """
     data: dict[str, Any] = {
         "budget": budget or budget_data(),
-        "buyers": buyers or [organization_data(identifier_id="111983", address=address_data())],
+        "buyers": buyers or [plan_organization_data(identifier_id="111983")],
         "classification": classification_data(),
-        "items": items if items is not None else [item],
+        "items": items if items is not None else [plan_item_data()],
         "mode": "test",
-        "procuringEntity": organization_data(),
+        "procuringEntity": procuring_entity or plan_organization_data(),
         "status": "draft",
         "tender": {
             "procurementMethod": procurement_method,
             "procurementMethodType": procurement_method_type,
-            "tenderPeriod": {"startDate": from_now_iso()},
+            "tenderPeriod": {"startDate": from_now_iso(acceleration=acceleration)},
         },
     }
     return {"data": build(data, **kwargs)}

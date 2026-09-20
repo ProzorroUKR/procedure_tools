@@ -33,6 +33,7 @@ from procedure_tools.context import Context
 from procedure_tools.main import parse_args, set_faker_seed
 from procedure_tools.runner import build_context, run_action
 from procedure_tools.utils import adapters
+from procedure_tools.utils.handlers import ProcedureExit
 
 # Key the data builders put the file content of a document under.
 CONTENTS_KEY = "contents"
@@ -137,7 +138,13 @@ class ProcedureTools:
         if action not in ACTIONS:
             raise ValueError(f"unknown action {action!r}. Available actions:\n{format_actions()}")
         payload = self._register_files(data)
-        run_action(self.context, action, [str(part) for part in parts], payload)
+        try:
+            run_action(self.context, action, [str(part) for part in parts], payload)
+        except ProcedureExit as e:
+            # The actions end the process on a rejected request, which is right
+            # for the command line but would abort the whole Robot run. Here it
+            # is one failing step, so report it as a failing keyword.
+            raise AssertionError(f"{action}: {e.message or e}") from None
 
     @keyword("Get Context Value")
     def get_context_value(self, key: str, default: Any = None) -> Any:

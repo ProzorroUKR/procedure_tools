@@ -104,8 +104,8 @@ class ProcedureData:
 
     @keyword("Signer Info Data")
     def signer_info_data(self, **overrides: Any) -> dict[str, Any]:
-        """Signer info of a contract party."""
-        return common.signer_info_data(**overrides)
+        """The signatory of a contract party, as the signer info request sends it."""
+        return contract.contract_signer_info_data(**overrides)
 
     # --- documents
 
@@ -130,17 +130,31 @@ class ProcedureData:
         """The draft contract published with the tender."""
         return document.contract_proforma_document_data(title=title, **overrides)
 
+    @keyword("Proposal Document Data")
+    def proposal_document_data(self, title: str = "bid_proposal.p7s", **overrides: Any) -> dict[str, Any]:
+        """The signed proposal a bid must carry to be submitted."""
+        return document.proposal_document_data(title=title, **overrides)
+
     # --- plan
 
     @keyword("Plan Data")
-    def plan_data(self, procurement_method_type: str = "aboveThreshold", **overrides: Any) -> dict[str, Any]:
+    def plan_data(
+        self,
+        procurement_method_type: str = "aboveThreshold",
+        acceleration: float | None = None,
+        **overrides: Any,
+    ) -> dict[str, Any]:
         """A draft plan for the given procedure type."""
-        return plan.plan_data(procurement_method_type=procurement_method_type, **overrides)
+        return plan.plan_data(
+            procurement_method_type=procurement_method_type,
+            acceleration=acceleration,
+            **overrides,
+        )
 
     @keyword("Reporting Plan Data")
-    def reporting_plan_data(self, **overrides: Any) -> dict[str, Any]:
+    def reporting_plan_data(self, acceleration: float | None = None, **overrides: Any) -> dict[str, Any]:
         """A draft plan for a reporting procedure."""
-        return plan.reporting_plan_data(**overrides)
+        return plan.reporting_plan_data(acceleration=acceleration, **overrides)
 
     @keyword("Plan Patch Data")
     def plan_patch_data(self, status: str = "scheduled", **overrides: Any) -> dict[str, Any]:

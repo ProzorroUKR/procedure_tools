@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from data.common import signer_info_data
 from data.utils import build, fake, from_date_iso, from_now_iso
 
 # Fields of a contract item that are echoed back when the item is priced.
@@ -82,6 +83,11 @@ def contract_active_data(
         price = item_amount if item_amount is not None else unit_amount(contract)
         data["items"] = [contract_item_data(item, amount=price) for item in contract["items"]]
     return {"data": build(data, **kwargs)}
+
+
+def contract_signer_info_data(**kwargs: Any) -> dict[str, Any]:
+    """The signatory of one side of the contract, ready to be sent."""
+    return {"data": signer_info_data(**kwargs)}
 
 
 def contract_value_data(amount: float, **kwargs: Any) -> dict[str, Any]:

@@ -15,6 +15,7 @@ from typing import Any
 TEMPLATES: dict[str, dict[str, Any]] = {
     "CRITERION.EXCLUSION.BUSINESS.BANKRUPTCY": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.BUSINESS.BANKRUPTCY",
             "scheme": "ESPD211",
         },
         "description": "Учасник процедури закупівлі визнаний у встановленому законом порядку банкрутом та стосовно нього відкрита ліквідаційна процедура",
@@ -22,6 +23,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.8",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -53,6 +55,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.CONFLICT_OF_INTEREST.EARLY_TERMINATION": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.CONFLICT_OF_INTEREST.EARLY_TERMINATION",
             "scheme": "ESPD211",
         },
         "description": "Замовник може прийняти рішення про відмову учаснику в участі у процедурі закупівлі та може відхилити тендерну пропозицію учасника в разі, якщо учасник процедури закупівлі не виконав свої зобов’язання за раніше укладеним договором про закупівлю з цим самим замовником, що призвело до його дострокового розірвання, і було застосовано санкції у вигляді штрафів та/або відшкодування збитків - протягом трьох років з дати дострокового розірвання такого договору. Учасник процедури закупівлі, що перебуває в обставинах, зазначених у частині другій цієї статті, може надати підтвердження вжиття заходів для доведення своєї надійності, незважаючи на наявність відповідної підстави для відмови в участі у процедурі закупівлі. Для цього учасник (суб’єкт господарювання) повинен довести, що він сплатив або зобов’язався сплатити відповідні зобов’язання та відшкодування завданих збитків. Якщо замовник вважає таке підтвердження достатнім, учаснику не може бути відмовлено в участі в процедурі закупівлі",
@@ -60,6 +63,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.2",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -101,6 +105,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.CONFLICT_OF_INTEREST.MISINTERPRETATION": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.CONFLICT_OF_INTEREST.MISINTERPRETATION",
             "scheme": "ESPD211",
         },
         "description": "Замовник має незаперечні докази того, що учасник процедури закупівлі пропонує, дає або погоджується дати прямо чи опосередковано будь-якій службовій (посадовій) особі замовника, іншого державного органу винагороду в будь-якій формі (пропозиція щодо найму на роботу, цінна річ, послуга тощо) з метою вплинути на прийняття рішення щодо визначення переможця процедури закупівлі або застосування замовником певної процедури закупівлі",
@@ -108,6 +113,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.1",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -138,6 +144,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.CONTRIBUTIONS.PAYMENT_OF_TAXES": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.CONTRIBUTIONS.PAYMENT_OF_TAXES",
             "scheme": "ESPD211",
         },
         "description": "Учасник процедури закупівлі має заборгованість із сплати податків і зборів (обов’язкових платежів), крім випадку, якщо такий учасник здійснив заходи щодо розстрочення і відстрочення такої заборгованості у порядку та на умовах, визначених законодавством країни реєстрації такого учасника",
@@ -145,6 +152,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.13",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -212,6 +220,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.CONVICTIONS.CHILD_LABOUR-HUMAN_TRAFFICKING": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.CONVICTIONS.CHILD_LABOUR-HUMAN_TRAFFICKING",
             "scheme": "ESPD211",
         },
         "description": "Cлужбова (посадова) особа учасника процедури закупівлі, яку уповноважено учасником представляти його інтереси під час проведення процедури закупівлі, фізичну особу, яка є учасником, було притягнуто згідно із законом до відповідальності за вчинення правопорушення, пов’язаного з використанням дитячої праці чи будь-якими формами торгівлі людьми",
@@ -219,6 +228,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.12",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -266,6 +276,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.CONVICTIONS.CORRUPTION": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.CONVICTIONS.CORRUPTION",
             "scheme": "ESPD211",
         },
         "description": "Відомості про юридичну особу, яка є учасником процедури закупівлі, внесено до Єдиного державного реєстру осіб, які вчинили корупційні або пов’язані з корупцією правопорушення; Службову (посадову) особу учасника процедури закупівлі, яку уповноважено учасником представляти його інтереси під час проведення процедури закупівлі, фізичну особу, яка є учасником, було притягнуто згідно із законом до відповідальності за вчинення корупційного правопорушення або правопорушення, пов’язаного з корупцією",
@@ -273,6 +284,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.2",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -282,6 +294,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.3",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -340,6 +353,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.CONVICTIONS.FRAUD": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.CONVICTIONS.FRAUD",
             "scheme": "ESPD211",
         },
         "description": 'Cуб’єкт господарювання (учасник) протягом останніх трьох років притягувався до відповідальності за порушення, передбачене пунктом 4 частини другої статті 6, пунктом 1 статті 50 Закону України "Про захист економічної конкуренції", у вигляді вчинення антиконкурентних узгоджених дій, що стосуються спотворення результатів тендерів',
@@ -347,6 +361,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.4",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -356,6 +371,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "6.2.4",
                 "identifier": {
+                    "id": "2210-III",
                     "legalName": 'Закон України "Про захист економічної конкуренції"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/2210-14#n46",
                 },
@@ -365,6 +381,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "50.1",
                 "identifier": {
+                    "id": "2210-III",
                     "legalName": 'Закон України "Про захист економічної конкуренції"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/2210-14#n456",
                 },
@@ -390,6 +407,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.CONVICTIONS.PARTICIPATION_IN_CRIMINAL_ORGANISATION": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.CONVICTIONS.PARTICIPATION_IN_CRIMINAL_ORGANISATION",
             "scheme": "ESPD211",
         },
         "description": "Службова (посадова) особа учасника процедури закупівлі, яка підписала тендерну пропозицію (або уповноважена на підписання договору в разі переговорної процедури закупівлі) або фізична особа, яка є учасником процедури закупівлі, була засуджена за кримінальне правопорушення, вчинене з корисливих мотивів (зокрема, пов’язане з хабарництвом, шахрайством та відмиванням коштів), судимість з якої не знято або не погашено у встановленому законом порядку",
@@ -397,6 +415,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.5",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -406,6 +425,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.6",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -453,6 +473,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.CONVICTIONS.TERRORIST_OFFENCES": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.CONVICTIONS.TERRORIST_OFFENCES",
             "scheme": "ESPD211",
         },
         "description": 'Учасник процедури закупівлі є особою, до якої застосовано санкцію у виді заборони на здійснення у неї публічних закупівель товарів, робіт і послуг згідно із Законом України "Про санкції"',
@@ -460,6 +481,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.11",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -468,6 +490,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             },
             {
                 "identifier": {
+                    "id": "1644-VII",
                     "legalName": 'Закон України "Про санкції"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/1644-18",
                 },
@@ -493,6 +516,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.MISCONDUCT.MARKET_DISTORTION": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.MISCONDUCT.MARKET_DISTORTION",
             "scheme": "ESPD211",
         },
         "description": "Тендерна пропозиція подана учасником конкурентної процедури закупівлі або участь у переговорній процедурі бере учасник, який є пов’язаною особою з іншими учасниками процедури закупівлі та/або з уповноваженою особою (особами), та/або з керівником замовника",
@@ -500,6 +524,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.7",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -530,6 +555,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.EXCLUSION.NATIONAL.OTHER": {
         "classification": {
+            "id": "CRITERION.EXCLUSION.NATIONAL.OTHER",
             "scheme": "ESPD211",
         },
         "description": 'У Єдиному державному реєстрі юридичних осіб, фізичних осіб - підприємців та громадських формувань відсутня інформація, передбачена пунктом 9 частини другої статті 9 Закону України "Про державну реєстрацію юридичних осіб, фізичних осіб - підприємців та громадських формувань" (крім нерезидентів)',
@@ -537,6 +563,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "17.1.9",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1261",
                 },
@@ -546,6 +573,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "9.2.9",
                 "identifier": {
+                    "id": "755-IV",
                     "legalName": 'Закон України "Про державну реєстрацію юридичних осіб, фізичних осіб - підприємців та громадських формувань"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/755-15#n160",
                 },
@@ -581,6 +609,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.OTHER.BID.GUARANTEE": {
         "classification": {
+            "id": "CRITERION.OTHER.BID.GUARANTEE",
             "scheme": "ESPD211",
         },
         "description": "Забезпечення тендерної пропозиції/пропозиції не повертається у разі: 1) відкликання тендерної пропозиції/пропозиції учасником після закінчення строку її подання, але до того, як сплив строк, протягом якого тендерні пропозиції вважаються дійсними; 2) непідписання договору про закупівлю учасником, який став переможцем тендеру/спрощеної закупівлі; 3) ненадання переможцем процедури закупівлі (крім переговорної процедури закупівлі) у строк, визначений частиною шостою статті 17 цього Закону, документів, що підтверджують відсутність підстав, установлених статтею 17 цього Закону; 4) ненадання переможцем процедури закупівлі (крім переговорної процедури закупівлі)/спрощеної закупівлі забезпечення виконання договору про закупівлю після отримання повідомлення про намір укласти договір про закупівлю, якщо надання такого забезпечення передбачено тендерною документацією/оголошенням про проведення спрощеної закупівлі",
@@ -588,6 +617,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "22.2.15",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398",
                 },
@@ -597,6 +627,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "25",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1444",
                 },
@@ -638,6 +669,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.OTHER.BID.LANGUAGE": {
         "classification": {
+            "id": "CRITERION.OTHER.BID.LANGUAGE",
             "scheme": "ESPD211",
         },
         "description": "Тендерна пропозиція та усі документи, які передбачені вимогами тендерної документації і додатками до неї, складаються українською мовою.\nЯкщо в складі тендерної пропозиції надається документ на іншій мові, ніж українська, учасник надає автентичний переклад цього документа українською мовою. Відповідальність за якість та достовірність перекладу несе учасник. Тексти повинні бути автентичними, визначальним є текст викладений українською мовою.\nДана вимога не відноситься до власних назв та/або загальноприйнятих визначень, термінів, малюнків, креслень тощо",
@@ -645,6 +677,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "22.2.13",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398",
                 },
@@ -673,6 +706,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.OTHER.BID.VALIDITY_PERIOD": {
         "classification": {
+            "id": "CRITERION.OTHER.BID.VALIDITY_PERIOD",
             "scheme": "ESPD211",
         },
         "description": "Строк, протягом якого тендерні пропозиції вважаються дійсними, але не менше 90 днів із дати кінцевого строку подання тендерних пропозицій",
@@ -680,6 +714,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "22.2.11",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398",
                 },
@@ -709,6 +744,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.OTHER.CONTRACT.GUARANTEE": {
         "classification": {
+            "id": "CRITERION.OTHER.CONTRACT.GUARANTEE",
             "scheme": "ESPD211",
         },
         "description": "Забезпечення виконання договору про закупівлю повертається: 1) після виконання переможцем процедури закупівлі/спрощеної закупівлі договору про закупівлю; 2) за рішенням суду щодо повернення забезпечення договору у випадку визнання результатів процедури закупівлі/спрощеної закупівлі недійсними або договору про закупівлю нікчемним; 3) у випадках, передбачених статтею 43 цього Закону; 4) згідно з умовами, зазначеними в договорі про закупівлю, але не пізніше ніж протягом п’яти банківських днів з дня настання зазначених обставин",
@@ -716,6 +752,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "22.2.16",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398",
                 },
@@ -725,6 +762,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "27",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1483",
                 },
@@ -805,6 +843,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.SELECTION.ECONOMIC_FINANCIAL_STANDING": {
         "classification": {
+            "id": "CRITERION.SELECTION.ECONOMIC_FINANCIAL_STANDING",
             "scheme": "ESPD211",
         },
         "description": "Наявність фінансової спроможності, яка підтверджується фінансовою звітністю. Не вимагається надання підтвердження обсягу річного доходу (виручки) у розмірі більшому, ніж очікувана вартість предмета закупівлі (пропорційно очікуваній вартості частини предмета закупівлі (лота) в разі поділу предмета закупівель на частини)",
@@ -812,6 +851,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "16.2.4",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1250",
                 },
@@ -821,6 +861,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "16.3",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1250",
                 },
@@ -852,6 +893,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.MANAGEMENT.SUBCONTRACTING_PROPORTION": {
         "classification": {
+            "id": "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.MANAGEMENT.SUBCONTRACTING_PROPORTION",
             "scheme": "ESPD211",
         },
         "description": "У тендерній пропозиції зазначається інформація (повне найменування та місцезнаходження) щодо кожного суб’єкта господарювання, якого учасник планує залучати до виконання робіт чи послуг як субпідрядника/співвиконавця в обсязі не менше 20 відсотків від вартості договору про закупівлю",
@@ -859,6 +901,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "22.2.18",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1398",
                 },
@@ -904,6 +947,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.REFERENCES.WORKS_PERFORMANCE": {
         "classification": {
+            "id": "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.REFERENCES.WORKS_PERFORMANCE",
             "scheme": "ESPD211",
         },
         "description": "Наявність документально підтвердженого досвіду виконання аналогічного (аналогічних) за предметом закупівлі договору (договорів)",
@@ -911,6 +955,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "16.2.3",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1250",
                 },
@@ -942,6 +987,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.TECHNICAL.EQUIPMENT": {
         "classification": {
+            "id": "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.TECHNICAL.EQUIPMENT",
             "scheme": "ESPD211",
         },
         "description": "Наявність в учасника процедури закупівлі обладнання, матеріально-технічної бази та технологій. Учасник може для підтвердження своєї відповідності такому критерію залучити спроможності інших суб'єктів господарювання як субпідрядників/співвиконавців",
@@ -949,6 +995,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "16.2.1",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1250",
                 },
@@ -958,6 +1005,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "16.3",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1250",
                 },
@@ -989,6 +1037,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.TECHNICAL.STAFF_FOR_CARRYING_SCOPE": {
         "classification": {
+            "id": "CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.TECHNICAL.STAFF_FOR_CARRYING_SCOPE",
             "scheme": "ESPD211",
         },
         "description": "Наявність в учасника процедури закупівлі працівників відповідної кваліфікації, які мають необхідні знання та досвід. Учасник може для підтвердження своєї відповідності такому критерію залучити спроможності інших суб'єктів господарювання як субпідрядників/співвиконавців",
@@ -996,6 +1045,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "16.2.2",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1250",
                 },
@@ -1005,6 +1055,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {
                 "article": "16.3",
                 "identifier": {
+                    "id": "922-VIII",
                     "legalName": 'Закон України "Про публічні закупівлі"',
                     "uri": "https://zakon.rada.gov.ua/laws/show/922-19#n1250",
                 },

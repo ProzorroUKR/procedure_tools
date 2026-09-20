@@ -113,6 +113,9 @@ Submit Bid
     ...                                            document_title=${proposal}[data][title]
     Post Bid Requirement Responses    ${responses}    index=${index}
 
+    ${signature}=    Proposal Document Data    title=bid_${index}_proposal.p7s
+    Attach Bid Document    ${signature}    index=${index}
+
     ${bid}=    Patch Bid    ${{ {'data': {'status': 'pending'}} }}    index=${index}
     Should Be Equal    ${bid}[status]    pending
     RETURN    ${bid}
