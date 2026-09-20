@@ -1,0 +1,4 @@
+{
+  "condition": "{{ tender.status != 'active.pre-qualification' }}",
+  "steps": 2
+}

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from procedure_tools.main import parse_args
@@ -11,7 +13,7 @@ REQUIRED = [
 ]
 
 
-def test_parse_args_positional_cli_still_works():
+def test_parse_args_positional_cli_still_works() -> None:
     args = parse_args(REQUIRED + ["--data", "aboveThreshold"], environ={}, search_dirs=["/nonexistent"])
     assert args.host == "https://api.example"
     assert args.token == "api-token"
@@ -22,23 +24,18 @@ def test_parse_args_positional_cli_still_works():
     assert args.env_file is None
 
 
-def test_parse_args_loads_env_file_and_cli_overrides(tmp_path):
+def test_parse_args_loads_env_file_and_cli_overrides(tmp_path: Path) -> None:
     env_file = tmp_path / ".env.sandbox"
     env_file.write_text(
-        "\n".join(
-            [
-                "API_HOST=https://from-env",
-                "API_TOKEN=env-token",
-                "DS_HOST=https://ds-from-env",
-                "DS_USERNAME=env-user",
-                "DS_PASSWORD=env-pass",
-                "API_PATH=/api/from-env/",
-                "DATA=reporting,aboveThreshold",
-                "ACCELERATION=123",
-                "DEBUG=true",
-            ]
-        )
-        + "\n",
+        "API_HOST=https://from-env\n"
+        "API_TOKEN=env-token\n"
+        "DS_HOST=https://ds-from-env\n"
+        "DS_USERNAME=env-user\n"
+        "DS_PASSWORD=env-pass\n"
+        "API_PATH=/api/from-env/\n"
+        "DATA=reporting,aboveThreshold\n"
+        "ACCELERATION=123\n"
+        "DEBUG=true\n",
         encoding="utf-8",
     )
     args = parse_args(
@@ -58,18 +55,42 @@ def test_parse_args_loads_env_file_and_cli_overrides(tmp_path):
     assert args.debug is True
 
 
-def test_parse_args_named_flags_override_positionals_and_env(tmp_path):
+def test_parse_args_disable_complaints_and_claims(tmp_path: Path) -> None:
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "API_HOST=https://from-env\n"
+        "API_TOKEN=env-token\n"
+        "DS_HOST=https://ds-from-env\n"
+        "DS_USERNAME=env-user\n"
+        "DS_PASSWORD=env-pass\n"
+        "DISABLE_COMPLAINTS=true\n"
+        "DISABLE_CLAIMS=false\n"
+        "DISABLE_QUESTIONS=true\n",
+        encoding="utf-8",
+    )
+    args = parse_args(["--env", str(env_file), "--data", "belowThreshold"], environ={}, search_dirs=[str(tmp_path)])
+    assert args.disable_complaints is True
+    assert args.disable_claims is False
+    assert args.disable_questions is True
+    args = parse_args(
+        ["--env", str(env_file), "--data", "belowThreshold", "--disable-claims"],
+        environ={},
+        search_dirs=[str(tmp_path)],
+    )
+    assert args.disable_claims is True
+    args = parse_args(
+        ["--host", "h", "--token", "t", "--ds-host", "d", "--ds-username", "u", "--ds-password", "p"], environ={}
+    )
+    assert args.disable_complaints is False and args.disable_claims is False and args.disable_questions is False
+
+
+def test_parse_args_named_flags_override_positionals_and_env(tmp_path: Path) -> None:
     (tmp_path / ".env").write_text(
-        "\n".join(
-            [
-                "API_HOST=https://from-env",
-                "API_TOKEN=env-token",
-                "DS_HOST=https://ds-from-env",
-                "DS_USERNAME=env-user",
-                "DS_PASSWORD=env-pass",
-            ]
-        )
-        + "\n",
+        "API_HOST=https://from-env\n"
+        "API_TOKEN=env-token\n"
+        "DS_HOST=https://ds-from-env\n"
+        "DS_USERNAME=env-user\n"
+        "DS_PASSWORD=env-pass\n",
         encoding="utf-8",
     )
     args = parse_args(
@@ -81,12 +102,12 @@ def test_parse_args_named_flags_override_positionals_and_env(tmp_path):
     assert args.token == "env-token"
 
 
-def test_parse_args_requires_connection_settings(tmp_path):
+def test_parse_args_requires_connection_settings(tmp_path: Path) -> None:
     with pytest.raises(SystemExit):
         parse_args([], environ={}, search_dirs=[str(tmp_path)])
 
 
-def test_parse_args_cli_env_overrides_procedure_env(tmp_path):
+def test_parse_args_cli_env_overrides_procedure_env(tmp_path: Path) -> None:
     for name, host in (("dev", "https://dev.example"), ("sandbox", "https://sandbox.example")):
         (tmp_path / f".env.{name}").write_text(
             "\n".join(
@@ -110,6 +131,6 @@ def test_parse_args_cli_env_overrides_procedure_env(tmp_path):
     assert args.env_file.endswith(".env.sandbox")
 
 
-def test_parse_args_missing_env_file(tmp_path):
+def test_parse_args_missing_env_file(tmp_path: Path) -> None:
     with pytest.raises(SystemExit):
         parse_args(["--env", "missing"], environ={}, search_dirs=[str(tmp_path)])

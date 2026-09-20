@@ -4,28 +4,30 @@ import logging
 import os
 import random
 import sys
+from collections.abc import Iterable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Any
 
 import requests
 
 from procedure_tools.client import API_PATH_PREFIX_DEFAULT
 from procedure_tools.fake import fake, fake_en
-from procedure_tools.procedure import (
-    WAIT_EDR_PRE_QUAL,
-    WAIT_EDR_QUAL,
-    process_procedure,
-)
+from procedure_tools.runner import process_tools
+from procedure_tools.steps import get_numberless_filename
 from procedure_tools.utils import adapters
 from procedure_tools.utils.data import (
     ACCELERATION_DEFAULT,
     SUBMISSION_QUICK_NO_AUCTION,
     SUBMISSIONS,
+    WAIT_EDR_QUAL,
+    WAIT_EVENTS,
 )
 from procedure_tools.utils.env import (
     ENV_SELECT_VAR,
     EXTEND_ARGS,
     REQUIRED_ARGS,
     EnvFileNotFound,
+    EnvValue,
     EnvValueError,
     first_set,
     load_run_env,
@@ -34,10 +36,13 @@ from procedure_tools.utils.file import (
     DATA_DIR_DEFAULT,
     get_data_path,
     get_default_data_dirs,
-    get_numberless_filename,
 )
 from procedure_tools.utils.handlers import EX_DATAERR, EX_OK
-from procedure_tools.utils.runtime import RunController, log_results_summary, set_controller
+from procedure_tools.utils.runtime import (
+    RunController,
+    log_results_summary,
+    set_controller,
+)
 from procedure_tools.utils.style import (
     fore_info,
     fore_log_level,
@@ -46,7 +51,8 @@ from procedure_tools.utils.style import (
 )
 from procedure_tools.version import __version__
 
-WAIT_EVENTS = (WAIT_EDR_QUAL, WAIT_EDR_PRE_QUAL)
+logger = logging.getLogger(__name__)
+
 
 LOG_DATEFMT = "%H:%M:%S"
 
@@ -55,22 +61,23 @@ LOG_FORMAT_DEBUG = "%(asctime)s %(levelname)s %(name)s %(prefix)s%(message)s"
 
 
 class OutputFormatter(logging.Formatter):
-    def formatTime(self, record, datefmt=None):
+    def formatTime(self, record: logging.LogRecord, datefmt: str | None = None) -> str:
         dfmt = datefmt if datefmt is not None else self.datefmt
         plain = super().formatTime(record, dfmt)
-        return fore_log_level(f"[{plain}]", record.level)
+        return fore_log_level(f"[{plain}]", getattr(record, "level", record.levelname))
 
-    def format(self, record):
+    def format(self, record: logging.LogRecord) -> str:
         if not hasattr(record, "prefix"):
             record.prefix = ""
         return super().format(record)
 
 
 class OutputFilter(logging.Filter):
-    def filter(self, record):
-        record.level = record.levelname  # back up uncolored levelname
-        record.levelname = fore_log_level(record.levelname, record.level)
-        record.name = fore_log_level(record.name or "", record.level)
+    def filter(self, record: logging.LogRecord) -> bool:
+        level = record.levelname
+        record.level = level  # back up uncolored levelname
+        record.levelname = fore_log_level(level, level)
+        record.name = fore_log_level(record.name or "", level)
         prefix = get_log_prefix()
         record.prefix = f"{fore_info('[' + prefix + ']')} " if prefix else ""
         return True
@@ -80,12 +87,12 @@ OUTPUT_FILTER = OutputFilter()
 OUTPUT_FORMATTER = OutputFormatter(LOG_FORMAT_DEFAULT, datefmt=LOG_DATEFMT)
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-for handler in logging.root.handlers:
-    handler.addFilter(OUTPUT_FILTER)
-    handler.setFormatter(OUTPUT_FORMATTER)
+for root_handler in logging.root.handlers:
+    root_handler.addFilter(OUTPUT_FILTER)
+    root_handler.setFormatter(OUTPUT_FORMATTER)
 
 
-def apply_debug_log_format(debug: bool):
+def apply_debug_log_format(debug: bool) -> None:
     fmt = LOG_FORMAT_DEBUG if debug else LOG_FORMAT_DEFAULT
     formatter = OutputFormatter(fmt, datefmt=LOG_DATEFMT)
     for handler in logging.root.handlers:
@@ -93,22 +100,22 @@ def apply_debug_log_format(debug: bool):
 
 
 class ArgumentParserFormatter(argparse.RawTextHelpFormatter):
-    def _format_action(self, action):
+    def _format_action(self, action: argparse.Action) -> str:
         return "\n\n" + super()._format_action(action)
 
 
-def format_choices(choices):
+def format_choices(choices: Iterable[str]) -> str:
     return " - " + "\n - ".join(choices)
 
 
-def set_faker_seed(args):
+def set_faker_seed(args: argparse.Namespace) -> None:
     faker_seed = args.seed or random.randint(0, 1000000)
-    logging.info(f"Using seed {faker_seed}\n")
+    logger.info(f"Using seed {faker_seed}\n")
     fake.seed_instance(faker_seed)
     fake_en.seed_instance(faker_seed)
 
 
-def exit_code(value):
+def exit_code(value: object) -> int:
     if value is None:
         return EX_OK
     if isinstance(value, int):
@@ -116,7 +123,7 @@ def exit_code(value):
     return 1
 
 
-def run_result_error(exc):
+def run_result_error(exc: BaseException) -> str:
     message = getattr(exc, "message", None)
     if message:
         return str(message).strip()
@@ -129,7 +136,12 @@ def run_result_error(exc):
     return f"{name}: {text}"
 
 
-def run_data_dir(args, session=None, controller=None):
+def run_data_dir(
+    args: argparse.Namespace,
+    session: requests.Session | None = None,
+    controller: RunController | None = None,
+) -> tuple[int, str | None]:
+    result: tuple[int, str | None]
     close_session = False
     if session is None:
         session = requests.Session()
@@ -141,21 +153,21 @@ def run_data_dir(args, session=None, controller=None):
     try:
         data_path = get_data_path(args.data)
         if data_path is None:
-            logging.error("Data path not found.\n")
+            logger.error("Data path not found.\n")
             result = EX_DATAERR, "Data path not found"
         else:
-            process_procedure(args, session=session)
-            logging.info("Completed.\n")
+            process_tools(args, session=session)
+            logger.info("Completed.\n")
             result = EX_OK, None
     except SystemExit as e:
         code = exit_code(e.code)
         if code == EX_OK:
-            logging.info("Completed.\n")
+            logger.info("Completed.\n")
             result = code, None
         else:
             result = code, run_result_error(e)
-    except Exception as e:
-        logging.exception("Failed")
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        logger.exception("Failed")
         result = 1, run_result_error(e)
     finally:
         if close_session:
@@ -165,15 +177,17 @@ def run_data_dir(args, session=None, controller=None):
     return result
 
 
-def run_data_dir_parallel(args, data_dir, controller=None):
+def run_data_dir_parallel(
+    args: argparse.Namespace, data_dir: str, controller: RunController | None = None
+) -> tuple[int, str | None]:
     folder_args = copy.copy(args)
     folder_args.data = data_dir
     set_log_prefix(data_dir)
     try:
         set_faker_seed(folder_args)
         return run_data_dir(folder_args, controller=controller)
-    except Exception as e:
-        logging.exception("Failed")
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        logger.exception("Failed")
         result = 1, run_result_error(e)
         if controller:
             controller.mark_finished(data_dir, *result)
@@ -182,7 +196,7 @@ def run_data_dir_parallel(args, data_dir, controller=None):
         set_log_prefix(None)
 
 
-def run(args, session=None):
+def run(args: argparse.Namespace, session: requests.Session | None = None) -> None:
     if args.stop:
         args.stop = get_numberless_filename(args.stop)
 
@@ -195,9 +209,10 @@ def run(args, session=None):
     set_controller(controller)
     controller.start()
     interrupted = False
+    results: list[tuple[str, int | None, str | None]]
     try:
         if args.parallel is not None and len(data_dirs) > 1:
-            codes = {}
+            codes: dict[str, tuple[int | None, str | None]] = {}
             max_workers = args.parallel or len(data_dirs)
             max_workers = max(1, min(max_workers, len(data_dirs)))
             executor = ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="procedure")
@@ -212,7 +227,7 @@ def run(args, session=None):
                         codes[data_dir] = future.result()
                     except KeyboardInterrupt:
                         raise
-                    except BaseException as e:
+                    except BaseException as e:  # noqa: BLE001  # pylint: disable=broad-exception-caught
                         result = (1, run_result_error(e))
                         codes[data_dir] = result
                         controller.mark_finished(data_dir, *result)
@@ -225,7 +240,7 @@ def run(args, session=None):
                     if future.done() and not future.cancelled():
                         try:
                             codes[data_dir] = future.result()
-                        except BaseException as e:
+                        except BaseException as e:  # noqa: BLE001  # pylint: disable=broad-exception-caught
                             result = (1, run_result_error(e))
                             codes[data_dir] = result
                             controller.mark_finished(data_dir, *result)
@@ -242,7 +257,7 @@ def run(args, session=None):
                 args.data = data_dir
                 set_log_prefix(data_dir if len(data_dirs) > 1 else None)
                 if len(data_dirs) > 1:
-                    logging.info(f"Starting {data_dir}\n")
+                    logger.info(f"Starting {data_dir}\n")
                 try:
                     controller.check_pause()
                     code, error = run_data_dir(args, session=session, controller=controller)
@@ -270,7 +285,7 @@ def run(args, session=None):
         set_controller(None)
 
 
-def _env_help():
+def _env_help() -> str:
     return (
         "env file or environment name for this run "
         f"(default: {ENV_SELECT_VAR} or .env if present; CLI arguments override the file).\n"
@@ -278,8 +293,13 @@ def _env_help():
     )
 
 
-def build_parser(env_values=None):
+def build_parser(
+    env_values: Mapping[str, EnvValue] | None = None,
+    data_dirs: Iterable[str] | None = None,
+    data_dir_default: str = DATA_DIR_DEFAULT,
+) -> argparse.ArgumentParser:
     env_values = env_values or {}
+    data_dirs = data_dirs if data_dirs is not None else get_default_data_dirs()
     parser = argparse.ArgumentParser(
         formatter_class=ArgumentParserFormatter,
     )
@@ -368,8 +388,8 @@ def build_parser(env_values=None):
     parser.add_argument(
         "-d",
         "--data",
-        help=f"one or more data folders, custom path or one of (omit to run all; sequential unless --parallel):\n{format_choices(sorted(get_default_data_dirs()))}",
-        metavar=str(DATA_DIR_DEFAULT),
+        help=f"one or more data folders, custom path or one of (omit to run all; sequential unless --parallel):\n{format_choices(sorted(data_dirs))}",
+        metavar=str(data_dir_default),
         action="extend",
         nargs="+",
     )
@@ -429,6 +449,27 @@ def build_parser(env_values=None):
         default=env_values.get("bot_token"),
     )
     parser.add_argument(
+        "--disable-complaints",
+        dest="disable_complaints",
+        help="Skip the complaint steps (the bot and reviewer flow)",
+        action="store_true",
+        default=bool(env_values.get("disable_complaints")),
+    )
+    parser.add_argument(
+        "--disable-claims",
+        dest="disable_claims",
+        help="Skip the claim steps (answered by the tender owner)",
+        action="store_true",
+        default=bool(env_values.get("disable_claims")),
+    )
+    parser.add_argument(
+        "--disable-questions",
+        dest="disable_questions",
+        help="Skip the tender question steps",
+        action="store_true",
+        default=bool(env_values.get("disable_questions")),
+    )
+    parser.add_argument(
         "--debug",
         help="Debug log level",
         action="store_true",
@@ -452,14 +493,15 @@ def build_parser(env_values=None):
     return parser
 
 
-def _parse_env_spec(argv):
+def _parse_env_spec(argv: Sequence[str]) -> str | None:
     env_parser = argparse.ArgumentParser(add_help=False)
     env_parser.add_argument("-E", "--env")
     env_ns, _ = env_parser.parse_known_args(argv)
-    return env_ns.env
+    env: str | None = env_ns.env
+    return env
 
 
-def apply_env_values(args, env_values):
+def apply_env_values(args: argparse.Namespace, env_values: Mapping[str, EnvValue]) -> None:
     args.host = first_set(args.host_option, args.host, env_values.get("host"))
     args.token = first_set(args.token_option, args.token, env_values.get("token"))
     args.ds_host = first_set(args.ds_host_option, args.ds_host, env_values.get("ds_host"))
@@ -470,23 +512,30 @@ def apply_env_values(args, env_values):
             setattr(args, dest, env_values[dest])
 
 
-def parse_args(argv=None, environ=None, search_dirs=None):
+def parse_args(
+    argv: Sequence[str] | None = None,
+    environ: Mapping[str, str] | None = None,
+    search_dirs: Sequence[str] | None = None,
+    data_dirs: Iterable[str] | None = None,
+    data_dir_default: str = DATA_DIR_DEFAULT,
+) -> argparse.Namespace:
     argv = sys.argv[1:] if argv is None else argv
+    parser_kwargs: dict[str, Any] = {"data_dirs": data_dirs, "data_dir_default": data_dir_default}
     if any(arg in ("-h", "--help", "-v", "--version") for arg in argv):
-        parser = build_parser()
+        parser = build_parser(**parser_kwargs)
         parser.parse_args(argv)
 
     env_spec = _parse_env_spec(argv)
     try:
         env_file, env_values = load_run_env(env_spec, environ=environ, search_dirs=search_dirs)
     except EnvFileNotFound as e:
-        parser = build_parser()
+        parser = build_parser(**parser_kwargs)
         parser.error(str(e))
     except EnvValueError as e:
-        parser = build_parser()
+        parser = build_parser(**parser_kwargs)
         parser.error(str(e))
 
-    parser = build_parser(env_values)
+    parser = build_parser(env_values, **parser_kwargs)
     args = parser.parse_args(argv)
     apply_env_values(args, env_values)
     args.env_file = env_file
@@ -501,12 +550,13 @@ def parse_args(argv=None, environ=None, search_dirs=None):
     return args
 
 
-def main():
+def main() -> None:
+    """``procedure-tools`` command: the data files of a folder define the flow, see ``tools.runner``."""
     try:
         args = parse_args()
         apply_debug_log_format(args.debug)
         if args.env_file:
-            logging.info(f"Using env file {args.env_file}\n")
+            logger.info(f"Using env file {args.env_file}\n")
         if not args.data:
             args.data = sorted(get_default_data_dirs())
         session = None
@@ -514,8 +564,6 @@ def main():
             session = requests.Session()
             adapters.mount(session)
         run(args, session=session)
-    except SystemExit as e:
-        sys.exit(e)
     except KeyboardInterrupt:
         os._exit(130)
     else:

@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 import logging
 import select
 import sys
 import threading
 import time
+from collections.abc import Iterable, Sequence
+from typing import Any
 
 from procedure_tools.utils.handlers import EX_OK
 from procedure_tools.utils.style import (
@@ -18,25 +22,35 @@ try:
     import termios
     import tty
 except ImportError:  # pragma: no cover - non-POSIX
-    termios = None
-    tty = None
+    termios = None  # type: ignore[assignment]
+    tty = None  # type: ignore[assignment]
 
-_controller = None
+
+logger = logging.getLogger(__name__)
+
+
+STDIN_ERRORS: tuple[type[BaseException], ...] = (
+    (ValueError, OSError, termios.error) if termios else (ValueError, OSError)
+)
+
+SummaryRow = tuple[str, str, str | None, str | None]
+
+_controller: RunController | None = None  # pylint: disable=invalid-name
 _PAUSE_HINT = "Press P to pause and show summary, S to show summary"
 _thread_data_dir = threading.local()
 _QUIET_SETTLE_SECONDS = 0.05
 
 
-def get_controller():
+def get_controller() -> RunController | None:
     return _controller
 
 
-def set_controller(controller):
-    global _controller
+def set_controller(controller: RunController | None) -> None:
+    global _controller  # pylint: disable=global-statement
     _controller = controller
 
 
-def status_from_code(code):
+def status_from_code(code: int | None) -> str:
     if code is None:
         return "aborted"
     if code == EX_OK:
@@ -44,7 +58,7 @@ def status_from_code(code):
     return "failed"
 
 
-def status_label(status, activity=None):
+def status_label(status: str, activity: str | None = None) -> str:
     if status == "success":
         return fore_success("success")
     if status == "failed":
@@ -59,13 +73,13 @@ def status_label(status, activity=None):
     return fore(str(status), STYLE_DIM) if STYLE_DIM else status
 
 
-def log_summary(rows):
+def log_summary(rows: Iterable[Sequence[Any]]) -> None:
     rows = list(rows)
     if not rows:
         return
     width = max(len(str(data_dir)) for data_dir, *_ in rows)
     lines = [fore_warning("Summary")]
-    errors = []
+    errors: list[tuple[Any, Any]] = []
     for row in rows:
         data_dir = row[0]
         status = row[1]
@@ -74,7 +88,7 @@ def log_summary(rows):
         lines.append(f" - {data_dir:<{width}}\t{status_label(status, activity)}")
         if status == "failed" and error:
             errors.append((data_dir, error))
-    logging.info("\n".join(lines) + "\n")
+    logger.info("\n".join(lines) + "\n")
     if errors:
         error_lines = [fore_error("Errors")]
         for data_dir, error in errors:
@@ -82,13 +96,13 @@ def log_summary(rows):
             error_lines.append(f" - {data_dir}")
             for error_line in error_text:
                 error_lines.append(f"   {fore_error(error_line)}")
-        logging.info("\n".join(error_lines) + "\n")
+        logger.info("\n".join(error_lines) + "\n")
     for handler in logging.root.handlers:
         handler.flush()
 
 
-def log_results_summary(results):
-    rows = []
+def log_results_summary(results: Iterable[tuple[str, int | None, str | None]]) -> None:
+    rows: list[SummaryRow] = []
     for data_dir, code, error in results:
         status = status_from_code(code)
         rows.append((data_dir, status, None, error if status == "failed" else None))
@@ -96,7 +110,7 @@ def log_results_summary(results):
 
 
 class RunController:
-    def __init__(self, data_dirs):
+    def __init__(self, data_dirs: Sequence[str]) -> None:
         self._lock = threading.Lock()
         self._stdin_lock = threading.RLock()
         self._resume = threading.Event()
@@ -105,24 +119,24 @@ class RunController:
         self._quiet.set()
         self._stop = threading.Event()
         self._waiting = 0
-        self._statuses = {data_dir: "pending" for data_dir in data_dirs}
-        self._results = {data_dir: (None, None) for data_dir in data_dirs}
-        self._activity = {data_dir: None for data_dir in data_dirs}
+        self._statuses: dict[str, str] = {data_dir: "pending" for data_dir in data_dirs}
+        self._results: dict[str, tuple[int | None, str | None]] = {data_dir: (None, None) for data_dir in data_dirs}
+        self._activity: dict[str, str | None] = {data_dir: None for data_dir in data_dirs}
         self._data_dirs = list(data_dirs)
-        self._listener = None
-        self._fd = None
-        self._old_termios = None
+        self._listener: threading.Thread | None = None
+        self._fd: int | None = None
+        self._old_termios: list[Any] | None = None
         self._cbreak = False
         self._enabled = False
 
     @property
-    def enabled(self):
+    def enabled(self) -> bool:
         return self._enabled
 
-    def current_data_dir(self):
+    def current_data_dir(self) -> str | None:
         return getattr(_thread_data_dir, "value", None)
 
-    def start(self):
+    def start(self) -> None:
         if termios is None or tty is None or not sys.stdin.isatty():
             return
         try:
@@ -137,9 +151,9 @@ class RunController:
         self._enabled = True
         self._listener = threading.Thread(target=self._listen_loop, name="pause-listener", daemon=True)
         self._listener.start()
-        logging.info(f"{_PAUSE_HINT}\n")
+        logger.info(f"{_PAUSE_HINT}\n")
 
-    def stop(self):
+    def stop(self) -> None:
         self._stop.set()
         self._resume.set()
         self._quiet.set()
@@ -150,7 +164,7 @@ class RunController:
         if getattr(_thread_data_dir, "value", None) is not None:
             _thread_data_dir.value = None
 
-    def mark_started(self, data_dir):
+    def mark_started(self, data_dir: str) -> None:
         _thread_data_dir.value = data_dir
         with self._lock:
             self._statuses[data_dir] = "running"
@@ -158,7 +172,7 @@ class RunController:
             if not self._resume.is_set():
                 self._maybe_signal_quiet_locked()
 
-    def mark_finished(self, data_dir, code, error=None):
+    def mark_finished(self, data_dir: str, code: int | None, error: str | None = None) -> None:
         if getattr(_thread_data_dir, "value", None) == data_dir:
             _thread_data_dir.value = None
         with self._lock:
@@ -168,7 +182,7 @@ class RunController:
             if not self._resume.is_set():
                 self._maybe_signal_quiet_locked()
 
-    def set_activity(self, data_dir, activity):
+    def set_activity(self, data_dir: str | None, activity: str | None) -> None:
         data_dir = data_dir or self.current_data_dir()
         if not data_dir:
             return
@@ -176,7 +190,7 @@ class RunController:
             if self._statuses.get(data_dir) == "running":
                 self._activity[data_dir] = activity
 
-    def check_pause(self):
+    def check_pause(self) -> None:
         with self._lock:
             if self._resume.is_set():
                 return
@@ -188,7 +202,7 @@ class RunController:
             with self._lock:
                 self._waiting -= 1
 
-    def wait_for_enter(self, prompt="Press Enter key to continue..."):
+    def wait_for_enter(self, prompt: str = "Press Enter key to continue...") -> None:
         with self._stdin_lock:
             was_cbreak = self._cbreak
             if was_cbreak:
@@ -199,7 +213,7 @@ class RunController:
                 if was_cbreak and not self._stop.is_set():
                     self._enable_cbreak()
 
-    def pause_aware_sleep(self, seconds):
+    def pause_aware_sleep(self, seconds: float) -> None:
         end = time.monotonic() + max(0, seconds)
         while True:
             self.check_pause()
@@ -208,9 +222,9 @@ class RunController:
                 return
             time.sleep(min(0.5, remaining))
 
-    def log_summary(self):
+    def log_summary(self) -> None:
         with self._lock:
-            rows = []
+            rows: list[SummaryRow] = []
             for data_dir in self._data_dirs:
                 status = self._statuses.get(data_dir, "pending")
                 activity = self._activity.get(data_dir)
@@ -218,20 +232,20 @@ class RunController:
                 rows.append((data_dir, status, activity, error if status == "failed" else None))
         log_summary(rows)
 
-    def _running_count_locked(self):
+    def _running_count_locked(self) -> int:
         return sum(1 for status in self._statuses.values() if status == "running")
 
-    def _maybe_signal_quiet_locked(self):
+    def _maybe_signal_quiet_locked(self) -> None:
         running = self._running_count_locked()
         if running == 0 or self._waiting >= running:
             self._quiet.set()
 
-    def _listen_loop(self):
+    def _listen_loop(self) -> None:
         while not self._stop.is_set():
             if not self._resume.is_set():
                 time.sleep(0.1)
                 continue
-            if not self._stdin_lock.acquire(blocking=False):
+            if not self._stdin_lock.acquire(blocking=False):  # pylint: disable=consider-using-with
                 time.sleep(0.1)
                 continue
             try:
@@ -248,19 +262,19 @@ class RunController:
                     self._pause_from_listener()
                 elif key == "s":
                     self.log_summary()
-            except (ValueError, OSError, termios.error if termios else OSError):
+            except STDIN_ERRORS:
                 break
             finally:
                 self._stdin_lock.release()
 
-    def _pause_from_listener(self):
+    def _pause_from_listener(self) -> None:
         if not self._resume.is_set():
             return
         with self._lock:
             self._quiet.clear()
             self._resume.clear()
             self._maybe_signal_quiet_locked()
-        logging.info("Pausing...\n")
+        logger.info("Pausing...\n")
         while not self._quiet.wait(timeout=0.2):
             if self._stop.is_set():
                 self._resume.set()
@@ -268,7 +282,7 @@ class RunController:
         for handler in logging.root.handlers:
             handler.flush()
         time.sleep(_QUIET_SETTLE_SECONDS)
-        logging.info("Paused.\n")
+        logger.info("Paused.\n")
         self.log_summary()
         was_cbreak = self._cbreak
         if was_cbreak:
@@ -282,9 +296,9 @@ class RunController:
             if was_cbreak and not self._stop.is_set():
                 self._enable_cbreak()
             self._resume.set()
-            logging.info("Resumed.\n")
+            logger.info("Resumed.\n")
 
-    def _enable_cbreak(self):
+    def _enable_cbreak(self) -> None:
         if termios is None or tty is None or self._fd is None:
             return
         try:
@@ -295,7 +309,7 @@ class RunController:
         except (termios.error, ValueError, OSError):
             self._cbreak = False
 
-    def _restore_terminal(self):
+    def _restore_terminal(self) -> None:
         if termios is None or self._fd is None or self._old_termios is None:
             self._cbreak = False
             return

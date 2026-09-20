@@ -13,13 +13,13 @@ from procedure_tools.test import (
 
 
 def main() -> None:
-    cases = WORKFLOW_TEST_CASES
+    outputs = {"cases": WORKFLOW_TEST_CASES}
     output_path = os.environ.get("GITHUB_OUTPUT")
     if output_path:
         with open(output_path, "a", encoding="utf-8") as f:
-            f.write(f"cases={json.dumps(cases)}\n")
+            f.writelines(f"{name}={json.dumps(cases)}\n" for name, cases in outputs.items())
     else:
-        print(json.dumps(cases))
+        print(json.dumps(outputs))
 
 
 if __name__ == "__main__":

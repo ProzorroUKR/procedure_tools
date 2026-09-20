@@ -1,5 +1,8 @@
 import os
 import re
+from collections.abc import Mapping, Sequence
+
+EnvValue = bool | int | list[str] | str
 
 DEFAULT_ENV_FILE = ".env"
 ENV_SELECT_VAR = "PROCEDURE_ENV"
@@ -23,6 +26,9 @@ ARG_ENV_KEYS = {
     "seed": ("SEED",),
     "reviewer_token": ("REVIEWER_TOKEN",),
     "bot_token": ("BOT_TOKEN",),
+    "disable_complaints": ("DISABLE_COMPLAINTS",),
+    "disable_claims": ("DISABLE_CLAIMS",),
+    "disable_questions": ("DISABLE_QUESTIONS",),
     "debug": ("DEBUG",),
     "debug_request": ("DEBUG_REQUEST", "DEBUG_REQ"),
     "debug_json_level": ("DEBUG_JSON_LEVEL",),
@@ -30,7 +36,7 @@ ARG_ENV_KEYS = {
 
 LIST_ARGS = frozenset({"data", "pause", "wait"})
 INT_ARGS = frozenset({"acceleration", "seed", "debug_json_level", "parallel"})
-BOOL_ARGS = frozenset({"debug", "debug_request"})
+BOOL_ARGS = frozenset({"debug", "debug_request", "disable_complaints", "disable_claims", "disable_questions"})
 # Fill after parse so argparse extend actions do not append to env defaults.
 EXTEND_ARGS = LIST_ARGS
 
@@ -47,7 +53,7 @@ REQUIRED_ARGS = (
 
 
 class EnvFileNotFound(FileNotFoundError):
-    def __init__(self, spec, tried, available):
+    def __init__(self, spec: str, tried: list[str], available: list[str]) -> None:
         self.spec = spec
         self.tried = tried
         self.available = available
@@ -60,13 +66,13 @@ class EnvValueError(ValueError):
     pass
 
 
-def get_repo_root():
+def get_repo_root() -> str:
     utils_dir = os.path.dirname(os.path.abspath(__file__))
     package_dir = os.path.dirname(utils_dir)
     return os.path.dirname(package_dir)
 
 
-def get_search_dirs(search_dirs=None):
+def get_search_dirs(search_dirs: Sequence[str] | None = None) -> list[str]:
     if search_dirs is not None:
         return [os.path.abspath(path) for path in search_dirs]
     dirs = [os.getcwd()]
@@ -76,8 +82,8 @@ def get_search_dirs(search_dirs=None):
     return dirs
 
 
-def parse_env_content(text):
-    result = {}
+def parse_env_content(text: str) -> dict[str, str]:
+    result: dict[str, str] = {}
     for raw_line in text.splitlines():
         line = raw_line.strip()
         if not line or line.startswith("#"):
@@ -94,22 +100,22 @@ def parse_env_content(text):
     return result
 
 
-def _unquote_env_value(value):
+def _unquote_env_value(value: str) -> str:
     if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
         return value[1:-1]
     return value
 
 
-def load_env_file(path):
+def load_env_file(path: str) -> dict[str, str]:
     with open(path, encoding="utf-8") as env_file:
         return parse_env_content(env_file.read())
 
 
-def _is_example_env(filename):
+def _is_example_env(filename: str) -> bool:
     return filename.endswith(EXAMPLE_SUFFIXES)
 
 
-def _env_name_from_filename(filename):
+def _env_name_from_filename(filename: str) -> str | None:
     if _is_example_env(filename):
         return None
     if filename == DEFAULT_ENV_FILE:
@@ -121,9 +127,9 @@ def _env_name_from_filename(filename):
     return filename
 
 
-def list_available_envs(search_dirs=None):
-    names = []
-    seen = set()
+def list_available_envs(search_dirs: Sequence[str] | None = None) -> list[str]:
+    names: list[str] = []
+    seen: set[str] = set()
     for directory in get_search_dirs(search_dirs):
         for rel_dir in ("", "envs"):
             path = os.path.join(directory, rel_dir) if rel_dir else directory
@@ -153,10 +159,10 @@ def list_available_envs(search_dirs=None):
     return names
 
 
-def _candidate_paths(spec, search_dirs):
+def _candidate_paths(spec: str, search_dirs: Sequence[str]) -> list[str]:
     if os.path.isabs(spec):
         return [spec]
-    candidates = []
+    candidates: list[str] = []
     for directory in search_dirs:
         candidates.extend(
             [
@@ -171,9 +177,9 @@ def _candidate_paths(spec, search_dirs):
     return candidates
 
 
-def resolve_env_path(spec=None, search_dirs=None):
+def resolve_env_path(spec: str | None = None, search_dirs: Sequence[str] | None = None) -> str | None:
     dirs = get_search_dirs(search_dirs)
-    if spec in (None, ""):
+    if not spec:
         for directory in dirs:
             path = os.path.join(directory, DEFAULT_ENV_FILE)
             if os.path.isfile(path):
@@ -183,7 +189,7 @@ def resolve_env_path(spec=None, search_dirs=None):
     if os.path.isfile(spec):
         return os.path.abspath(spec)
 
-    tried = []
+    tried: list[str] = []
     for path in _candidate_paths(spec, dirs):
         abs_path = os.path.abspath(path)
         if abs_path not in tried:
@@ -193,7 +199,7 @@ def resolve_env_path(spec=None, search_dirs=None):
     raise EnvFileNotFound(spec, tried, list_available_envs(search_dirs))
 
 
-def _first_raw_value(keys, file_vars, environ):
+def _first_raw_value(keys: Sequence[str], file_vars: Mapping[str, str], environ: Mapping[str, str]) -> str | None:
     for key in keys:
         if key in file_vars and file_vars[key] != "":
             return file_vars[key]
@@ -204,7 +210,7 @@ def _first_raw_value(keys, file_vars, environ):
     return None
 
 
-def _parse_bool(dest, value):
+def _parse_bool(dest: str, value: str) -> bool:
     normalized = value.strip().lower()
     if normalized in TRUE_VALUES:
         return True
@@ -213,22 +219,22 @@ def _parse_bool(dest, value):
     raise EnvValueError(f"invalid boolean value for {dest}: {value!r}")
 
 
-def _parse_int(dest, value):
+def _parse_int(dest: str, value: str) -> int:
     stripped = value.strip()
     if dest == "parallel" and stripped.lower() == "all":
         return 0
     try:
         return int(stripped)
-    except (TypeError, ValueError):
-        raise EnvValueError(f"invalid integer value for {dest}: {value!r}")
+    except (TypeError, ValueError) as exc:
+        raise EnvValueError(f"invalid integer value for {dest}: {value!r}") from exc
 
 
-def _parse_list(value):
+def _parse_list(value: str) -> list[str] | None:
     parts = [part.strip() for part in re.split(r"[,\s]+", value.strip()) if part.strip()]
     return parts or None
 
 
-def convert_env_value(dest, value):
+def convert_env_value(dest: str, value: str) -> EnvValue | None:
     if dest in BOOL_ARGS:
         return _parse_bool(dest, value)
     if dest in INT_ARGS:
@@ -238,9 +244,9 @@ def convert_env_value(dest, value):
     return value
 
 
-def build_env_values(file_vars, environ=None):
+def build_env_values(file_vars: Mapping[str, str], environ: Mapping[str, str] | None = None) -> dict[str, EnvValue]:
     environ = os.environ if environ is None else environ
-    values = {}
+    values: dict[str, EnvValue] = {}
     for dest, keys in ARG_ENV_KEYS.items():
         raw = _first_raw_value(keys, file_vars, environ)
         if raw is None:
@@ -252,16 +258,20 @@ def build_env_values(file_vars, environ=None):
     return values
 
 
-def load_run_env(spec=None, environ=None, search_dirs=None):
+def load_run_env(
+    spec: str | None = None,
+    environ: Mapping[str, str] | None = None,
+    search_dirs: Sequence[str] | None = None,
+) -> tuple[str | None, dict[str, EnvValue]]:
     environ = os.environ if environ is None else environ
-    if spec in (None, ""):
+    if not spec:
         spec = environ.get(ENV_SELECT_VAR) or None
     path = resolve_env_path(spec, search_dirs=search_dirs)
-    file_vars = load_env_file(path) if path else {}
+    file_vars: dict[str, str] = load_env_file(path) if path else {}
     return path, build_env_values(file_vars, environ)
 
 
-def first_set(*values):
+def first_set(*values: EnvValue | None) -> EnvValue | None:
     for value in values:
         if value is not None and value != "":
             return value

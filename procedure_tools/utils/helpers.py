@@ -7,10 +7,10 @@ DEFAULT_ACCELERATION = 1
 
 def from_date(
     date: str | datetime.datetime,
-    acceleration=DEFAULT_ACCELERATION,
-    client_timedelta=None,
-    **kwargs,
-):
+    acceleration: float = DEFAULT_ACCELERATION,
+    client_timedelta: datetime.timedelta | None = None,
+    **kwargs: float,
+) -> datetime.datetime:
     if isinstance(date, str):
         date = parse_date(date)
     if client_timedelta:
@@ -22,10 +22,10 @@ def from_date(
 
 
 def from_now(
-    acceleration=DEFAULT_ACCELERATION,
-    client_timedelta=None,
-    **kwargs,
-):
+    acceleration: float = DEFAULT_ACCELERATION,
+    client_timedelta: datetime.timedelta | None = None,
+    **kwargs: float,
+) -> datetime.datetime:
     return from_date(
         get_now(),
         acceleration=acceleration,
@@ -36,10 +36,10 @@ def from_now(
 
 def from_date_iso(
     date: str | datetime.datetime,
-    acceleration=DEFAULT_ACCELERATION,
-    client_timedelta=None,
-    **kwargs,
-):
+    acceleration: float = DEFAULT_ACCELERATION,
+    client_timedelta: datetime.timedelta | None = None,
+    **kwargs: float,
+) -> str:
     return from_date(
         date,
         acceleration=acceleration,
@@ -49,10 +49,10 @@ def from_date_iso(
 
 
 def from_now_iso(
-    acceleration=DEFAULT_ACCELERATION,
-    client_timedelta=None,
-    **kwargs,
-):
+    acceleration: float = DEFAULT_ACCELERATION,
+    client_timedelta: datetime.timedelta | None = None,
+    **kwargs: float,
+) -> str:
     return from_now(
         acceleration=acceleration,
         client_timedelta=client_timedelta,

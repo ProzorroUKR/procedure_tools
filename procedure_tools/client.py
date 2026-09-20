@@ -1,7 +1,9 @@
 import logging
 from base64 import b64encode
+from collections.abc import Callable
 from copy import copy
 from datetime import timedelta
+from typing import Any, ClassVar
 from urllib.parse import urljoin
 
 import requests
@@ -9,35 +11,40 @@ import requests
 from procedure_tools.utils import adapters
 from procedure_tools.utils.date import get_utcnow, parse_date_header
 from procedure_tools.utils.handlers import (
+    allowed_error_handler,
     client_init_response_handler,
     response_handler,
 )
 from procedure_tools.version import __version__
 
+logger = logging.getLogger(__name__)
+
+
 API_PATH_PREFIX_DEFAULT = "/api/0/"
 
 
-class BaseApiClient(object):
+class BaseApiClient:
     name = "api"
 
     SPORE_PATH = "spore"
 
-    HEADERS_DEFAULT = {
+    HEADERS_DEFAULT: ClassVar[dict[str, str]] = {
         "User-Agent": f"procedure_tools/{__version__}",
     }
 
     def __init__(
         self,
-        host,
-        session=None,
-        debug_request=False,
-        debug_json_level=None,
-        debug=False,
-        **kwargs,
-    ):
-        logging.info(f"Initializing {self.name} client\n")
+        host: str,
+        session: requests.Session | None = None,
+        debug_request: bool = False,
+        debug_json_level: int | None = None,
+        debug: bool = False,
+        **kwargs: Any,
+    ) -> None:
+        logger.info(f"Initializing {self.name} client\n")
         self.host = host
         self.kwargs = kwargs
+        self.allow_fail = False  # let the next request fail without stopping the run (allow_fail action)
         self.debug_request = debug_request
         self.debug_json_level = debug_json_level
         adapters.configure_urllib3_logging(debug)
@@ -59,20 +66,23 @@ class BaseApiClient(object):
             )
         self.headers = copy(self.HEADERS_DEFAULT)
 
-    def get_url(self, api_path):
+    def get_url(self, api_path: str) -> str:
         return urljoin(self.host, api_path)
 
-    def request(self, method, path, **kwargs):
+    def request(self, method: str, path: str, **kwargs: Any) -> requests.Response:
         request_kwargs = copy(kwargs)
         auth_token = request_kwargs.pop("auth_token", None)
         success_handler = request_kwargs.pop("success_handler", None)
         error_handler = request_kwargs.pop("error_handler", None)
+        if self.allow_fail:
+            self.allow_fail = False
+            error_handler = allowed_error_handler
         request_kwargs["headers"] = copy(self.headers)
         request_kwargs["headers"].update({"Authorization": "Bearer " + auth_token} if auth_token else {})
         request_kwargs["headers"].update(kwargs.get("headers", {}))
         url = self.get_url(path)
         response = self.session.request(method=method, url=url, **request_kwargs)
-        handlers = {}
+        handlers: dict[str, Callable[..., None]] = {}
         if success_handler:
             handlers["success_handler"] = success_handler
         if error_handler:
@@ -80,16 +90,16 @@ class BaseApiClient(object):
         response_handler(response, **handlers)
         return response
 
-    def get(self, path, **kwargs):
+    def get(self, path: str, **kwargs: Any) -> requests.Response:
         return self.request("GET", path, **kwargs)
 
-    def post(self, path, json=None, **kwargs):
+    def post(self, path: str, json: Any = None, **kwargs: Any) -> requests.Response:
         return self.request("POST", path, json=json, **kwargs)
 
-    def put(self, path, json=None, **kwargs):
+    def put(self, path: str, json: Any = None, **kwargs: Any) -> requests.Response:
         return self.request("PUT", path, json=json, **kwargs)
 
-    def patch(self, path, json=None, **kwargs):
+    def patch(self, path: str, json: Any = None, **kwargs: Any) -> requests.Response:
         return self.request("PATCH", path, json=json, **kwargs)
 
 
@@ -98,15 +108,15 @@ class CDBClient(BaseApiClient):
 
     SPORE_PATH = "spore"
 
-    def __init__(
+    def __init__(  # pylint: disable=unused-argument
         self,
-        host,
-        auth_token=None,
-        path_prefix=API_PATH_PREFIX_DEFAULT,
-        session=None,
-        **request_kwargs,
-    ):
-        super(CDBClient, self).__init__(host, session=session, **request_kwargs)
+        host: str,
+        auth_token: str | None = None,
+        path_prefix: str = API_PATH_PREFIX_DEFAULT,
+        session: requests.Session | None = None,
+        **request_kwargs: Any,
+    ) -> None:
+        super().__init__(host, session=session, **request_kwargs)
         self.path_prefix = path_prefix
         self.headers.update({"Content-Type": "application/json"})
         # GET request to retrieve cookies and server time (via request() so debug request logging applies)
@@ -114,21 +124,21 @@ class CDBClient(BaseApiClient):
         # Calculate client time delta with server
         client_datetime = get_utcnow()
         try:
-            server_datetime = parse_date_header(response.headers.get("date"))
+            server_datetime = parse_date_header(response.headers.get("date", ""))
             self.client_timedelta = server_datetime - client_datetime
-        except:
+        except (TypeError, ValueError):
             self.client_timedelta = timedelta()
         client_init_response_handler(response, self.client_timedelta)
 
-    def get_api_path(self, path, acc_token=None):
+    def get_api_path(self, path: str, acc_token: str | None = None) -> str:
         return urljoin(
             self.path_prefix,
             urljoin(path, f"?acc_token={acc_token}" if acc_token else None),
         )
 
-    def request(self, method, path, **kwargs):
+    def request(self, method: str, path: str, **kwargs: Any) -> requests.Response:
         path = self.get_api_path(path, acc_token=kwargs.pop("acc_token", None))
-        return super(CDBClient, self).request(method, path, **kwargs)
+        return super().request(method, path, **kwargs)
 
 
 class DSClient(BaseApiClient):
@@ -136,14 +146,14 @@ class DSClient(BaseApiClient):
 
     def __init__(
         self,
-        host,
-        username=None,
-        password=None,
-        session=None,
-        **request_kwargs,
-    ):
-        super(DSClient, self).__init__(host, session=session, **request_kwargs)
+        host: str,
+        username: str | None = None,
+        password: str | None = None,
+        session: requests.Session | None = None,
+        **request_kwargs: Any,
+    ) -> None:
+        super().__init__(host, session=session, **request_kwargs)
         self.headers.update({"Authorization": "Basic " + b64encode(f"{username}:{password}".encode()).decode()})
 
-    def post_document_upload(self, files, **kwargs):
+    def post_document_upload(self, files: Any, **kwargs: Any) -> requests.Response:
         return self.post("upload", files=files, **kwargs)

@@ -1,0 +1,78 @@
+{
+  "data": {
+    "documents": [
+      {
+        "title": "tender_bid_document_file.txt"
+      },
+      {
+        "confidentiality": "buyerOnly",
+        "confidentialityRationale": "{{ fake.sentence(nb_words=10) }}",
+        "title": "tender_bid_confidential_document_file.txt",
+        "file": "tender_bid_document_file.txt"
+      }
+    ],
+    "eligibilityDocuments": [
+      {
+        "title": "tender_bid_eligibility_document_file.txt",
+        "file": "tender_bid_document_file.txt"
+      }
+    ],
+    "financialDocuments": [
+      {
+        "title": "tender_bid_financial_document_file.txt",
+        "file": "tender_bid_document_file.txt"
+      }
+    ],
+    "items": [
+      {
+        "description": "{{ tender['items'][0].description }}",
+        "description_en": "{{ tender['items'][0].description_en }}",
+        "id": "{{ tender['items'][0].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг"
+        }
+      }
+    ],
+    "lotValues": [
+      {
+        "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
+        "subcontractingDetails": "{{ fake.company() }}, Україна",
+        "value": {
+          "amount": 500
+        }
+      }
+    ],
+    "qualificationDocuments": [
+      {
+        "title": "tender_bid_qualification_document_file.txt",
+        "file": "tender_bid_document_file.txt"
+      }
+    ],
+    "status": "draft",
+    "tenderers": [
+      {
+        "address": {
+          "countryName": "Україна",
+          "locality": "м. Львів",
+          "postalCode": "79013",
+          "region": "Львівська область",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "contactPoint": {
+          "email": "{{ fake.email() }}",
+          "name": "{{ fake.name() }}",
+          "telephone": "{{ fake.prozorro_phone_number() }}"
+        },
+        "identifier": {
+          "id": "00137228",
+          "scheme": "UA-EDR",
+          "uri": "{{ fake.url() }}"
+        },
+        "name": "{{ fake.company() }}",
+        "scale": "micro"
+      }
+    ]
+  }
+}

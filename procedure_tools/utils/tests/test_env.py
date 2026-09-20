@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from procedure_tools.utils.env import (
@@ -12,7 +14,7 @@ from procedure_tools.utils.env import (
 )
 
 
-def test_parse_env_content_supports_export_quotes_and_comments():
+def test_parse_env_content_supports_export_quotes_and_comments() -> None:
     values = parse_env_content("""
         # comment
         export API_HOST=https://example.com
@@ -29,7 +31,7 @@ def test_parse_env_content_supports_export_quotes_and_comments():
     }
 
 
-def test_convert_env_value_types():
+def test_convert_env_value_types() -> None:
     assert convert_env_value("debug", "true") is True
     assert convert_env_value("debug_request", "0") is False
     assert convert_env_value("acceleration", "100") == 100
@@ -42,7 +44,7 @@ def test_convert_env_value_types():
         convert_env_value("seed", "nope")
 
 
-def test_build_env_values_prefers_file_over_os_environ():
+def test_build_env_values_prefers_file_over_os_environ() -> None:
     values = build_env_values(
         {"API_HOST": "from-file", "API_TOKEN": "file-token"},
         environ={"API_HOST": "from-os", "DS_HOST": "os-ds"},
@@ -52,7 +54,7 @@ def test_build_env_values_prefers_file_over_os_environ():
     assert values["ds_host"] == "os-ds"
 
 
-def test_resolve_env_path_by_name_and_default(tmp_path):
+def test_resolve_env_path_by_name_and_default(tmp_path: Path) -> None:
     sandbox = tmp_path / ".env.sandbox"
     sandbox.write_text("API_HOST=https://sandbox.example\n", encoding="utf-8")
     default = tmp_path / ".env"
@@ -63,7 +65,7 @@ def test_resolve_env_path_by_name_and_default(tmp_path):
     assert resolve_env_path(None, search_dirs=[str(tmp_path / "missing")]) is None
 
 
-def test_resolve_env_path_from_envs_dir_and_suffix(tmp_path):
+def test_resolve_env_path_from_envs_dir_and_suffix(tmp_path: Path) -> None:
     named = tmp_path / "staging.env"
     named.write_text("API_HOST=https://staging.example\n", encoding="utf-8")
     nested_dir = tmp_path / "envs"
@@ -75,14 +77,14 @@ def test_resolve_env_path_from_envs_dir_and_suffix(tmp_path):
     assert resolve_env_path("dev", search_dirs=[str(tmp_path)]) == str(nested)
 
 
-def test_list_available_envs_skips_examples(tmp_path):
+def test_list_available_envs_skips_examples(tmp_path: Path) -> None:
     (tmp_path / ".env").write_text("API_HOST=a\n", encoding="utf-8")
     (tmp_path / ".env.sandbox").write_text("API_HOST=b\n", encoding="utf-8")
     (tmp_path / ".env.example").write_text("API_HOST=c\n", encoding="utf-8")
     assert list_available_envs(search_dirs=[str(tmp_path)]) == [".env", "sandbox"]
 
 
-def test_load_run_env_uses_procedure_env(tmp_path):
+def test_load_run_env_uses_procedure_env(tmp_path: Path) -> None:
     sandbox = tmp_path / ".env.sandbox"
     sandbox.write_text("API_HOST=https://sandbox.example\nAPI_TOKEN=token\n", encoding="utf-8")
     path, values = load_run_env(
@@ -94,6 +96,6 @@ def test_load_run_env_uses_procedure_env(tmp_path):
     assert values["host"] == "https://sandbox.example"
 
 
-def test_resolve_env_path_missing_named_file(tmp_path):
+def test_resolve_env_path_missing_named_file(tmp_path: Path) -> None:
     with pytest.raises(EnvFileNotFound):
         resolve_env_path("missing", search_dirs=[str(tmp_path)])

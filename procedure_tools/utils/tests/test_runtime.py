@@ -1,3 +1,4 @@
+# pylint: disable=protected-access
 import threading
 import time
 
@@ -5,7 +6,7 @@ from procedure_tools.utils.handlers import EX_OK
 from procedure_tools.utils.runtime import RunController, get_controller, set_controller
 
 
-def test_run_controller_summary_states():
+def test_run_controller_summary_states() -> None:
     controller = RunController(["one", "two", "three"])
     set_controller(controller)
     try:
@@ -31,11 +32,11 @@ def test_run_controller_summary_states():
         assert get_controller() is None
 
 
-def test_check_pause_blocks_until_resume():
+def test_check_pause_blocks_until_resume() -> None:
     controller = RunController(["one"])
     released = threading.Event()
 
-    def worker():
+    def worker() -> None:
         controller.check_pause()
         released.set()
 
@@ -49,14 +50,14 @@ def test_check_pause_blocks_until_resume():
     assert released.is_set()
 
 
-def test_pause_waits_until_all_running_workers_are_quiet():
+def test_pause_waits_until_all_running_workers_are_quiet() -> None:
     controller = RunController(["one", "two"])
     controller.mark_started("one")
     controller.mark_started("two")
     quiet_seen = threading.Event()
     workers_ready = threading.Barrier(3)
 
-    def worker():
+    def worker() -> None:
         workers_ready.wait()
         controller.check_pause()
 
@@ -64,7 +65,7 @@ def test_pause_waits_until_all_running_workers_are_quiet():
     for thread in threads:
         thread.start()
 
-    def pause_ui():
+    def pause_ui() -> None:
         workers_ready.wait()
         with controller._lock:
             controller._quiet.clear()
@@ -83,7 +84,7 @@ def test_pause_waits_until_all_running_workers_are_quiet():
     assert quiet_seen.is_set()
 
 
-def test_pause_is_quiet_immediately_when_nothing_running():
+def test_pause_is_quiet_immediately_when_nothing_running() -> None:
     controller = RunController(["one", "two"])
     controller.mark_finished("one", EX_OK, None)
     with controller._lock:

@@ -1,4 +1,6 @@
 import os
+from collections.abc import Callable
+from typing import Any
 from unittest import mock
 
 import pytest
@@ -16,7 +18,7 @@ SKIP_REQUIRED = REQUIRED_ARGS + (
 )
 
 
-def _load_test_env():
+def _load_test_env() -> tuple[str | None, dict[str, Any]]:
     try:
         return load_run_env(TEST_ENV or None)
     except EnvFileNotFound:
@@ -34,301 +36,216 @@ skipifenv = pytest.mark.skipif(
 )
 
 
-def run_test(argv):
+def run_test(argv: list[str]) -> None:
     args = ["--env", TEST_ENV]
     args.extend(argv)
 
-    print("\n\nTest with args: %s\n\n" % (args))
+    print(f"\n\nTest with args: {args}\n\n")
 
     with mock.patch("sys.argv", [""] + args), pytest.raises(SystemExit) as e:
         main()
 
-    assert e.type == SystemExit
+    assert e.type is SystemExit
     assert e.value.code == 0
 
 
-@skipifenv
-def test_above_threshold():
-    argv = ["--data", "aboveThreshold"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
+def run_data(data_dir: str, fast_stop: str | None = None) -> None:
+    argv = ["--data", data_dir]
+    if fast_stop and os.environ.get("FAST_RUN"):
+        argv += ["--stop", fast_stop]
     run_test(argv)
 
 
 @skipifenv
-def test_above_threshold_features():
-    argv = ["--data", "aboveThreshold.features"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold() -> None:
+    run_data("aboveThreshold", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_lcc():
-    argv = ["--data", "aboveThreshold.lcc"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_cancellation() -> None:
+    run_data("aboveThreshold.cancellation", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_econtract():
-    argv = ["--data", "aboveThreshold.econtract"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_features() -> None:
+    run_data("aboveThreshold.features", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_eu():
-    argv = ["--data", "aboveThresholdEU"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_lcc() -> None:
+    run_data("aboveThreshold.lcc", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_eu_features():
-    argv = ["--data", "aboveThresholdEU.features"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_econtract() -> None:
+    run_data("aboveThreshold.econtract", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_eu_lcc():
-    argv = ["--data", "aboveThresholdEU.lcc"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_eu() -> None:
+    run_data("aboveThresholdEU", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_eu_econtract():
-    argv = ["--data", "aboveThresholdEU.econtract"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_eu_cancellation() -> None:
+    run_data("aboveThresholdEU.cancellation", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_ua():
-    argv = ["--data", "aboveThresholdUA"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_eu_features() -> None:
+    run_data("aboveThresholdEU.features", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_ua_features():
-    argv = ["--data", "aboveThresholdUA.features"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_eu_lcc() -> None:
+    run_data("aboveThresholdEU.lcc", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_above_threshold_ua_lcc():
-    argv = ["--data", "aboveThresholdUA.lcc"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_above_threshold_eu_econtract() -> None:
+    run_data("aboveThresholdEU.econtract", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_below_threshold():
-    argv = ["--data", "belowThreshold"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "tender_patch.json"]
-    run_test(argv)
+def test_above_threshold_ua() -> None:
+    run_data("aboveThresholdUA", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_below_threshold_central():
-    argv = ["--data", "belowThreshold.central"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "tender_patch.json"]
-    run_test(argv)
+def test_above_threshold_ua_features() -> None:
+    run_data("aboveThresholdUA.features", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_below_threshold_features():
-    argv = ["--data", "belowThreshold.features"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "tender_patch.json"]
-    run_test(argv)
+def test_above_threshold_ua_lcc() -> None:
+    run_data("aboveThresholdUA.lcc", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_below_threshold_econtract():
-    argv = ["--data", "belowThreshold.econtract"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_below_threshold() -> None:
+    run_data("belowThreshold", "tender_patch.json")
 
 
 @skipifenv
-def test_close_framework_agreement_ua():
-    argv = ["--data", "closeFrameworkAgreementUA"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_below_threshold_central() -> None:
+    run_data("belowThreshold.central", "tender_patch.json")
 
 
 @skipifenv
-def test_close_framework_agreement_ua_central():
-    argv = ["--data", "closeFrameworkAgreementUA.central"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_below_threshold_features() -> None:
+    run_data("belowThreshold.features", "tender_patch.json")
 
 
 @skipifenv
-def test_competitive_dialogue_eu():
-    argv = ["--data", "competitiveDialogueEU"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_below_threshold_econtract() -> None:
+    run_data("belowThreshold.econtract", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_competitive_dialogue_ua():
-    argv = ["--data", "competitiveDialogueUA"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_close_framework_agreement_ua() -> None:
+    run_data("closeFrameworkAgreementUA", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_competitive_dialogue_ua_features():
-    argv = ["--data", "competitiveDialogueUA.features"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_close_framework_agreement_ua_central() -> None:
+    run_data("closeFrameworkAgreementUA.central", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_esco():
-    argv = ["--data", "esco"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_competitive_dialogue_eu() -> None:
+    run_data("competitiveDialogueEU", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_esco_features():
-    argv = ["--data", "esco.features"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_competitive_dialogue_ua() -> None:
+    run_data("competitiveDialogueUA", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_complex_asset_arma():
-    argv = ["--data", "complexAsset.arma"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_competitive_dialogue_ua_features() -> None:
+    run_data("competitiveDialogueUA.features", "tender_bid_patch_1.json")
+
+
+@skipifenv
+def test_esco() -> None:
+    run_data("esco", "tender_bid_patch_1.json")
+
+
+@skipifenv
+def test_esco_features() -> None:
+    run_data("esco.features", "tender_bid_patch_1.json")
+
+
+@skipifenv
+def test_complex_asset_arma() -> None:
+    run_data("complexAsset.arma", "tender_bid_patch_1.json")
+
+
+@skipifenv
+def test_negotiation() -> None:
+    run_data("negotiation")
+
+
+@skipifenv
+def test_negotiation_local() -> None:
+    run_data("negotiation.local")
+
+
+@skipifenv
+def test_negotiation_quick() -> None:
+    run_data("negotiation.quick")
+
+
+@skipifenv
+def test_reporting() -> None:
+    run_data("reporting")
+
+
+@skipifenv
+def test_reporting_local() -> None:
+    run_data("reporting.local")
+
+
+@skipifenv
+def test_price_quotation() -> None:
+    run_data("priceQuotation", "tender_bid_patch_1.json")
 
 
 @skipinactive
 @skipifenv
-def test_negotiation():
-    argv = ["--data", "negotiation"]
-    run_test(argv)
+def test_simple_defense() -> None:
+    run_data("simple.defense", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_negotiation_local():
-    argv = ["--data", "negotiation.local"]
-    run_test(argv)
-
-
-@skipinactive
-@skipifenv
-def test_negotiation_quick():
-    argv = ["--data", "negotiation.quick"]
-    run_test(argv)
+def test_dynamic_purchasing_system_competitive_ordering_short() -> None:
+    run_data("dynamicPurchasingSystem.competitiveOrdering.short", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_reporting():
-    argv = ["--data", "reporting"]
-    run_test(argv)
+def test_dynamic_purchasing_system_competitive_ordering_long() -> None:
+    run_data("dynamicPurchasingSystem.competitiveOrdering.long", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_reporting_local():
-    argv = ["--data", "reporting.local"]
-    run_test(argv)
+def test_dynamic_purchasing_system_competitive_ordering_long_multi_sourcing() -> None:
+    run_data("dynamicPurchasingSystem.competitiveOrdering.long.MultiSourcing", "tender_bid_patch_1.json")
 
 
 @skipifenv
-def test_price_quotation():
-    argv = ["--data", "priceQuotation"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
-
-
-@skipinactive
-@skipifenv
-def test_simple_defense():
-    argv = ["--data", "simple.defense"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_request_for_proposal() -> None:
+    run_data("requestForProposal", "tender_patch.json")
 
 
 @skipifenv
-def test_dynamic_purchasing_system_competitive_ordering_short():
-    argv = ["--data", "dynamicPurchasingSystem.competitiveOrdering.short"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
+def test_international_financial_institutions_request_for_proposal() -> None:
+    run_data("internationalFinancialInstitutions.requestForProposal", "tender_patch.json")
 
 
-@skipifenv
-def test_dynamic_purchasing_system_competitive_ordering_long():
-    argv = ["--data", "dynamicPurchasingSystem.competitiveOrdering.long"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
-
-
-@skipifenv
-def test_dynamic_purchasing_system_competitive_ordering_long_multi_sourcing():
-    argv = ["--data", "dynamicPurchasingSystem.competitiveOrdering.long.MultiSourcing"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "bid_patch_1.json"]
-    run_test(argv)
-
-
-@skipifenv
-def test_request_for_proposal():
-    argv = ["--data", "requestForProposal"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "tender_patch.json"]
-    run_test(argv)
-
-
-@skipifenv
-def test_international_financial_institutions_request_for_proposal():
-    argv = ["--data", "internationalFinancialInstitutions.requestForProposal"]
-    if os.environ.get("FAST_RUN"):
-        argv += ["--stop", "tender_patch.json"]
-    run_test(argv)
-
-
-def has_skipinactive_marker(test_func):
+def has_skipinactive_marker(test_func: Callable[..., object]) -> bool:
     marks = getattr(test_func, "pytestmark", [])
     return any(
-        all(
-            (
-                getattr(mark, "name", None) == "skip",
-                getattr(mark, "kwargs", {}).get("reason") == INACTIVE_REASON,
-            )
-        )
+        getattr(mark, "name", None) == "skip" and getattr(mark, "kwargs", {}).get("reason") == INACTIVE_REASON
         for mark in marks
     )
 
@@ -336,11 +253,5 @@ def has_skipinactive_marker(test_func):
 WORKFLOW_TEST_CASES = [  # pyright: ignore[reportUnusedVariable]
     name.removeprefix("test_")
     for name, test_func in globals().items()
-    if all(
-        (
-            name.startswith("test_"),
-            callable(test_func),
-            not has_skipinactive_marker(test_func),
-        )
-    )
+    if name.startswith("test_") and callable(test_func) and not has_skipinactive_marker(test_func)
 ]

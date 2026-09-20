@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       case:
-        description: 'Test Case'
+        description: 'Test Case (procedure_tools/test.py)'
         required: false
 jobs:
   pytest-case:

@@ -1,0 +1,150 @@
+{
+  "data": {
+    "documents": [
+      {
+        "title": "tender_bid_document_file.txt"
+      },
+      {
+        "confidentiality": "buyerOnly",
+        "confidentialityRationale": "{{ fake.sentence(nb_words=10) }}",
+        "title": "tender_bid_confidential_document_file.txt",
+        "file": "tender_bid_document_file.txt"
+      }
+    ],
+    "eligibilityDocuments": [
+      {
+        "title": "tender_bid_eligibility_document_file.txt",
+        "file": "tender_bid_document_file.txt"
+      }
+    ],
+    "financialDocuments": [
+      {
+        "title": "tender_bid_financial_document_file.txt",
+        "file": "tender_bid_document_file.txt"
+      }
+    ],
+    "items": [
+      {
+        "description": "{{ tender['items'][0].description }}",
+        "description_en": "{{ tender['items'][0].description_en }}",
+        "id": "{{ tender['items'][0].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг",
+          "value": {
+            "amount": 2000.65,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
+        }
+      },
+      {
+        "description": "{{ tender['items'][2].description }}",
+        "description_en": "{{ tender['items'][2].description_en }}",
+        "id": "{{ tender['items'][2].id }}",
+        "quantity": 25,
+        "unit": {
+          "code": "KGM",
+          "name": "кг",
+          "value": {
+            "amount": 80.0,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
+        }
+      },
+      {
+        "description": "{{ tender['items'][3].description }}",
+        "description_en": "{{ tender['items'][3].description_en }}",
+        "id": "{{ tender['items'][3].id }}",
+        "quantity": 28,
+        "unit": {
+          "code": "KGM",
+          "name": "кг",
+          "value": {
+            "amount": 75.0,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
+        }
+      },
+      {
+        "description": "{{ tender['items'][4].description }}",
+        "description_en": "{{ tender['items'][4].description_en }}",
+        "id": "{{ tender['items'][4].id }}",
+        "quantity": 1,
+        "unit": {
+          "code": "KGM",
+          "name": "кг",
+          "value": {
+            "amount": 2200.0,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
+        }
+      }
+    ],
+    "lotValues": [
+      {
+        "relatedLot": "43054351543840f2875c9804e45f91fd",
+        "subcontractingDetails": "{{ fake.company() }}, Україна, м. Київ, {{ fake.street_address() }}",
+        "value": {
+          "amount": 2000.65
+        }
+      },
+      {
+        "relatedLot": "0a134597132d4fc09a555e49e11992d0",
+        "subcontractingDetails": "{{ fake.company() }}, Україна, м. Київ, {{ fake.street_address() }}",
+        "value": {
+          "amount": 2000.0
+        }
+      },
+      {
+        "relatedLot": "facc21a00c89441685c06eea10ef4d23",
+        "subcontractingDetails": "{{ fake.company() }}, Україна, м. Київ, {{ fake.street_address() }}",
+        "value": {
+          "amount": 2100.0
+        }
+      },
+      {
+        "relatedLot": "86647380e74045d2b4b2c39882ccaa17",
+        "subcontractingDetails": "{{ fake.company() }}, Україна, м. Київ, {{ fake.street_address() }}",
+        "value": {
+          "amount": 2200.0
+        }
+      }
+    ],
+    "qualificationDocuments": [
+      {
+        "title": "tender_bid_qualification_document_file.txt",
+        "file": "tender_bid_document_file.txt"
+      }
+    ],
+    "status": "draft",
+    "subcontractingDetails": "{{ fake.company() }}, Україна, м. Київ, {{ fake.street_address() }}",
+    "tenderers": [
+      {
+        "address": {
+          "countryName": "Україна",
+          "locality": "м. Київ",
+          "postalCode": "21100",
+          "region": "м. Київ",
+          "streetAddress": "{{ fake.street_address() }}"
+        },
+        "contactPoint": {
+          "email": "{{ fake.email() }}",
+          "name": "{{ fake.name() }}",
+          "telephone": "{{ fake.prozorro_phone_number() }}"
+        },
+        "identifier": {
+          "id": "00137256",
+          "scheme": "UA-EDR",
+          "uri": "{{ fake.url() }}"
+        },
+        "name": "{{ fake.company() }}",
+        "scale": "micro"
+      }
+    ]
+  }
+}

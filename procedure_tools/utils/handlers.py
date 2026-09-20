@@ -1,8 +1,16 @@
 import json
 import logging
+from collections.abc import Callable
+from datetime import timedelta
+from typing import Any
+
+import requests
 
 from procedure_tools.utils.date import client_timedelta_string
-from procedure_tools.utils.style import fore_error, fore_info, fore_status_code
+from procedure_tools.utils.style import fore_error, fore_info
+
+logger = logging.getLogger(__name__)
+
 
 PAD = 20
 
@@ -11,18 +19,44 @@ EX_DATAERR = 65
 
 
 class ProcedureExit(SystemExit):
-    def __init__(self, code, message=None):
+    def __init__(self, code: int, message: str | None = None) -> None:
         super().__init__(code)
         self.message = message
 
 
-def format_log_entry(label: str, value: str) -> str:
-    return f" - {label:<{PAD}} {fore_info(value)}\n"
+def format_log_entry(label: str, value: str, pad: int = PAD) -> str:
+    return f" - {label:<{pad}} {fore_info(value)}\n"
 
 
-def parse_json_path(path: str):
-    tokens = []
-    buffer = []
+def flatten_payload(payload: Any, prefix: str = "") -> list[tuple[str, Any]]:
+    """(path, value) pairs of every leaf of a JSON payload: errors[0].name, data.id, ..."""
+    if isinstance(payload, dict) and payload:
+        pairs: list[tuple[str, Any]] = []
+        for key, value in payload.items():
+            pairs.extend(flatten_payload(value, f"{prefix}.{key}" if prefix else str(key)))
+        return pairs
+    if isinstance(payload, list) and payload:
+        pairs = []
+        for index, value in enumerate(payload):
+            pairs.extend(flatten_payload(value, f"{prefix}[{index}]"))
+        return pairs
+    return [(prefix or "value", payload)]
+
+
+def format_log_all_fields(payload: Any) -> str:
+    """Every field of a payload, one line each, in the same layout as the success handlers."""
+    pairs = flatten_payload(payload)
+    pad = max([PAD, *(len(label) for label, _ in pairs)])
+    msg = ""
+    for label, value in pairs:
+        text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
+        msg += format_log_entry(label, text, pad)
+    return msg
+
+
+def parse_json_path(path: str) -> list[tuple[str, str | int | None]]:
+    tokens: list[tuple[str, str | int | None]] = []
+    buffer: list[str] = []
     i = 0
     while i < len(path):
         char = path[i]
@@ -62,25 +96,29 @@ def parse_json_path(path: str):
     return tokens
 
 
-def extract_path_values(payload, path: str):
+def extract_path_values(payload: Any, path: str) -> list[tuple[Any, str]]:
     tokens = parse_json_path(path)
     if not tokens:
         return []
 
-    values = [(payload, "")]
+    values: list[tuple[Any, str]] = [(payload, "")]
 
     for token_type, token_value in tokens:
-        next_values = []
+        next_values: list[tuple[Any, str]] = []
         for current_value, current_path in values:
             if token_type == "field":
-                if isinstance(current_value, dict) and token_value in current_value:
+                if isinstance(current_value, dict) and isinstance(token_value, str) and token_value in current_value:
                     next_value = current_value[token_value]
                     next_path = f"{current_path}.{token_value}" if current_path else token_value
                     next_values.append((next_value, next_path))
                 continue
 
             if token_type == "index":
-                if isinstance(current_value, list) and token_value < len(current_value):
+                if (
+                    isinstance(current_value, list)
+                    and isinstance(token_value, int)
+                    and token_value < len(current_value)
+                ):
                     next_value = current_value[token_value]
                     next_path = f"{current_path}[{token_value}]"
                     next_values.append((next_value, next_path))
@@ -98,7 +136,7 @@ def extract_path_values(payload, path: str):
     return values
 
 
-def get_wildcard_prefix(path: str):
+def get_wildcard_prefix(path: str) -> str | None:
     wildcard_marker = "[*]"
     marker_index = path.find(wildcard_marker)
     if marker_index == -1:
@@ -106,7 +144,7 @@ def get_wildcard_prefix(path: str):
     return path[: marker_index + len(wildcard_marker)]
 
 
-def split_wildcard_path(path: str):
+def split_wildcard_path(path: str) -> tuple[str, str]:
     wildcard_marker = "[*]"
     marker_index = path.find(wildcard_marker)
     if marker_index == -1:
@@ -116,7 +154,7 @@ def split_wildcard_path(path: str):
     return prefix, suffix
 
 
-def format_log_fields(payload: dict, fields: list[str]) -> str:
+def format_log_fields(payload: Any, fields: list[str]) -> str:
     msg = ""
     index = 0
     while index < len(fields):
@@ -138,11 +176,11 @@ def format_log_fields(payload: dict, fields: list[str]) -> str:
             grouped_paths.append(next_path)
             next_index += 1
 
-        groups = {}
-        group_order = []
+        groups: dict[str, list[tuple[str, Any]]] = {}
+        group_order: list[str] = []
 
         for grouped_path in grouped_paths:
-            wildcard_root, wildcard_suffix = split_wildcard_path(grouped_path)
+            _, wildcard_suffix = split_wildcard_path(grouped_path)
             for value, resolved_path in extract_path_values(payload, grouped_path):
                 group_key = resolved_path
                 if wildcard_suffix and resolved_path.endswith(wildcard_suffix):
@@ -163,16 +201,18 @@ def format_log_fields(payload: dict, fields: list[str]) -> str:
     return msg
 
 
-def allow_null_success_handler(handler):
-    def wrapper(response):
+def allow_null_success_handler(
+    handler: Callable[[requests.Response], None],
+) -> Callable[[requests.Response], None]:
+    def wrapper(response: requests.Response) -> None:
         if response.text == "null":
             return default_success_handler(response)
-        handler(response)
+        return handler(response)
 
     return wrapper
 
 
-def format_response_text(text):
+def format_response_text(text: str) -> str:
     if not text:
         return text
     try:
@@ -181,35 +221,81 @@ def format_response_text(text):
         return text
 
 
-def error(text, allow_error=False):
+def parse_response_payload(response: requests.Response) -> Any:
+    """The JSON payload of a response, or None when the body is not JSON."""
+    try:
+        return response.json()
+    except ValueError:
+        return None
+
+
+def format_error_summary(payload: Any, text: str) -> str:
+    """One line for the raised error: ``body.tendererAction: Rogue field; ...`` or the compact response text."""
+    errors = payload.get("errors") if isinstance(payload, dict) else None
+    if isinstance(errors, list) and errors and all(isinstance(item, dict) for item in errors):
+        parts = []
+        for item in errors:
+            where = ".".join(str(item[key]) for key in ("location", "name") if item.get(key))
+            description = item.get("description", "")
+            if not isinstance(description, str):
+                description = json.dumps(description, ensure_ascii=False)
+            parts.append(f"{where}: {description}" if where else description)
+        return "; ".join(parts)
+    return format_response_text(text)
+
+
+def log_error_response(response: requests.Response, allow_error: bool) -> None:
+    """Log every field of an error response like the success handlers do, then raise (unless allowed)."""
+    payload = parse_response_payload(response)
+    if payload is None or payload == {}:
+        logger.info("Response text:\n")
+        error(format_response_text(response.text), allow_error=allow_error)
+        return
+    logger.info("Response error:\n" + format_log_all_fields(payload))
+    error(format_error_summary(payload, response.text), allow_error=allow_error)
+
+
+def error(text: str, allow_error: bool = False) -> None:
     msg = fore_error(text)
     msg += "\n"
-    logging.info(msg)
+    logger.info(msg)
     if not allow_error:
         raise ProcedureExit(EX_DATAERR, text)
 
 
-def default_error_handler(response):
-    msg = "Response text:\n"
-    logging.info(msg)
-    error(format_response_text(response.text))
+class RequestFailed(Exception):
+    """A request failed while a failure was allowed (see the ``allow_fail`` action)."""
 
 
-def allow_error_handler(response):
-    msg = "Response text:\n"
-    logging.info(msg)
-    error(format_response_text(response.text), allow_error=True)
+def allowed_error_handler(response: requests.Response) -> None:
+    """Log a failed response without the red error text and abort the step with RequestFailed."""
+    payload = parse_response_payload(response)
+    if payload is None or payload == {}:
+        summary = format_response_text(response.text)
+        logger.info(f"Response text (failure allowed):\n{summary}\n")
+    else:
+        summary = format_error_summary(payload, response.text)
+        logger.info("Response error (failure allowed):\n" + format_log_all_fields(payload))
+    raise RequestFailed(summary)
 
 
-def default_success_handler(response):
+def default_error_handler(response: requests.Response) -> None:
+    log_error_response(response, allow_error=False)
+
+
+def allow_error_handler(response: requests.Response) -> None:
+    log_error_response(response, allow_error=True)
+
+
+def default_success_handler(_response: requests.Response) -> None:
     pass
 
 
 def response_handler(
-    response,
-    success_handler=default_success_handler,
-    error_handler=default_error_handler,
-):
+    response: requests.Response,
+    success_handler: Callable[[requests.Response], None] = default_success_handler,
+    error_handler: Callable[[requests.Response], None] = default_error_handler,
+) -> None:
     if 200 <= response.status_code < 300:
         success_handler(response)
     else:
@@ -217,15 +303,15 @@ def response_handler(
 
 
 def client_init_response_handler(
-    response,
-    client_timedelta,
-):
+    response: requests.Response,
+    client_timedelta: timedelta,
+) -> None:
     response_handler(response)
     timedelta_string = client_timedelta_string(client_timedelta)
-    logging.info(f"Client time delta with server: {timedelta_string}\n")
+    logger.info(f"Client time delta with server: {timedelta_string}\n")
 
 
-def tender_create_success_handler(response):
+def tender_create_success_handler(response: requests.Response) -> None:
     msg = "Tender created:\n"
     msg += format_log_fields(
         response.json(),
@@ -239,10 +325,10 @@ def tender_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def framework_create_success_handler(response):
+def framework_create_success_handler(response: requests.Response) -> None:
     msg = "Framework created:\n"
     msg += format_log_fields(
         response.json(),
@@ -254,10 +340,10 @@ def framework_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def framework_patch_success_handler(response):
+def framework_patch_success_handler(response: requests.Response) -> None:
     msg = "Framework patched:\n"
     msg += format_log_fields(
         response.json(),
@@ -267,10 +353,10 @@ def framework_patch_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def submission_create_success_handler(response):
+def submission_create_success_handler(response: requests.Response) -> None:
     msg = "Submission created:\n"
     msg += format_log_fields(
         response.json(),
@@ -281,10 +367,10 @@ def submission_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def framework_get_success_handler(response):
+def framework_get_success_handler(response: requests.Response) -> None:
     msg = "Framework found:\n"
     msg += format_log_fields(
         response.json(),
@@ -295,10 +381,10 @@ def framework_get_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def plan_create_success_handler(response):
+def plan_create_success_handler(response: requests.Response) -> None:
     """Handle successful plan creation response."""
     msg = "Plan created:\n"
     msg += format_log_fields(
@@ -311,10 +397,10 @@ def plan_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def plan_patch_success_handler(response):
+def plan_patch_success_handler(response: requests.Response) -> None:
     msg = "Plan patched:\n"
     msg += format_log_fields(
         response.json(),
@@ -324,10 +410,10 @@ def plan_patch_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def contract_credentials_success_handler(response):
+def contract_credentials_success_handler(response: requests.Response) -> None:
     msg = "Contract credentials retrieved:\n"
     msg += format_log_fields(
         response.json(),
@@ -337,10 +423,10 @@ def contract_credentials_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def contract_post_success_handler(response):
+def contract_post_success_handler(response: requests.Response) -> None:
     msg = "Contract created:\n"
     msg += format_log_fields(
         response.json(),
@@ -350,11 +436,11 @@ def contract_post_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def contract_access_success_handler(role: str, contract_id: str):
-    def handler(response):
+def contract_access_success_handler(role: str, contract_id: str) -> Callable[[requests.Response], None]:
+    def handler(response: requests.Response) -> None:
         msg = f"Contract access for {role} retrieved:\n"
         msg += format_log_entry("id", contract_id)
         msg += format_log_fields(
@@ -368,12 +454,12 @@ def contract_access_success_handler(role: str, contract_id: str):
         )
         msg += format_log_entry("role", role)
 
-        logging.info(msg)
+        logger.info(msg)
 
     return handler
 
 
-def bid_create_success_handler(response):
+def bid_create_success_handler(response: requests.Response) -> None:
     data = response.json()["data"]
 
     msg = "Bid created:\n"
@@ -393,13 +479,15 @@ def bid_create_success_handler(response):
         "qualificationDocuments",
     ):
         for document in data.get(bid_document_container, []):
-            response = type("Response", (object,), {"json": lambda self: {"data": document}})()
-            document_attach_success_handler(response)
+            document_response: Any = type(
+                "Response", (object,), {"json": lambda self, document=document: {"data": document}}
+            )()
+            document_attach_success_handler(document_response)
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def item_create_success_handler(response):
+def item_create_success_handler(response: requests.Response) -> None:
     msg = "Item created:\n"
     msg += format_log_fields(
         response.json(),
@@ -409,10 +497,10 @@ def item_create_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def item_get_success_handler(response):
+def item_get_success_handler(response: requests.Response) -> None:
     for i, _item in enumerate(response.json()["data"]):
         msg = "Item found:\n"
         msg += format_log_fields(
@@ -423,10 +511,10 @@ def item_get_success_handler(response):
             ],
         )
 
-        logging.info(msg)
+        logger.info(msg)
 
 
-def item_patch_success_handler(response):
+def item_patch_success_handler(response: requests.Response) -> None:
     msg = "Item patched:\n"
     msg += format_log_fields(
         response.json(),
@@ -436,10 +524,10 @@ def item_patch_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def signatory_post_success_handler(response):
+def signatory_post_success_handler(response: requests.Response) -> None:
     msg = "Signatory created:\n"
     msg += format_log_fields(
         response.json(),
@@ -448,10 +536,10 @@ def signatory_post_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def tender_patch_success_handler(response):
+def tender_patch_success_handler(response: requests.Response) -> None:
     msg = "Tender patched:\n"
     msg += format_log_fields(
         response.json(),
@@ -461,10 +549,10 @@ def tender_patch_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def tender_post_criteria_success_handler(response):
+def tender_post_criteria_success_handler(response: requests.Response) -> None:
     msg = "Tender criteria created:\n"
     msg += format_log_fields(
         response.json(),
@@ -473,10 +561,10 @@ def tender_post_criteria_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def tender_check_status_success_handler(response):
+def tender_check_status_success_handler(response: requests.Response) -> None:
     msg = "Tender info:\n"
     msg += format_log_fields(
         response.json(),
@@ -486,10 +574,10 @@ def tender_check_status_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def tender_check_status_invalid_handler(response):
+def tender_check_status_invalid_handler(response: requests.Response) -> None:
     msg = "Tender info:\n"
     msg += format_log_fields(
         response.json(),
@@ -500,10 +588,10 @@ def tender_check_status_invalid_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def auction_participation_url_success_handler(response):
+def auction_participation_url_success_handler(response: requests.Response) -> None:
     msg = "Auction participation url for bid:\n"
     msg += format_log_fields(
         response.json(),
@@ -513,10 +601,10 @@ def auction_participation_url_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def auction_multilot_participation_url_success_handler(response):
+def auction_multilot_participation_url_success_handler(response: requests.Response) -> None:
     msg = "Auction participation urls for bid:\n"
     msg += format_log_fields(
         response.json(),
@@ -528,10 +616,10 @@ def auction_multilot_participation_url_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def tender_post_plan_success_handler(response):
+def tender_post_plan_success_handler(response: requests.Response) -> None:
     msg = "Tender plans:\n"
     msg += format_log_fields(
         response.json(),
@@ -540,10 +628,10 @@ def tender_post_plan_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def tender_post_complaint_success_handler(response):
+def tender_post_complaint_success_handler(response: requests.Response) -> None:
     msg = "Complaint created:\n"
     msg += format_log_fields(
         response.json(),
@@ -553,10 +641,58 @@ def tender_post_complaint_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)
 
 
-def document_attach_success_handler(response):
+def complaints_get_success_handler(kind_type: str, complaints: list[dict[str, Any]]) -> None:
+    """Log the listed complaints or claims of an object."""
+    if not complaints:
+        logger.info(f"No {kind_type}s found\n")
+        return
+    for complaint in complaints:
+        msg = f"{kind_type.capitalize()} found:\n"
+        msg += format_log_fields(
+            {"data": complaint},
+            [
+                "data.id",
+                "data.status",
+                "data.resolutionType",
+                "data.satisfied",
+                "data.cancellationReason",
+            ],
+        )
+        logger.info(msg)
+
+
+def question_success_handler(response: requests.Response) -> None:
+    msg = "Question:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.id",
+            "data.questionOf",
+            "data.title",
+            "data.answer",
+        ],
+    )
+    logger.info(msg)
+
+
+def complaint_post_success_handler(response: requests.Response) -> None:
+    msg = "Complaint post created:\n"
+    msg += format_log_fields(
+        response.json(),
+        [
+            "data.id",
+            "data.recipient",
+            "data.relatedPost",
+            "data.title",
+        ],
+    )
+    logger.info(msg)
+
+
+def document_attach_success_handler(response: requests.Response) -> None:
     msg = "Document attached:\n"
     msg += format_log_fields(
         response.json(),
@@ -568,4 +704,4 @@ def document_attach_success_handler(response):
         ],
     )
 
-    logging.info(msg)
+    logger.info(msg)

@@ -1,0 +1,8 @@
+{
+  "data": {
+    "title": "{{ fake.sentence(nb_words=5) }}",
+    "description": "{{ fake.paragraph(nb_sentences=2) }}",
+    "relatedObjection": "{{ award_complaints[0][0].objections[0].id }}",
+    "recipient": "complaint_owner"
+  }
+}

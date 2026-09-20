@@ -1,0 +1,294 @@
+{
+  "data": [
+    {
+      "requirement": {
+        "id": "feeeded658d74dbe8d678d7e36adcdad"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "bb7df8e84d664efea120721b81b5f0c7"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "be47e42bb5534d339aa2587ad937ae70"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "e1a1596f081c4fedb0873e4d8c6fb186"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "5e9478901804452ba97c5f4e19894f40"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "35400ee6d9084f669b41e9d1c287f24e"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "e1ce1ec92eb241129a0e34887b9f9052"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "7f28658d49044e19a5a05ae8df64e471"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "73dcacf4675c4f358b2275626521bced"
+      },
+      "values": [
+        "Українська"
+      ]
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "901ce874fb7f49b194ae9d32fa55c2a6"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "acff9ee46b204b58825c7b1190114dc2"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "777b09d741fa46de962a3c2e5c581a9a"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Інформаційна довідка або витяг з реєстру",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "6a239882d63849978265b5a455c159ea"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "e638a1444c3a48d187ad5450f33a9bab"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "6d91695aedb54c2c9f46df4b9ad739c8"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "6e3f7b372afd46f2bc3deda8ed121806"
+      },
+      "value": 90
+    },
+    {
+      "requirement": {
+        "id": "650c1cf73ce14011af27923eda5b1dee"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "51c629fa3fad4d729ae340c7d310144e"
+      },
+      "value": 3.0
+    },
+    {
+      "requirement": {
+        "id": "df0944c47fa94257895c3ba5f39ba4ee"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "94365e2567544f0c8770413c080b30f2"
+      },
+      "value": 3.0
+    },
+    {
+      "requirement": {
+        "id": "21bc462df8e04321b1e286ebb756d29b"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "d7f1d2249a3a492c9105cbf052f40ee3"
+      },
+      "value": 3.0
+    },
+    {
+      "requirement": {
+        "id": "734877dcd0f24a6094915da0bb583717"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "4300823cb88f4d63a0fc5f317de9d884"
+      },
+      "value": 3.0
+    },
+    {
+      "requirement": {
+        "id": "5be519aef44d4c608479c853f0392332"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "1b745335067d4ca38394ab00ba088995"
+      },
+      "value": 3.0
+    },
+    {
+      "requirement": {
+        "id": "8e1377430ccb407cb86893f20f3b5c64"
+      },
+      "value": true
+    },
+    {
+      "evidences": [
+        {
+          "relatedDocument": {
+            "title": "name.doc"
+          },
+          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
+          "type": "document"
+        }
+      ],
+      "requirement": {
+        "id": "e6d75f7b53884c0db86e68bd4aadb8a2"
+      },
+      "value": 3.0
+    },
+    {
+      "requirement": {
+        "id": "2e54f19585fc4129a8a33fa08cb9ed48"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "34a9dfd2d141444e8716df64dd2e1a3f"
+      },
+      "value": 5.0
+    },
+    {
+      "requirement": {
+        "id": "18ddb677b17a4dc19097ba3b76d9f997"
+      },
+      "value": 0
+    },
+    {
+      "requirement": {
+        "id": "422dc438d5c1431399ca94d34d19cdd0"
+      },
+      "value": 5.0
+    },
+    {
+      "requirement": {
+        "id": "b56d2e39a4e44c939b0f611292be043b"
+      },
+      "value": 0
+    }
+  ]
+}

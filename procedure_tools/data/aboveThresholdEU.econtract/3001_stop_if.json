@@ -1,0 +1,4 @@
+{
+  "condition": "{{ constants.SIGNATURE_VERIFICATION_ENABLED }}",
+  "message": "Signature verification is enabled on current environment"
+}
