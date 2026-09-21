@@ -5,8 +5,8 @@ Tender payloads.
 lots and milestones. Anything it builds can be replaced by passing it in, so a
 test that cares about one aspect only describes that aspect::
 
-    ${lots}=      Lots Data      2
-    ${tender}=    Tender Data    lots=${lots}    value.amount=5000
+    ${lots}=      Дані Лотів        2
+    ${tender}=    Дані Закупівлі    lots=${lots}    value.amount=5000
 """
 
 from __future__ import annotations
@@ -21,7 +21,12 @@ from data.common import (
     procuring_entity_data,
     value_data,
 )
+from data.config import config_defaults
 from data.utils import build, fake, fake_en, from_now_iso
+
+# What a tender is worth when it does not say. With lots the value is the sum
+# of theirs, so it starts at zero; without lots it has to carry a real amount.
+DEFAULT_TENDER_AMOUNT = 1000
 
 # Config of an above threshold open procedure: auction, complaints, no prequalification.
 ABOVE_THRESHOLD_CONFIG: dict[str, Any] = {
@@ -80,14 +85,46 @@ REPORTING_CAUSE_DETAILS: dict[str, Any] = {
 }
 
 
+def tender_config_data(
+    procedure: str | None = None,
+    base: dict[str, Any] | None = None,
+    **kwargs: Any,
+) -> dict[str, Any]:
+    """
+    The config block of a tender, with the keys the caller cares about changed.
+
+    Config is how the CDB branches, so a test that is about one option says only
+    that option and takes the rest as given. Without ``base`` the defaults come
+    from the config schema of ``procedure``, which is what the API would apply
+    anyway - that is how a procedure nobody has written a config for still gets
+    a valid one.
+    """
+    if base is None:
+        base = config_defaults(procedure) if procedure else ABOVE_THRESHOLD_CONFIG
+    return build(base, **kwargs)
+
+
 def procurement_method_details(acceleration: float | None = None) -> str:
     """The accelerator the CDB needs to run a procedure faster than real time."""
     return f"quick, accelerator={int(acceleration)}" if acceleration else ""
 
 
-def lots_data(count: int = 1, amount: float = 2500, **kwargs: Any) -> list[dict[str, Any]]:
+def lots_data(
+    count: int = 1,
+    amount: float = 2500,
+    with_minimal_step: bool = True,
+    **kwargs: Any,
+) -> list[dict[str, Any]]:
     """``count`` lots, numbered in their titles."""
-    return [lot_data(title=f"Лот №{index + 1}: {fake.word()}", amount=amount, **kwargs) for index in range(count)]
+    return [
+        lot_data(
+            title=f"Лот №{index + 1}: {fake.word()}",
+            amount=amount,
+            with_minimal_step=with_minimal_step,
+            **kwargs,
+        )
+        for index in range(count)
+    ]
 
 
 def items_data(
@@ -138,6 +175,13 @@ def tender_data(
     """
     lots = lots if lots is not None else []
     items = items if items is not None else items_data(lots=lots)
+    effective_config = config if config is not None else ABOVE_THRESHOLD_CONFIG
+    # A tender that holds no auction has nothing to submit into and no step to
+    # improve on, and the API refuses both fields as rogue.
+    has_auction = effective_config.get("hasAuction", True)
+    if not has_auction:
+        submission = None
+        lots = [{key: value for key, value in lot.items() if key != "minimalStep"} for lot in lots]
     data: dict[str, Any] = {
         "items": items,
         "mainProcurementCategory": main_procurement_category,
@@ -153,7 +197,7 @@ def tender_data(
         },
         "title": f"{fake.sentence(nb_words=10)} (created with robot_tests)",
         "title_en": f"{fake_en.sentence(nb_words=10)} (created with robot_tests)",
-        "value": value or value_data(amount=0),
+        "value": value or value_data(amount=0 if lots else DEFAULT_TENDER_AMOUNT),
     }
     if lots:
         data["lots"] = lots

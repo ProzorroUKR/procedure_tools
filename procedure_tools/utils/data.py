@@ -54,18 +54,33 @@ def get_submission_method_details(response: requests.Response) -> str | None:
     return value
 
 
+def get_body(response: requests.Response) -> dict[str, Any]:
+    """
+    The response body as a mapping.
+
+    A request that changes nothing - patching a field to the value it already
+    has, for instance - comes back with no body at all, so the helpers that
+    tolerate a missing key have to tolerate a missing body too.
+    """
+    try:
+        body = response.json()
+    except ValueError:
+        return {}
+    return body if isinstance(body, dict) else {}
+
+
 def get_data(response: requests.Response) -> dict[str, Any]:
-    value: dict[str, Any] = response.json().get("data", {})
+    value: dict[str, Any] = get_body(response).get("data") or {}
     return value
 
 
 def get_access(response: requests.Response) -> dict[str, Any]:
-    value: dict[str, Any] = response.json().get("access", {})
+    value: dict[str, Any] = get_body(response).get("access") or {}
     return value
 
 
 def get_config(response: requests.Response) -> dict[str, Any]:
-    value: dict[str, Any] = response.json().get("config", {})
+    value: dict[str, Any] = get_body(response).get("config") or {}
     return value
 
 

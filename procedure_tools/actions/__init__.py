@@ -6,6 +6,7 @@ from procedure_tools.actions import (  # noqa: F401  (importing registers the ac
     complaint,
     contract,
     framework,
+    lot,
     plan,
     qualification,
     question,

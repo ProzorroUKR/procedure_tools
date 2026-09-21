@@ -5,7 +5,7 @@ from procedure_tools.actions.common import attach_document, get_until, has_data
 from procedure_tools.actions.registry import action
 from procedure_tools.context import Context
 from procedure_tools.steps import Step
-from procedure_tools.utils.data import get_data, get_token
+from procedure_tools.utils.data import get_config, get_data, get_token
 from procedure_tools.utils.handlers import (
     error,
     framework_create_success_handler,
@@ -67,6 +67,9 @@ def framework_create(context: Context, step: Step) -> None:
     )
     context["framework"] = get_data(response)
     context["framework_token"] = get_token(response)
+    config = get_config(response)
+    if config:
+        context["framework_config"] = config
 
 
 @action("framework_patch")

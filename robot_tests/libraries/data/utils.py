@@ -6,7 +6,7 @@ Every builder follows the same shape: it fills in sensible defaults and takes
 restating the rest. Override keys may be dotted paths, which makes them usable
 straight from a Robot Framework keyword call::
 
-    ${tender}=    Tender Data    value.amount=200000    lots.0.title=Лот A
+    ${tender}=    Дані Закупівлі    value.amount=200000    lots.0.title=Лот A
 """
 
 from __future__ import annotations

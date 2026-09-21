@@ -162,26 +162,58 @@ def item_data(
     return build(item, **kwargs)
 
 
+# A product from the localisation catalogue, and the category it sits in. A
+# localisation criterion can only be attached to an item that names both.
+LOCALISED_CATEGORY = "31120000-730722-40996564"
+LOCALISED_PRODUCT = "1270c96a250e474ba0dd7bc782705411"
+LOCALISED_CLASSIFICATION = {
+    "description": "Генератори",
+    "id": "31120000-3",
+    "scheme": "ДК021",
+}
+
+
+def localised_item_data(quantity: float = 1, **kwargs: Any) -> dict[str, Any]:
+    """
+    An item that can carry a localisation criterion.
+
+    The criterion is about how much of the product is made locally, so the item
+    has to say which catalogue product it is; without ``category`` the API
+    refuses the criterion rather than the item.
+    """
+    item = item_data(quantity=quantity, with_id=True)
+    item["classification"] = dict(LOCALISED_CLASSIFICATION)
+    item["category"] = LOCALISED_CATEGORY
+    item["product"] = LOCALISED_PRODUCT
+    return build(item, **kwargs)
+
+
 def lot_data(
     title: str | None = None,
     amount: float = 2500,
     minimal_step_amount: float = 25,
     guarantee_amount: float = 100,
     lot_id: str | None = None,
+    with_minimal_step: bool = True,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    """One lot, with the id a test needs to bind items, milestones and criteria to it."""
-    return build(
-        {
-            "id": lot_id or new_id(),
-            "title": title or f"Лот: {fake.word()}",
-            "description": fake.sentence(nb_words=6),
-            "value": value_data(amount=amount),
-            "minimalStep": value_data(amount=minimal_step_amount),
-            "guarantee": guarantee_data(amount=guarantee_amount),
-        },
-        **kwargs,
-    )
+    """
+    One lot, with the id a test needs to bind items, milestones and criteria to it.
+
+    ``minimalStep`` is how much a bid has to improve on the last one during the
+    auction, so a tender that holds no auction must not carry it - the API
+    calls it a rogue field.
+    """
+    lot: dict[str, Any] = {
+        "id": lot_id or new_id(),
+        "title": title or f"Лот: {fake.word()}",
+        "description": fake.sentence(nb_words=6),
+        "value": value_data(amount=amount),
+        "guarantee": guarantee_data(amount=guarantee_amount),
+    }
+    if with_minimal_step:
+        lot["minimalStep"] = value_data(amount=minimal_step_amount)
+    return build(lot, **kwargs)
 
 
 def milestone_data(

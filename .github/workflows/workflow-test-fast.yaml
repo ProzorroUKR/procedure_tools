@@ -93,7 +93,29 @@ jobs:
           pip install -e .[test]
       - name: Run unit tests
         run: |
-          pytest procedure_tools/ --ignore=procedure_tools/test.py
+          pytest procedure_tools/ robot_tests/libraries/tests/ --ignore=procedure_tools/test.py
+
+  robot-dryrun:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUNBUFFERED: 1
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[test,robot]
+      # The suites are written in Robot Framework's Ukrainian localization, so a
+      # dry run is what catches a renamed keyword or a mistyped Ukrainian
+      # setting name without spending a procedure run against a CDB.
+      - name: Resolve every keyword
+        working-directory: robot_tests
+        run: |
+          robot --dryrun --output NONE --log NONE --report NONE tests
 
   pytest-fast:
     needs: extract-test-cases

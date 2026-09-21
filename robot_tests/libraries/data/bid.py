@@ -99,6 +99,8 @@ def bid_data(
     eligibility_documents: list[dict[str, Any]] | None = None,
     financial_documents: list[dict[str, Any]] | None = None,
     qualification_documents: list[dict[str, Any]] | None = None,
+    parameters: list[dict[str, Any]] | None = None,
+    lot_ids: list[str] | None = None,
     with_items: bool = True,
     identifier_id: str = "00137256",
     **kwargs: Any,
@@ -107,10 +109,15 @@ def bid_data(
     A draft bid for ``tender``.
 
     With lots the offer is split into ``lotValues``, one per lot; without lots
-    it is a single ``value``. The document arguments take document payloads,
+    it is a single ``value``, and ``lot_ids`` narrows the offer to the lots the
+    bidder wants. The document arguments take document payloads,
     whose files the keyword that creates the bid uploads first.
     """
     lots = tender.get("lots") or []
+    if lot_ids is not None:
+        # a bidder need not want every lot
+        wanted = set(lot_ids)
+        lots = [lot for lot in lots if lot["id"] in wanted]
     data: dict[str, Any] = {
         "status": "draft",
         "tenderers": tenderers or [tenderer_data(identifier_id=identifier_id)],
@@ -121,12 +128,14 @@ def bid_data(
     else:
         tender_amount = tender.get("value", {}).get("amount", 1000)
         data["value"] = {"amount": amount if amount is not None else round(tender_amount * 0.8, 2)}
+    if parameters:
+        data["parameters"] = parameters
     if with_items and tender.get("items"):
         offered = {value["relatedLot"]: value["value"]["amount"] for value in data.get("lotValues", [])}
         total = data.get("value", {}).get("amount")
-        data["items"] = [
-            bid_item_data(item, amount=item_unit_amount(item, tender, offered, total)) for item in tender["items"]
-        ]
+        # an item of a lot the bidder passed over has no price to give
+        priced = [item for item in tender["items"] if not lot_ids or item.get("relatedLot") in offered]
+        data["items"] = [bid_item_data(item, amount=item_unit_amount(item, tender, offered, total)) for item in priced]
     payload: dict[str, Any] = {}
     containers = dict(
         zip(

@@ -31,6 +31,9 @@ color = [
 test = [
     "pytest",
 ]
+robot = [
+    "robotframework",
+]
 dev = [
     "mypy",
     "pylint",
@@ -70,6 +73,7 @@ python_files = [
 ]
 testpaths = [
     "procedure_tools",
+    "robot_tests/libraries/tests",
 ]
 norecursedirs = [
     "__pycache__",

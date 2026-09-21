@@ -11,9 +11,15 @@ from __future__ import annotations
 from typing import Any
 
 from data.common import signer_info_data
+from data.document import SIGNATURE_CONTENT, document_data
 from data.utils import build, fake, from_date_iso, from_now_iso
 
-# Fields of a contract item that are echoed back when the item is priced.
+# The fields a contract item keeps when its price is set. The API compares an
+# item it is sent against the one already on the contract and refuses it as a
+# new item unless every "main" field is identical, so the ones it names -
+# classification, relatedLot, relatedBuyer, additionalClassifications and
+# product - all have to be carried over. Dropping "product" is what made a
+# localised item look new.
 ITEM_FIELDS = (
     "additionalClassifications",
     "classification",
@@ -22,7 +28,9 @@ ITEM_FIELDS = (
     "description",
     "description_en",
     "id",
+    "product",
     "quantity",
+    "relatedBuyer",
     "relatedLot",
 )
 
@@ -98,6 +106,22 @@ def contract_value_data(amount: float, **kwargs: Any) -> dict[str, Any]:
             **kwargs,
         )
     }
+
+
+def contract_signature_data(title: str, **kwargs: Any) -> dict[str, Any]:
+    """
+    A signature on an electronic contract.
+
+    The API reads the format from the file name, so the title keeps its
+    ``.p7s`` ending; what makes it a signature rather than any attachment is
+    the document type.
+    """
+    return document_data(title=title, document_type="contractSignature", content=SIGNATURE_CONTENT, **kwargs)
+
+
+def contract_cancellation_data(reason: str, **kwargs: Any) -> dict[str, Any]:
+    """Cancelling a contract, or an amendment to one, with the reason for it."""
+    return {"data": build({"reason": reason}, **kwargs)}
 
 
 def contract_change_data(rationale_type: str = "itemPriceChange", **kwargs: Any) -> dict[str, Any]:

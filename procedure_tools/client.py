@@ -102,6 +102,9 @@ class BaseApiClient:
     def patch(self, path: str, json: Any = None, **kwargs: Any) -> requests.Response:
         return self.request("PATCH", path, json=json, **kwargs)
 
+    def delete(self, path: str, **kwargs: Any) -> requests.Response:
+        return self.request("DELETE", path, **kwargs)
+
 
 class CDBClient(BaseApiClient):
     name = "cdb"

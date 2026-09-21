@@ -1,96 +1,55 @@
-*** Settings ***
-Documentation     Setup and the keywords every procedure shares.
+language: uk
+
+*** Налаштування ***
+Документація      Те, що потрібне кожному сценарію: сесія, налаштування запуску
+...               і стадії, з яких складається процедура закупівлі.
 ...
-...               The libraries do the work: ``ProcedureData`` builds payloads,
-...               ``ProcedureTools`` sends them through the procedure_tools
-...               actions. What lives here is only what more than one procedure
-...               needs, in particular the run settings (acceleration and
-...               submission method) that the tender dates depend on.
+...               Сьюіт імпортує цей один файл і разом з ним отримує ключові
+...               слова стадій. Як складається сценарій - див. TESTING.md.
 
-Library           Collections
-Library           ${CURDIR}/../libraries/ProcedureTools.py
-Library           ${CURDIR}/../libraries/ProcedureData.py
+Ресурс            ${CURDIR}/libraries.resource
+Ресурс            ${CURDIR}/phases/tendering.resource
+Ресурс            ${CURDIR}/phases/qualification.resource
+Ресурс            ${CURDIR}/phases/contracting.resource
 
 
-*** Keywords ***
-Open Procedure Session
-    [Documentation]    Connect to the API; use it as the suite setup.
-    Start Procedure Session
+*** Ключових слова ***
+Відкрити Сесію Процедури
+    [Документація]    Підключитись до API і почати нову процедуру. Ставлять
+    ...               у налаштування сьюіта: усі стадії одного сьюіта працюють
+    ...               з однією процедурою.
+    Запустити Сесію Процедури
+    Set Suite Variable    ${PHASE_FAILED}    ${False}
 
-Close Procedure Session
-    [Documentation]    Close the connection and drop the generated files.
-    End Procedure Session
+Закрити Сесію Процедури
+    [Документація]    Закрити зʼєднання і прибрати згенеровані файли.
+    Зупинити Сесію Процедури
 
-Run Settings
-    [Documentation]    Acceleration and submission method of this run, as a dictionary
-    ...                to splat into a data keyword.
-    ${acceleration}=    Get Acceleration
-    ${submission}=      Get Submission
+Налаштування Запуску
+    [Документація]    Прискорення і режим подання цього запуску - словником,
+    ...               щоб розгорнути його в ключове слово даних.
+    ${acceleration}=    Отримати Прискорення
+    ${submission}=      Отримати Режим Подання
     ${settings}=        Create Dictionary    acceleration=${acceleration}    submission=${submission}
     RETURN    ${settings}
 
-Publish Tender
-    [Documentation]    Move the tender to ``active.tendering`` and check that it got there.
-    ${data}=      Tender Patch Data    active.tendering
-    ${tender}=    Patch Tender         ${data}
-    Should Be Equal    ${tender}[status]    active.tendering
-    RETURN    ${tender}
+Потрібні Токени Органу Оскарження Та Бота
+    [Документація]    Запобіжник для сьюітів зі скаргами: більшу частину
+    ...               шляху скарги проходять бот і орган оскарження, тож без
+    ...               їхніх токенів спостерігати нічого, і сьюіт
+    ...               пропускається, а не падає.
+    ${available}=    Токени Органу Оскарження Доступні
+    Skip If    not ${available}    цьому запуску не передали токени органу оскарження і бота
 
-Activate Tender
-    [Documentation]    Move a limited procedure tender to ``active``.
-    ${data}=      Tender Patch Data    active
-    ${tender}=    Patch Tender         ${data}
-    Should Be Equal    ${tender}[status]    active
-    RETURN    ${tender}
+Пропустити Якщо Попередня Стадія Впала
+    [Документація]    Налаштування тесту в сьюіті зі стадіями. Стадії процедури
+    ...               залежать одна від одної, тож коли одна впала, решта
+    ...               пропускаються, а не падають за нею з тієї самої причини.
+    Skip If    ${PHASE_FAILED}    попередня стадія цієї процедури впала
 
-Qualify Award
-    [Documentation]    Qualify an award, sign the decision and activate it. Limited
-    ...                procedures have no eligibility check, pass ``eligible=${None}``
-    ...                to leave it out.
-    [Arguments]    ${index}=0    ${eligible}=${True}
-    ${qualification}=    Award Qualification Data    eligible=${eligible}
-    Patch Award          ${qualification}    index=${index}
-
-    ${notice}=    Signature Document Data    title=award_notice_${index}.p7s
-    Attach Award Document    ${notice}    index=${index}
-
-    ${activate}=    Award Patch Data    active
-    ${award}=       Patch Award         ${activate}    index=${index}
-    Should Be Equal    ${award}[status]    active
-    RETURN    ${award}
-
-Sign Contract
-    [Documentation]    Take the contract credentials, let both parties name their
-    ...                signatory and activate the contract.
-    [Arguments]    ${index}=0    ${amount}=${None}    ${with_signer_info}=${True}
-    Take Contract Credentials    index=${index}
-    IF    ${with_signer_info}
-        ${buyer}=       Signer Info Data
-        Put Contract Buyer Signer Info        ${buyer}       index=${index}
-        ${supplier}=    Signer Info Data
-        Put Contract Suppliers Signer Info    ${supplier}    index=${index}
+Запамʼятати Невдалу Стадію
+    [Документація]    Розбирання тесту в сьюіті зі стадіями, друга половина
+    ...               ``Пропустити Якщо Попередня Стадія Впала``.
+    IF    "${TEST STATUS}" == "FAIL"
+        Set Suite Variable    ${PHASE_FAILED}    ${True}
     END
-    ${contract}=    Get Contract            index=${index}
-    ${data}=        Contract Active Data    ${contract}    amount=${amount}
-    ${contract}=    Patch Contract          ${data}        index=${index}
-    Should Be Equal    ${contract}[status]    active
-    RETURN    ${contract}
-
-Amend Contract
-    [Documentation]    Create an amendment and activate it.
-    [Arguments]    ${index}=0    ${rationale_type}=itemPriceChange
-    ${change}=      Contract Change Data    rationale_type=${rationale_type}
-    ${contract}=    Post Contract Change    ${change}    index=${index}
-    ${last}=        Evaluate    len($contract["changes"]) - 1
-    ${activate}=    Contract Change Active Data    ${contract}
-    ${contract}=    Patch Contract Change    ${activate}    index=${index}    change_index=${last}
-    Should Be Equal    ${contract}[changes][${last}][status]    active
-    RETURN    ${contract}
-
-Terminate Contract
-    [Documentation]    Close the contract, stating the amount actually paid.
-    [Arguments]    ${amount}    ${index}=0
-    ${data}=        Contract Terminated Data    ${amount}
-    ${contract}=    Patch Contract    ${data}    index=${index}
-    Should Be Equal    ${contract}[status]    terminated
-    RETURN    ${contract}
