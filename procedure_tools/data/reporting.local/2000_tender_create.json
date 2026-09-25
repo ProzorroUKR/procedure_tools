@@ -62,10 +62,15 @@
         "description": "{{ fake.sentence(nb_words=8) }}",
         "description_en": "{{ fake_en.sentence(nb_words=8) }}",
         "id": "2dc54675d6364e2baffbc0f8e74432ac",
-        "quantity": 1,
+        "quantity": 9,
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 55.56,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         },
         "product": "1270c96a250e474ba0dd7bc782705411",
         "category": "31120000-730722-40996564"
@@ -136,7 +141,7 @@
     "title": "{{ fake.sentence(nb_words=10) }} (created with procedure_tools)",
     "title_en": "{{ fake_en.sentence(nb_words=10) }} (created with procedure_tools)",
     "value": {
-      "amount": 500000,
+      "amount": 500,
       "currency": "UAH",
       "valueAddedTaxIncluded": true
     }

@@ -70,7 +70,11 @@
       {
         "description": "{{ fake.sentence(nb_words=6) }}",
         "id": "ddb35dd0e9904726aafd18baed24863a",
-        "title": "{{ fake.sentence(nb_words=4) }}"
+        "title": "{{ fake.sentence(nb_words=4) }}",
+        "guarantee": {
+          "amount": 10,
+          "currency": "UAH"
+        }
       }
     ],
     "milestones": [

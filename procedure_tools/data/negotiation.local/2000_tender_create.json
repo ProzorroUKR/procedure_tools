@@ -62,11 +62,16 @@
         },
         "description": "{{ fake.sentence(nb_words=8) }}",
         "description_en": "{{ fake_en.sentence(nb_words=8) }}",
-        "quantity": 1,
+        "quantity": 20,
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 25.02,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         },
         "product": "1270c96a250e474ba0dd7bc782705411",
         "category": "31120000-730722-40996564"
@@ -98,11 +103,16 @@
         },
         "description": "{{ fake.sentence(nb_words=8) }}",
         "description_en": "{{ fake_en.sentence(nb_words=8) }}",
-        "quantity": 1,
+        "quantity": 40,
         "relatedLot": "9d4fc4783ebb4a99b10cc9a2f7d7552f",
         "unit": {
           "code": "KGM",
-          "name": "кг"
+          "name": "кг",
+          "value": {
+            "amount": 12.51,
+            "currency": "UAH",
+            "valueAddedTaxIncluded": false
+          }
         },
         "product": "1270c96a250e474ba0dd7bc782705411",
         "category": "31120000-730722-40996564"
