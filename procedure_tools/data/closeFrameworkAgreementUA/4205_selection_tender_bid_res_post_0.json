@@ -1,0 +1,52 @@
+{
+  "data": [
+    {
+      "requirement": {
+        "id": "2f7afcac9ccd443ba15417d10f434738"
+      },
+      "value": 1
+    },
+    {
+      "requirement": {
+        "id": "8b9c45c8665249bda707958c8300c8d9"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "d5805733751346d7962513f8da0691e4"
+      },
+      "value": 1
+    },
+    {
+      "requirement": {
+        "id": "55033fcc887f4a50b32aa19c3e3a6cc0"
+      },
+      "value": 100
+    },
+    {
+      "requirement": {
+        "id": "139264277b104ecaba1c73f5229840b4"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "b682eb3fe7914d1f8aa52df182d3e0c0"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "4caaf763847f4b95aef44bdade14115e"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "3935b25cece24b269d3fb23d660c30ea"
+      },
+      "value": true
+    }
+  ]
+}

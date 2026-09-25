@@ -44,7 +44,10 @@
             "currency": "{{ contracts[0]['items'][0].unit.value.currency }}",
             "valueAddedTaxIncluded": "{{ contracts[0]['items'][0].unit.value.valueAddedTaxIncluded }}"
           }
-        }
+        },
+        "product": "{{ contracts[0]['items'][0].product }}",
+        "category": "{{ contracts[0]['items'][0].category }}"
+
       },
       {
         "additionalClassifications": [
@@ -87,7 +90,9 @@
             "currency": "{{ contracts[0]['items'][1].unit.value.currency }}",
             "valueAddedTaxIncluded": "{{ contracts[0]['items'][1].unit.value.valueAddedTaxIncluded }}"
           }
-        }
+        },
+        "product": "{{ contracts[0]['items'][1].product }}",
+        "category": "{{ contracts[0]['items'][1].category }}"
       },
       {
         "additionalClassifications": [
@@ -130,7 +135,9 @@
             "currency": "{{ contracts[0]['items'][2].unit.value.currency }}",
             "valueAddedTaxIncluded": "{{ contracts[0]['items'][2].unit.value.valueAddedTaxIncluded }}"
           }
-        }
+        },
+        "product": "{{ contracts[0]['items'][2].product }}",
+        "category": "{{ contracts[0]['items'][2].category }}"
       }
     ],
     "period": {
