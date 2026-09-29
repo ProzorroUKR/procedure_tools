@@ -47,6 +47,7 @@ class BaseApiClient:
         self.allow_fail = False  # let the next request fail without stopping the run (allow_fail action)
         self.debug_request = debug_request
         self.debug_json_level = debug_json_level
+        self.debug = debug
         adapters.configure_urllib3_logging(debug)
         if session:
             self.session = session
@@ -55,6 +56,7 @@ class BaseApiClient:
                 enabled=self.debug_request,
                 json_level=self.debug_json_level,
                 exclude_paths=(self.SPORE_PATH,),
+                stats=self.debug,
             )
         else:
             self.session = requests.Session()
@@ -63,6 +65,7 @@ class BaseApiClient:
                 debug_request=self.debug_request,
                 debug_json_level=self.debug_json_level,
                 debug_exclude_paths=(self.SPORE_PATH,),
+                debug_stats=self.debug,
             )
         self.headers = copy(self.HEADERS_DEFAULT)
 

@@ -493,7 +493,7 @@ def build_parser(
     )
     parser.add_argument(
         "--debug",
-        help="Debug log level",
+        help="Debug log level; also logs the timing of every request (connect, send, wait, download)",
         action="store_true",
         default=bool(env_values.get("debug")),
     )

@@ -255,7 +255,7 @@ options:
 
   --disable-questions   Skip the tender question steps
 
-  --debug               Debug log level
+  --debug               Debug log level; also logs the timing of every request (connect, send, wait, download)
 
   --debug-req, --debug-request
                         Log HTTP request/response bodies

@@ -91,6 +91,9 @@ For request and response bodies, the CLI debug switches work here too:
 DEBUG_REQUEST=true DEBUG_JSON_LEVEL=2 robot tests
 ```
 
+`DEBUG=true` adds the timing of every request (connect, send, wait, download)
+after its status line.
+
 To keep a plain text trace of a run, including every keyword, use Robot's
 debug file and follow it from another terminal:
 

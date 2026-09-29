@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import sys
+import time
 from collections.abc import Collection, Iterable, Mapping
 from typing import Any
 from urllib.parse import urlsplit
@@ -10,6 +11,13 @@ from requests import PreparedRequest, Response, Session, adapters
 from requests.exceptions import ConnectionError as RequestsConnectionError
 from urllib3 import Retry
 
+from procedure_tools.utils.stats import (
+    TIMED_POOL_CLASSES_BY_SCHEME,
+    RequestStats,
+    format_request_stats,
+    start_collecting,
+    stop_collecting,
+)
 from procedure_tools.utils.style import (
     fore_debug,
     fore_info,
@@ -58,6 +66,16 @@ class RetryingHTTPAdapter(adapters.HTTPAdapter):
 
         super().__init__(max_retries=max_retries)
 
+    def init_poolmanager(self, *args: Any, **kwargs: Any) -> None:
+        super().init_poolmanager(*args, **kwargs)
+        # the timed connections record the request stats the logging adapter reports
+        self.poolmanager.pool_classes_by_scheme = TIMED_POOL_CLASSES_BY_SCHEME
+
+    def proxy_manager_for(self, *args: Any, **kwargs: Any) -> Any:
+        manager = super().proxy_manager_for(*args, **kwargs)
+        manager.pool_classes_by_scheme = TIMED_POOL_CLASSES_BY_SCHEME
+        return manager
+
     def send(self, request: PreparedRequest, *args: Any, **kwargs: Any) -> Response:
         last_exc: RequestsConnectionError | None = None
         for attempt in range(max(1, 1 + DEFAULT_MAX_RETRIES)):
@@ -80,11 +98,13 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         debug_request: bool = False,
         debug_json_level: int | None = None,
         debug_exclude_paths: Iterable[str] = (),
+        debug_stats: bool = False,
     ) -> None:
         self.transport_adapter = transport_adapter
         self.debug_request = debug_request
         self.debug_json_level = debug_json_level
         self.debug_exclude_paths = tuple(debug_exclude_paths)
+        self.debug_stats = debug_stats
         super().__init__()
 
     def set_debug_options(
@@ -92,10 +112,12 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         enabled: bool = False,
         json_level: int | None = None,
         exclude_paths: Iterable[str] | None = (),
+        stats: bool = False,
     ) -> None:
         self.debug_request = enabled
         self.debug_json_level = json_level
         self.debug_exclude_paths = tuple(exclude_paths or ())
+        self.debug_stats = stats
 
     def fold_json(self, data: Any, max_level: int | None, current_level: int = 0) -> Any:
         if max_level is None:
@@ -245,7 +267,11 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
         if self.should_log_exchange(request.url):
             debug_request = self.get_debug_request(request)
             logger.info(f"HTTP Request:\n\n{self.pad_log_lines(debug_request)}\n")
-        response = self.transport_adapter.send(request, *args, **kwargs)
+        stats: RequestStats | None = None
+        if not self.debug_stats:
+            response = self.transport_adapter.send(request, *args, **kwargs)
+        else:
+            response, stats = self.send_with_stats(request, *args, **kwargs)
         if self.should_log_exchange(request.url):
             debug_response = self.get_debug_response(response)
             logger.info(f"HTTP Response:\n\n{self.pad_log_lines(debug_response)}\n")
@@ -253,7 +279,33 @@ class LoggingHTTPAdapter(adapters.HTTPAdapter):
             status_text = fore_status_code(response.status_code)
             reason_text = fore_warning(response.reason) if response.reason else ""
             logger.info(f"Response status: {status_text} {reason_text}\n")
+        if stats:
+            logger.debug(f"Request stats: {format_request_stats(stats)}\n")
         return response
+
+    def send_with_stats(self, request: PreparedRequest, *args: Any, **kwargs: Any) -> tuple[Response, RequestStats]:
+        """Send through the transport adapter, timing each phase of the request.
+
+        A failed request logs its timing here, since there is no response to report it with.
+        """
+        stats = start_collecting()
+        started = time.perf_counter()
+        try:
+            response = self.transport_adapter.send(request, *args, **kwargs)
+            if not kwargs.get("stream"):
+                # requests reads the body right after send(); read it here so the download is timed
+                download_started = time.perf_counter()
+                body = response.content
+                stats.download_seconds = time.perf_counter() - download_started
+                stats.body_bytes = len(body)
+        except BaseException:
+            stats.total_seconds = time.perf_counter() - started
+            logger.debug(f"Request stats (failed): {format_request_stats(stats)}\n")
+            raise
+        finally:
+            stop_collecting()
+        stats.total_seconds = time.perf_counter() - started
+        return response, stats
 
     def close(self) -> None:
         self.transport_adapter.close()
@@ -271,6 +323,7 @@ def mount(
     debug_request: bool = False,
     debug_json_level: int | None = None,
     debug_exclude_paths: Iterable[str] = (),
+    debug_stats: bool = False,
 ) -> None:
     max_retries = Retry(
         total=max_retries_total,
@@ -290,6 +343,7 @@ def mount(
         debug_request=debug_request,
         debug_json_level=debug_json_level,
         debug_exclude_paths=debug_exclude_paths,
+        debug_stats=debug_stats,
     )
     session.mount("https://", adapter)
     session.mount("http://", adapter)
@@ -300,10 +354,11 @@ def configure_debug_logging(
     enabled: bool = False,
     json_level: int | None = None,
     exclude_paths: Iterable[str] = (),
+    stats: bool = False,
 ) -> None:
     for adapter in set(session.adapters.values()):
         if isinstance(adapter, LoggingHTTPAdapter):
-            adapter.set_debug_options(enabled=enabled, json_level=json_level, exclude_paths=exclude_paths)
+            adapter.set_debug_options(enabled=enabled, json_level=json_level, exclude_paths=exclude_paths, stats=stats)
 
 
 def configure_urllib3_logging(debug: bool) -> None:
