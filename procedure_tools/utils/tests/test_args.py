@@ -134,3 +134,26 @@ def test_parse_args_cli_env_overrides_procedure_env(tmp_path: Path) -> None:
 def test_parse_args_missing_env_file(tmp_path: Path) -> None:
     with pytest.raises(SystemExit):
         parse_args(["--env", "missing"], environ={}, search_dirs=[str(tmp_path)])
+
+
+def test_parse_args_disable_data_from_cli_and_env(tmp_path: Path) -> None:
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "API_HOST=https://from-env\n"
+        "API_TOKEN=env-token\n"
+        "DS_HOST=https://ds-from-env\n"
+        "DS_USERNAME=env-user\n"
+        "DS_PASSWORD=env-pass\n"
+        "DISABLE_DATA=esco, reporting.local\n",
+        encoding="utf-8",
+    )
+    args = parse_args(["--env", str(env_file)], environ={}, search_dirs=[str(tmp_path)])
+    assert args.disable_data == ["esco", "reporting.local"]
+    args = parse_args(
+        ["--env", str(env_file), "--disable-data", "negotiation", "priceQuotation"],
+        environ={},
+        search_dirs=[str(tmp_path)],
+    )
+    assert args.disable_data == ["negotiation", "priceQuotation"]
+    args = parse_args(REQUIRED, environ={}, search_dirs=["/nonexistent"])
+    assert args.disable_data is None

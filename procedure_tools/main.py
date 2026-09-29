@@ -39,9 +39,12 @@ from procedure_tools.utils.file import (
 )
 from procedure_tools.utils.handlers import EX_DATAERR, EX_OK
 from procedure_tools.utils.runtime import (
+    STATUS_DISABLED,
+    ResultRow,
     RunController,
     log_results_summary,
     set_controller,
+    status_from_code,
 )
 from procedure_tools.utils.style import (
     fore_info,
@@ -196,6 +199,12 @@ def run_data_dir_parallel(
         set_log_prefix(None)
 
 
+def get_disabled_data_dirs(data_dirs: Sequence[str], disabled: Iterable[str] | None) -> list[str]:
+    """The data folders of the run that are listed as disabled, in run order."""
+    disabled_keys = {os.path.normpath(data_dir) for data_dir in disabled or ()}
+    return [data_dir for data_dir in data_dirs if os.path.normpath(data_dir) in disabled_keys]
+
+
 def run(args: argparse.Namespace, session: requests.Session | None = None) -> None:
     if args.stop:
         args.stop = get_numberless_filename(args.stop)
@@ -205,21 +214,30 @@ def run(args: argparse.Namespace, session: requests.Session | None = None) -> No
     args.wait = args.wait or []
 
     data_dirs = args.data if isinstance(args.data, list) else [args.data]
-    controller = RunController(data_dirs)
+    disabled = get_disabled_data_dirs(data_dirs, getattr(args, "disable_data", None))
+    enabled = [data_dir for data_dir in data_dirs if data_dir not in disabled]
+    controller = RunController(data_dirs, disabled=disabled)
     set_controller(controller)
     controller.start()
     interrupted = False
-    results: list[tuple[str, int | None, str | None]]
+    codes: dict[str, tuple[int | None, str | None]] = {}
+
+    def result_row(data_dir: str) -> ResultRow:
+        if data_dir in disabled:
+            return data_dir, STATUS_DISABLED, None
+        code, error = codes.get(data_dir) or (None, None)
+        return data_dir, status_from_code(code), error
+
     try:
-        if args.parallel is not None and len(data_dirs) > 1:
-            codes: dict[str, tuple[int | None, str | None]] = {}
-            max_workers = args.parallel or len(data_dirs)
-            max_workers = max(1, min(max_workers, len(data_dirs)))
+        if disabled:
+            logger.info("Disabled: " + ", ".join(disabled) + "\n")
+        if args.parallel is not None and len(enabled) > 1:
+            max_workers = args.parallel or len(enabled)
+            max_workers = max(1, min(max_workers, len(enabled)))
             executor = ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="procedure")
             try:
                 futures = {
-                    executor.submit(run_data_dir_parallel, args, data_dir, controller): data_dir
-                    for data_dir in data_dirs
+                    executor.submit(run_data_dir_parallel, args, data_dir, controller): data_dir for data_dir in enabled
                 }
                 for future in as_completed(futures):
                     data_dir = futures[future]
@@ -249,35 +267,31 @@ def run(args: argparse.Namespace, session: requests.Session | None = None) -> No
                         controller.mark_finished(data_dir, None, None)
             else:
                 executor.shutdown(wait=True)
-            results = [(data_dir, *(codes.get(data_dir) or (None, None))) for data_dir in data_dirs]
         else:
             set_faker_seed(args)
-            results = []
-            for data_dir in data_dirs:
+            for index, data_dir in enumerate(enabled):
                 args.data = data_dir
                 set_log_prefix(data_dir if len(data_dirs) > 1 else None)
                 if len(data_dirs) > 1:
                     logger.info(f"Starting {data_dir}\n")
                 try:
                     controller.check_pause()
-                    code, error = run_data_dir(args, session=session, controller=controller)
-                    results.append((data_dir, code, error))
+                    codes[data_dir] = run_data_dir(args, session=session, controller=controller)
                 except KeyboardInterrupt:
-                    controller.mark_finished(data_dir, None, None)
-                    results.append((data_dir, None, None))
-                    for remaining in data_dirs[len(results) :]:
+                    for remaining in enabled[index:]:
                         controller.mark_finished(remaining, None, None)
-                        results.append((remaining, None, None))
+                        codes[remaining] = (None, None)
                     interrupted = True
                     break
             set_log_prefix(None)
 
+        results = [result_row(data_dir) for data_dir in data_dirs]
         if interrupted:
             print("\n")
         log_results_summary(results)
         if interrupted:
             raise KeyboardInterrupt
-        failed = [code for _, code, _ in results if code != EX_OK]
+        failed = [codes[data_dir][0] for data_dir in enabled if codes.get(data_dir, (EX_OK, None))[0] != EX_OK]
         if failed:
             raise SystemExit(failed[0])
     finally:
@@ -389,6 +403,14 @@ def build_parser(
         "-d",
         "--data",
         help=f"one or more data folders, custom path or one of (omit to run all; sequential unless --parallel):\n{format_choices(sorted(data_dirs))}",
+        metavar=str(data_dir_default),
+        action="extend",
+        nargs="+",
+    )
+    parser.add_argument(
+        "--disable-data",
+        dest="disable_data",
+        help="one or more data folders to skip (env DISABLE_DATA); they stay in the summary as disabled",
         metavar=str(data_dir_default),
         action="extend",
         nargs="+",

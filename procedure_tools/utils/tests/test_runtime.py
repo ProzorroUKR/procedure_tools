@@ -92,3 +92,14 @@ def test_pause_is_quiet_immediately_when_nothing_running() -> None:
         controller._resume.clear()
         controller._maybe_signal_quiet_locked()
         assert controller._quiet.is_set()
+
+
+def test_run_controller_keeps_disabled_data_dirs_in_summary() -> None:
+    controller = RunController(["one", "two", "three"], disabled=["two"])
+    with controller._lock:
+        assert controller._statuses == {"one": "pending", "two": "disabled", "three": "pending"}
+    controller.mark_started("one")
+    controller.mark_finished("one", EX_OK, None)
+    with controller._lock:
+        assert controller._statuses["two"] == "disabled"
+    assert controller._data_dirs == ["one", "two", "three"]

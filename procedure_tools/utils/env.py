@@ -18,6 +18,7 @@ ARG_ENV_KEYS = {
     "acceleration": ("ACCELERATION",),
     "path": ("API_PATH",),
     "data": ("DATA",),
+    "disable_data": ("DISABLE_DATA",),
     "parallel": ("PARALLEL",),
     "submission": ("SUBMISSION",),
     "stop": ("STOP",),
@@ -34,7 +35,7 @@ ARG_ENV_KEYS = {
     "debug_json_level": ("DEBUG_JSON_LEVEL",),
 }
 
-LIST_ARGS = frozenset({"data", "pause", "wait"})
+LIST_ARGS = frozenset({"data", "disable_data", "pause", "wait"})
 INT_ARGS = frozenset({"acceleration", "seed", "debug_json_level", "parallel"})
 BOOL_ARGS = frozenset({"debug", "debug_request", "disable_complaints", "disable_claims", "disable_questions"})
 # Fill after parse so argparse extend actions do not append to env defaults.

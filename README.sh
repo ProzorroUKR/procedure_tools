@@ -320,7 +320,7 @@ Technical actions (\`tender_wait_status\`, \`tender_wait_next_check\`, \`wait_da
 2150_tender_wait_next_check.json  {}
 \`\`\`
 
-An unknown action name fails before anything is sent to the API and prints the available actions. \`--stop\` and \`--pause\` take a step file name (with or without its number), \`--wait\` enables the EDR waits, \`--parallel\` runs several data folders at once.
+An unknown action name fails before anything is sent to the API and prints the available actions. \`--stop\` and \`--pause\` take a step file name (with or without its number), \`--wait\` enables the EDR waits, \`--parallel\` runs several data folders at once, \`--disable-data\` (env \`DISABLE_DATA\`) leaves the listed folders out of a run and shows them as \`disabled\` in the summary.
 
 Run:
 

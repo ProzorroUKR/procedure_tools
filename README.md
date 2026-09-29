@@ -127,6 +127,7 @@ usage: procedure-tools [-h] [-v] [-E sandbox] [--host HOST] [--token TOKEN]
                        [--ds-host DS_HOST] [--ds-username DS_USERNAME]
                        [--ds-password DS_PASSWORD] [-a 460800] [-p /api/0/]
                        [-d aboveThreshold [aboveThreshold ...]]
+                       [--disable-data aboveThreshold [aboveThreshold ...]]
                        [--parallel [N]] [-m quick(mode:no-auction)]
                        [-s tender_create.json]
                        [--pause tender_create.json [tender_create.json ...]]
@@ -216,6 +217,9 @@ options:
                          - reporting.local
                          - requestForProposal
                          - simple.defense
+
+  --disable-data aboveThreshold [aboveThreshold ...]
+                        one or more data folders to skip (env DISABLE_DATA); they stay in the summary as disabled
 
   --parallel [N]        run data folders in parallel (optional max concurrent folders; omit N to run all)
 
@@ -844,7 +848,7 @@ Technical actions (`tender_wait_status`, `tender_wait_next_check`, `wait_date`, 
 2150_tender_wait_next_check.json  {}
 ```
 
-An unknown action name fails before anything is sent to the API and prints the available actions. `--stop` and `--pause` take a step file name (with or without its number), `--wait` enables the EDR waits, `--parallel` runs several data folders at once.
+An unknown action name fails before anything is sent to the API and prints the available actions. `--stop` and `--pause` take a step file name (with or without its number), `--wait` enables the EDR waits, `--parallel` runs several data folders at once, `--disable-data` (env `DISABLE_DATA`) leaves the listed folders out of a run and shows them as `disabled` in the summary.
 
 Run:
 

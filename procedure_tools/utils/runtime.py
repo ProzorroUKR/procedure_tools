@@ -5,7 +5,7 @@ import select
 import sys
 import threading
 import time
-from collections.abc import Iterable, Sequence
+from collections.abc import Collection, Iterable, Sequence
 from typing import Any
 
 from procedure_tools.utils.handlers import EX_OK
@@ -34,6 +34,9 @@ STDIN_ERRORS: tuple[type[BaseException], ...] = (
 )
 
 SummaryRow = tuple[str, str, str | None, str | None]
+ResultRow = tuple[str, str, str | None]
+
+STATUS_DISABLED = "disabled"
 
 _controller: RunController | None = None  # pylint: disable=invalid-name
 _PAUSE_HINT = "Press P to pause and show summary, S to show summary"
@@ -70,7 +73,7 @@ def status_label(status: str, activity: str | None = None) -> str:
         if activity:
             label = f"{label} ({activity})"
         return label
-    return fore(str(status), STYLE_DIM) if STYLE_DIM else status
+    return fore(str(status), STYLE_DIM) if STYLE_DIM else str(status)
 
 
 def log_summary(rows: Iterable[Sequence[Any]]) -> None:
@@ -101,16 +104,15 @@ def log_summary(rows: Iterable[Sequence[Any]]) -> None:
         handler.flush()
 
 
-def log_results_summary(results: Iterable[tuple[str, int | None, str | None]]) -> None:
+def log_results_summary(results: Iterable[ResultRow]) -> None:
     rows: list[SummaryRow] = []
-    for data_dir, code, error in results:
-        status = status_from_code(code)
+    for data_dir, status, error in results:
         rows.append((data_dir, status, None, error if status == "failed" else None))
     log_summary(rows)
 
 
 class RunController:
-    def __init__(self, data_dirs: Sequence[str]) -> None:
+    def __init__(self, data_dirs: Sequence[str], disabled: Collection[str] = ()) -> None:
         self._lock = threading.Lock()
         self._stdin_lock = threading.RLock()
         self._resume = threading.Event()
@@ -119,7 +121,9 @@ class RunController:
         self._quiet.set()
         self._stop = threading.Event()
         self._waiting = 0
-        self._statuses: dict[str, str] = {data_dir: "pending" for data_dir in data_dirs}
+        self._statuses: dict[str, str] = {
+            data_dir: STATUS_DISABLED if data_dir in disabled else "pending" for data_dir in data_dirs
+        }
         self._results: dict[str, tuple[int | None, str | None]] = {data_dir: (None, None) for data_dir in data_dirs}
         self._activity: dict[str, str | None] = {data_dir: None for data_dir in data_dirs}
         self._data_dirs = list(data_dirs)
