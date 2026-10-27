@@ -26,11 +26,9 @@
     "valueCurrencyEquality": true
   },
   "data": {
-    "agreement":
-      {
-        "id": "{{ agreement.id }}"
-      }
-    ,
+    "agreement": {
+      "id": "{{ agreement.id }}"
+    },
     "items": [
       {
         "additionalClassifications": [

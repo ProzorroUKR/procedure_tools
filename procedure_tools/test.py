@@ -182,6 +182,11 @@ def test_complex_asset_arma() -> None:
 
 
 @skipifenv
+def test_simple_asset_arma() -> None:
+    run_data("simpleAsset.arma", "tender_bid_patch_1.json")
+
+
+@skipifenv
 def test_negotiation() -> None:
     run_data("negotiation")
 
