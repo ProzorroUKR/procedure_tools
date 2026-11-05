@@ -1,0 +1,8 @@
+{
+  "status": [
+    "active.auction",
+    "active.qualification",
+    "active.awarded"
+  ],
+  "fail_status": "unsuccessful"
+}

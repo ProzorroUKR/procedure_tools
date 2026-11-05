@@ -1,0 +1,6 @@
+{
+  "data": {
+    "status": "cancelled",
+    "cancellationReason": "{{ fake.sentence(nb_words=6) }}"
+  }
+}

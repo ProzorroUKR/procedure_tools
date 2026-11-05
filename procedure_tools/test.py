@@ -122,6 +122,26 @@ def test_above_threshold_ua_lcc() -> None:
 
 
 @skipifenv
+def test_open_tendering_eu() -> None:
+    run_data("openTendering.EU", "tender_bid_patch_1.json")
+
+
+@skipifenv
+def test_open_tendering_eu_econtract() -> None:
+    run_data("openTendering.EU.econtract", "tender_bid_patch_1.json")
+
+
+@skipifenv
+def test_open_tendering_ua() -> None:
+    run_data("openTendering.UA", "tender_bid_patch_1.json")
+
+
+@skipifenv
+def test_open_tendering_ua_central() -> None:
+    run_data("openTendering.UA.central", "tender_bid_patch_1.json")
+
+
+@skipifenv
 def test_below_threshold() -> None:
     run_data("belowThreshold", "tender_patch.json")
 
