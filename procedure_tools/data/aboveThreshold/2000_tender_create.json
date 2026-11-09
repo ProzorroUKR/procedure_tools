@@ -306,7 +306,7 @@
         "code": "postpayment",
         "duration": {
           "days": 2,
-          "type": "banking"
+          "type": "working"
         },
         "percentage": 100,
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",
