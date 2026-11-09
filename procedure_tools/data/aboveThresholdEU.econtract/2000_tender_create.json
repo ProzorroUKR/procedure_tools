@@ -26,7 +26,7 @@
     "valueCurrencyEquality": true
   },
   "data": {
-    "contractTemplateName": "00000000.0002.01",
+    "contractTemplateName": "GENERAL.0001.01",
     "items": [
       {
         "additionalClassifications": [
@@ -323,7 +323,7 @@
         "code": "postpayment",
         "duration": {
           "days": 999,
-          "type": "banking"
+          "type": "working"
         },
         "percentage": 30,
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
@@ -383,7 +383,7 @@
         "code": "postpayment",
         "duration": {
           "days": 2,
-          "type": "banking"
+          "type": "working"
         },
         "percentage": 33,
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",
@@ -431,7 +431,7 @@
         "code": "postpayment",
         "duration": {
           "days": 2,
-          "type": "banking"
+          "type": "working"
         },
         "percentage": 33,
         "relatedLot": "60441ce87301487c9bf194fbd3a4f7c7",

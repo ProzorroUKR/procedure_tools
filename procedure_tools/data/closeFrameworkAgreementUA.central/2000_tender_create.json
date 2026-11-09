@@ -207,7 +207,7 @@
         "code": "prepayment",
         "duration": {
           "days": 2,
-          "type": "banking"
+          "type": "working"
         },
         "percentage": 80,
         "sequenceNumber": 1,

@@ -212,6 +212,10 @@ options:
                          - negotiation
                          - negotiation.local
                          - negotiation.quick
+                         - openTendering.EU
+                         - openTendering.EU.econtract
+                         - openTendering.UA
+                         - openTendering.UA.central
                          - priceQuotation
                          - reporting
                          - reporting.local
@@ -354,114 +358,114 @@ procedure-tools https://lb-api-sandbox-2.prozorro.gov.ua broker_api_token https:
 procedure-tools --env sandbox --data=closeFrameworkAgreementUA --stop=tender_bid_create_1.json
 ```
 ```
-[15:50:31] Using env file /Users/smithumble/Dev/prozorro/dev-other/procedure_tools/.env.readme
+[08:51:45] Using env file /Users/smithumble/Dev/prozorro/dev-other/procedure_tools/.env.readme
 
-[15:50:31] Using seed 454109
+[08:51:45] Using seed 389061
 
-[15:50:31] Discovered 188 steps in /Users/smithumble/Dev/prozorro/dev-other/procedure_tools/procedure_tools/data/closeFrameworkAgreementUA
+[08:51:45] Discovered 188 steps in /Users/smithumble/Dev/prozorro/dev-other/procedure_tools/procedure_tools/data/closeFrameworkAgreementUA
 
-[15:50:31] Initializing cdb client
+[08:51:45] Initializing cdb client
 
-[15:50:31] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/spore
-[15:50:31] Response status: 200 OK
+[08:51:45] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/spore
+[08:51:45] Response status: 200 OK
 
-[15:50:32] Client time delta with server: -1447 milliseconds
+[08:51:46] Client time delta with server: -1147 milliseconds
 
-[15:50:32] Initializing ds client
+[08:51:46] Initializing ds client
 
-[15:50:32] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/constants
-[15:50:32] Response status: 200 OK
+[08:51:46] GET https://lb-api-sandbox-2.prozorro.gov.ua/api/0/constants
+[08:51:46] Response status: 200 OK
 
-[15:50:32] Step 1/188: 0100_plan_create.json
+[08:51:46] Step 1/188: 0100_plan_create.json
 
-[15:50:32] Creating plan...
+[08:51:46] Creating plan...
 
-[15:50:32] Processing data file: 0100_plan_create.json
+[08:51:46] Processing data file: 0100_plan_create.json
 
-[15:50:32] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans
-[15:50:32] Response status: 201 Created
+[08:51:46] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans
+[08:51:46] Response status: 201 Created
 
-[15:50:32] Plan created:
- - data.id              7dda60a27b2b40f086e2eca5fb790dbb
- - access.token         55c138876bfc4cb292181e74e8e11a2c
- - access.transfer      6902710e1f9443558e50e2b789464746
+[08:51:46] Plan created:
+ - data.id              68d94137de1147ac960414c632ac23c1
+ - access.token         cec1b960cc0e4f6bac71cd5e7f5b8fb6
+ - access.transfer      b46a0e0be5bf437895d2adae3c85d35f
  - data.status          draft
 
-[15:50:32] Step 2/188: 0110_plan_patch.json
+[08:51:46] Step 2/188: 0110_plan_patch.json
 
-[15:50:32] Patching plan...
+[08:51:46] Patching plan...
 
-[15:50:32] Processing data file: 0110_plan_patch.json
+[08:51:46] Processing data file: 0110_plan_patch.json
 
-[15:50:32] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans/7dda60a27b2b40f086e2eca5fb790dbb?acc_token=55c138876bfc4cb292181e74e8e11a2c
-[15:50:32] Response status: 200 OK
+[08:51:46] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans/68d94137de1147ac960414c632ac23c1?acc_token=cec1b960cc0e4f6bac71cd5e7f5b8fb6
+[08:51:46] Response status: 200 OK
 
-[15:50:32] Plan patched:
- - data.id              7dda60a27b2b40f086e2eca5fb790dbb
+[08:51:46] Plan patched:
+ - data.id              68d94137de1147ac960414c632ac23c1
  - data.status          scheduled
 
-[15:50:32] Step 3/188: 2000_tender_create.json
+[08:51:46] Step 3/188: 2000_tender_create.json
 
-[15:50:32] Creating tender...
+[08:51:46] Creating tender...
 
-[15:50:32] Processing data file: 2000_tender_create.json
+[08:51:46] Processing data file: 2000_tender_create.json
 
-[15:50:33] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans/7dda60a27b2b40f086e2eca5fb790dbb/tenders
-[15:50:33] Response status: 201 Created
+[08:51:46] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/plans/68d94137de1147ac960414c632ac23c1/tenders
+[08:51:46] Response status: 201 Created
 
-[15:50:33] Tender created:
- - data.id              78019225fba64309a15f3bccdb1c3ae8
- - access.token         8e16579bfaa44fdf9bafda99297c2d8f
- - access.transfer      6734743242e64156ae2879deeccb3a34
+[08:51:46] Tender created:
+ - data.id              1cb2fe0ff2134942a0da50629f4eb4c3
+ - access.token         79dd14419e254471819bd613d798d970
+ - access.transfer      e21a8005fd08436a902165af9283a92c
  - data.status          draft
- - data.tenderID        UA-2026-10-27-000089-a
+ - data.tenderID        UA-2026-11-09-000002-a
  - data.procurementMethodType closeFrameworkAgreementUA
 
-[15:50:33] Step 4/188: 2011_tender_document_attach_file.json
+[08:51:46] Step 4/188: 2011_tender_document_attach_file.json
 
-[15:50:33] Uploading tender document...
+[08:51:46] Uploading tender document...
 
-[15:50:33] Processing data file: 2011_tender_document_attach_file.json
+[08:51:46] Processing data file: 2011_tender_document_attach_file.json
 
-[15:50:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:33] Response status: 200 OK
+[08:51:46] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:47] Response status: 200 OK
 
-[15:50:33] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/documents?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:33] Response status: 201 Created
+[08:51:47] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/documents?acc_token=79dd14419e254471819bd613d798d970
+[08:51:47] Response status: 201 Created
 
-[15:50:33] Document attached:
- - data.id              23126374552d4808bfb3ca5d67f58119
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/c3f4a2869bb445c6883064da6affd8b4?Signature=WWiMNEI6%2BEGehcYqgPV6f3IFuHjyEb0kOgAImEO0wfcT2NC4rtejNNR5BZ%2FydO723%2FaUPXzZdB81qTB8QUYSBQ%3D%3D&KeyID=1331dc52
+[08:51:47] Document attached:
+ - data.id              31466fb2e3404c57943fb88896fcc065
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/ed523aa071284dd1826f992b12c55193?Signature=fvqunHzksuTXacpEuC0iUKEI3%2FcaFuTKacajv%2FCdZkdNYsFSuoh7FOdMKuplnT2wRiIoVKCcxxA4hVgAWnRpAQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:33] Step 5/188: 2013_tender_document_attach_proforma.json
+[08:51:47] Step 5/188: 2013_tender_document_attach_proforma.json
 
-[15:50:33] Uploading tender document...
+[08:51:47] Uploading tender document...
 
-[15:50:33] Processing data file: 2013_tender_document_attach_proforma.json
+[08:51:47] Processing data file: 2013_tender_document_attach_proforma.json
 
-[15:50:33] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:34] Response status: 200 OK
+[08:51:47] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:47] Response status: 200 OK
 
-[15:50:34] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/documents?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:34] Response status: 201 Created
+[08:51:47] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/documents?acc_token=79dd14419e254471819bd613d798d970
+[08:51:47] Response status: 201 Created
 
-[15:50:34] Document attached:
- - data.id              e8dce6959916434faa8e16968630e7fd
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/c02b7aeadde946d59307ec1394c783b2?Signature=%2FtHv9v3ZkUGEp4NjpPHR%2B78Y%2F%2BeZgy9GgmguiqykedfIZljNi5M%2FLdHQjkUcSi%2BEj%2FPbD8Ux6CwY734UwBkmDA%3D%3D&KeyID=1331dc52
+[08:51:47] Document attached:
+ - data.id              34a82603d9fc486f978de52d2c7385ab
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/69740979d4f74aba87ba08a16dca752b?Signature=%2BYriiQ33vmaqZ7a8ygRWT14WJQWy%2Fxmb91uCIa5rZ8DSwBLZ%2FyRwZoEnJbnvNcwVELz%2Bw%2FHXO4FpPkdk%2FfOpCQ%3D%3D&KeyID=1331dc52
  - data.documentType    contractProforma
  - data.confidentiality public
 
-[15:50:34] Step 6/188: 2014_tender_criteria_post.json
+[08:51:47] Step 6/188: 2014_tender_criteria_post.json
 
-[15:50:34] Creating tender criteria...
+[08:51:47] Creating tender criteria...
 
-[15:50:34] Processing data file: 2014_tender_criteria_post.json
+[08:51:47] Processing data file: 2014_tender_criteria_post.json
 
-[15:50:34] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/criteria?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:34] Response status: 201 Created
+[08:51:47] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/criteria?acc_token=79dd14419e254471819bd613d798d970
+[08:51:47] Response status: 201 Created
 
-[15:50:34] Tender criteria created:
+[08:51:47] Tender criteria created:
  - data[0].classification.id CRITERION.EXCLUSION.CONVICTIONS.PARTICIPATION_IN_CRIMINAL_ORGANISATION
  - data[1].classification.id CRITERION.EXCLUSION.CONVICTIONS.FRAUD
  - data[2].classification.id CRITERION.EXCLUSION.CONVICTIONS.CORRUPTION
@@ -481,325 +485,325 @@ procedure-tools --env sandbox --data=closeFrameworkAgreementUA --stop=tender_bid
  - data[16].classification.id CRITERION.OTHER.BID.VALIDITY_PERIOD
  - data[17].classification.id CRITERION.SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.MANAGEMENT.SUBCONTRACTING_PROPORTION
 
-[15:50:34] Step 7/188: 2016_tender_document_attach_notice.json
+[08:51:47] Step 7/188: 2016_tender_document_attach_notice.json
 
-[15:50:34] Uploading tender document...
+[08:51:47] Uploading tender document...
 
-[15:50:34] Processing data file: 2016_tender_document_attach_notice.json
+[08:51:47] Processing data file: 2016_tender_document_attach_notice.json
 
-[15:50:34] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:35] Response status: 200 OK
+[08:51:47] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:48] Response status: 200 OK
 
-[15:50:35] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/documents?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:35] Response status: 201 Created
+[08:51:48] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/documents?acc_token=79dd14419e254471819bd613d798d970
+[08:51:48] Response status: 201 Created
 
-[15:50:35] Document attached:
- - data.id              92c5a3a805594b7c8dd1a16288397bb6
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/60e779aa00ea43c9bcb4274f03b33b4c?Signature=6EuXfVXB4ih58p41EgLlvBpBZZxVzTuwgtYhIzD%2Bm7yqDDYHCJ%2FyvSfyd%2FJ11ezp3%2FI%2Feo0dJYBvrTLgC5DbCQ%3D%3D&KeyID=1331dc52
+[08:51:48] Document attached:
+ - data.id              7465b98dce504c4e94f4fb87d382da62
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/aa763211679745a294b789350ba6a116?Signature=4MeKg10x5H%2BWqZV%2FBL0CrpcT2Mci4p2zeje7OdEb5Y2FPC4R%2B5oTrY0mjBpmy0lPFsAC7G%2FdgVD4Lq5UQzxUBg%3D%3D&KeyID=1331dc52
  - data.documentType    notice
  - data.confidentiality public
 
-[15:50:35] Step 8/188: 2020_tender_patch.json
+[08:51:48] Step 8/188: 2020_tender_patch.json
 
-[15:50:35] Patching tender...
+[08:51:48] Patching tender...
 
-[15:50:35] Processing data file: 2020_tender_patch.json
+[08:51:48] Processing data file: 2020_tender_patch.json
 
-[15:50:35] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:35] Response status: 200 OK
+[08:51:48] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3?acc_token=79dd14419e254471819bd613d798d970
+[08:51:48] Response status: 200 OK
 
-[15:50:35] Tender patched:
- - data.id              78019225fba64309a15f3bccdb1c3ae8
+[08:51:48] Tender patched:
+ - data.id              1cb2fe0ff2134942a0da50629f4eb4c3
  - data.status          active.tendering
 
-[15:50:35] Step 9/188: 2021_tender_question_create_0.json
+[08:51:48] Step 9/188: 2021_tender_question_create_0.json
 
-[15:50:35] Creating question 0...
+[08:51:48] Creating question 0...
 
-[15:50:35] Processing data file: 2021_tender_question_create_0.json
+[08:51:48] Processing data file: 2021_tender_question_create_0.json
 
-[15:50:35] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/questions
-[15:50:35] Response status: 201 Created
+[08:51:48] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/questions
+[08:51:48] Response status: 201 Created
 
-[15:50:35] Question:
- - data.id              60237e2e23984af494db8bc72ce8629f
+[08:51:48] Question:
+ - data.id              1c45579ad8c44a5e8db698215bb0074c
  - data.questionOf      tender
- - data.title           ЧервʼЯк сумний недолік райком.
+ - data.title           Плід зміна здригнутися летіти встати звільнення.
 
-[15:50:35] Step 10/188: 2022_tender_question_patch_0.json
+[08:51:48] Step 10/188: 2022_tender_question_patch_0.json
 
-[15:50:35] Answering question 0...
+[08:51:48] Answering question 0...
 
-[15:50:35] Processing data file: 2022_tender_question_patch_0.json
+[08:51:48] Processing data file: 2022_tender_question_patch_0.json
 
-[15:50:35] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/questions/60237e2e23984af494db8bc72ce8629f?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:35] Response status: 200 OK
+[08:51:48] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/questions/1c45579ad8c44a5e8db698215bb0074c?acc_token=79dd14419e254471819bd613d798d970
+[08:51:48] Response status: 200 OK
 
-[15:50:35] Question:
- - data.id              60237e2e23984af494db8bc72ce8629f
+[08:51:48] Question:
+ - data.id              1c45579ad8c44a5e8db698215bb0074c
  - data.questionOf      tender
- - data.title           ЧервʼЯк сумний недолік райком.
- - data.answer          Податковий місце олівець неправда чоловічок летіти. Рідкий квапливий зарплата.
+ - data.title           Плід зміна здригнутися летіти встати звільнення.
+ - data.answer          Прірва порт ніч господиня виблискувати ланцюжок тисяча. Єврейський гуляти хотіти природний.
 
-[15:50:35] Step 11/188: 2023_tender_question_create_1.json
+[08:51:48] Step 11/188: 2023_tender_question_create_1.json
 
-[15:50:35] Creating question 1...
+[08:51:48] Creating question 1...
 
-[15:50:35] Processing data file: 2023_tender_question_create_1.json
+[08:51:48] Processing data file: 2023_tender_question_create_1.json
 
-[15:50:35] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/questions
-[15:50:35] Response status: 201 Created
+[08:51:48] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/questions
+[08:51:48] Response status: 201 Created
 
-[15:50:35] Question:
- - data.id              880ca0a5f7004e4f83a75ae3e40623c5
+[08:51:48] Question:
+ - data.id              25053f410f4245b9b2ae1c4231323697
  - data.questionOf      item
- - data.title           Спалити полум'я хлопець деякий намір ручка олівець.
+ - data.title           Незручно неправда палець провал надати що тривога вітрина.
 
-[15:50:35] Step 12/188: 2024_tender_question_patch_1.json
+[08:51:48] Step 12/188: 2024_tender_question_patch_1.json
 
-[15:50:35] Answering question 1...
+[08:51:48] Answering question 1...
 
-[15:50:35] Processing data file: 2024_tender_question_patch_1.json
+[08:51:48] Processing data file: 2024_tender_question_patch_1.json
 
-[15:50:35] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/questions/880ca0a5f7004e4f83a75ae3e40623c5?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:36] Response status: 200 OK
+[08:51:48] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/questions/25053f410f4245b9b2ae1c4231323697?acc_token=79dd14419e254471819bd613d798d970
+[08:51:48] Response status: 200 OK
 
-[15:50:36] Question:
- - data.id              880ca0a5f7004e4f83a75ae3e40623c5
+[08:51:48] Question:
+ - data.id              25053f410f4245b9b2ae1c4231323697
  - data.questionOf      item
- - data.title           Спалити полум'я хлопець деякий намір ручка олівець.
- - data.answer          Спосіб черговий тьмяний блін. Щось щось навіщо пити набір перед.
+ - data.title           Незручно неправда палець провал надати що тривога вітрина.
+ - data.answer          Порт відповідність розгубитися.
 
-[15:50:36] Step 13/188: 2030_tender_complaint_create_0.json
+[08:51:48] Step 13/188: 2030_tender_complaint_create_0.json
 
-[15:50:36] Skipping tender complaint 0: bot and reviewer tokens are required
+[08:51:48] Skipping tender complaint 0: bot and reviewer tokens are required
 
-[15:50:36] Step 14/188: 2031_tender_complaint_create_1.json
+[08:51:48] Step 14/188: 2031_tender_complaint_create_1.json
 
-[15:50:36] Skipping tender complaint 1: bot and reviewer tokens are required
+[08:51:48] Skipping tender complaint 1: bot and reviewer tokens are required
 
-[15:50:36] Step 15/188: 2032_tender_complaint_create_2.json
+[08:51:48] Step 15/188: 2032_tender_complaint_create_2.json
 
-[15:50:36] Skipping tender complaint 2: bot and reviewer tokens are required
+[08:51:48] Skipping tender complaint 2: bot and reviewer tokens are required
 
-[15:50:36] Step 16/188: 2033_tender_complaint_create_3.json
+[08:51:48] Step 16/188: 2033_tender_complaint_create_3.json
 
-[15:50:36] Skipping tender complaint 3: bot and reviewer tokens are required
+[08:51:48] Skipping tender complaint 3: bot and reviewer tokens are required
 
-[15:50:36] Step 17/188: 2034_tender_complaint_create_4.json
+[08:51:48] Step 17/188: 2034_tender_complaint_create_4.json
 
-[15:50:36] Creating tender complaint 4...
+[08:51:48] Creating tender complaint 4...
 
-[15:50:36] Processing data file: 2034_tender_complaint_create_4.json
+[08:51:48] Processing data file: 2034_tender_complaint_create_4.json
 
-[15:50:36] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/complaints?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:36] Response status: 201 Created
+[08:51:48] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/complaints?acc_token=79dd14419e254471819bd613d798d970
+[08:51:48] Response status: 201 Created
 
-[15:50:36] Complaint created:
- - data.id              69457a052fac4dee973f289086861b6a
+[08:51:48] Complaint created:
+ - data.id              632fb20cfe83441c86d44cfda0412331
  - data.status          draft
 
-[15:50:36] Step 18/188: 2035_tender_complaint_create_5.json
+[08:51:48] Step 18/188: 2035_tender_complaint_create_5.json
 
-[15:50:36] Creating tender complaint 5...
+[08:51:48] Creating tender complaint 5...
 
-[15:50:36] Processing data file: 2035_tender_complaint_create_5.json
+[08:51:48] Processing data file: 2035_tender_complaint_create_5.json
 
-[15:50:36] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/complaints?acc_token=8e16579bfaa44fdf9bafda99297c2d8f
-[15:50:36] Response status: 201 Created
+[08:51:48] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/complaints?acc_token=79dd14419e254471819bd613d798d970
+[08:51:49] Response status: 201 Created
 
-[15:50:36] Complaint created:
- - data.id              546facc8b0e14c4184d88baf7338e0c6
+[08:51:49] Complaint created:
+ - data.id              9140750e596b486bac641fff0be4c479
  - data.status          draft
 
-[15:50:36] Step 19/188: 2040_tender_complaint_patch_0_bot.json
+[08:51:49] Step 19/188: 2040_tender_complaint_patch_0_bot.json
 
-[15:50:36] Skipping tender complaint 0 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 0 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 20/188: 2041_tender_complaint_post_create_0_0_reviewer.json
+[08:51:49] Step 20/188: 2041_tender_complaint_post_create_0_0_reviewer.json
 
-[15:50:36] Skipping tender complaint 0 post 0: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 0 post 0: bot and reviewer tokens are required
 
-[15:50:36] Step 21/188: 2042_tender_complaint_post_create_0_1_complainer.json
+[08:51:49] Step 21/188: 2042_tender_complaint_post_create_0_1_complainer.json
 
-[15:50:36] Skipping tender complaint 0 post 1: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 0 post 1: bot and reviewer tokens are required
 
-[15:50:36] Step 22/188: 2043_tender_complaint_post_create_0_2_reviewer.json
+[08:51:49] Step 22/188: 2043_tender_complaint_post_create_0_2_reviewer.json
 
-[15:50:36] Skipping tender complaint 0 post 2: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 0 post 2: bot and reviewer tokens are required
 
-[15:50:36] Step 23/188: 2044_tender_complaint_post_create_0_3_tenderer.json
+[08:51:49] Step 23/188: 2044_tender_complaint_post_create_0_3_tenderer.json
 
-[15:50:36] Skipping tender complaint 0 post 3: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 0 post 3: bot and reviewer tokens are required
 
-[15:50:36] Step 24/188: 2045_tender_complaint_patch_0_reviewer.json
+[08:51:49] Step 24/188: 2045_tender_complaint_patch_0_reviewer.json
 
-[15:50:36] Skipping tender complaint 0 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 0 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 25/188: 2046_tender_complaint_patch_0_reviewer.json
+[08:51:49] Step 25/188: 2046_tender_complaint_patch_0_reviewer.json
 
-[15:50:36] Skipping tender complaint 0 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 0 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 26/188: 2047_tender_complaint_patch_0_tenderer.json
+[08:51:49] Step 26/188: 2047_tender_complaint_patch_0_tenderer.json
 
-[15:50:36] Skipping tender complaint 0 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 0 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 27/188: 2048_tender_complaint_patch_1_bot.json
+[08:51:49] Step 27/188: 2048_tender_complaint_patch_1_bot.json
 
-[15:50:36] Skipping tender complaint 1 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 1 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 28/188: 2049_tender_complaint_patch_1_reviewer.json
+[08:51:49] Step 28/188: 2049_tender_complaint_patch_1_reviewer.json
 
-[15:50:36] Skipping tender complaint 1 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 1 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 29/188: 2050_tender_complaint_patch_1_reviewer.json
+[08:51:49] Step 29/188: 2050_tender_complaint_patch_1_reviewer.json
 
-[15:50:36] Skipping tender complaint 1 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 1 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 30/188: 2051_tender_complaint_patch_2_bot.json
+[08:51:49] Step 30/188: 2051_tender_complaint_patch_2_bot.json
 
-[15:50:36] Skipping tender complaint 2 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 2 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 31/188: 2052_tender_complaint_patch_2_reviewer.json
+[08:51:49] Step 31/188: 2052_tender_complaint_patch_2_reviewer.json
 
-[15:50:36] Skipping tender complaint 2 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 2 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 32/188: 2053_tender_complaint_patch_2_reviewer.json
+[08:51:49] Step 32/188: 2053_tender_complaint_patch_2_reviewer.json
 
-[15:50:36] Skipping tender complaint 2 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 2 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 33/188: 2054_tender_complaint_patch_3_bot.json
+[08:51:49] Step 33/188: 2054_tender_complaint_patch_3_bot.json
 
-[15:50:36] Skipping tender complaint 3 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 3 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 34/188: 2055_tender_complaint_patch_3_reviewer.json
+[08:51:49] Step 34/188: 2055_tender_complaint_patch_3_reviewer.json
 
-[15:50:36] Skipping tender complaint 3 patch: bot and reviewer tokens are required
+[08:51:49] Skipping tender complaint 3 patch: bot and reviewer tokens are required
 
-[15:50:36] Step 35/188: 2056_tender_complaint_patch_4_complainer.json
+[08:51:49] Step 35/188: 2056_tender_complaint_patch_4_complainer.json
 
-[15:50:36] Patching tender complaint 4 as complainer...
+[08:51:49] Patching tender complaint 4 as complainer...
 
-[15:50:36] Processing data file: 2056_tender_complaint_patch_4_complainer.json
+[08:51:49] Processing data file: 2056_tender_complaint_patch_4_complainer.json
 
-[15:50:36] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/complaints/69457a052fac4dee973f289086861b6a?acc_token=3bc88e7d65b047fba8d60023cce29bc3
-[15:50:36] Response status: 200 OK
+[08:51:49] PATCH https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/complaints/632fb20cfe83441c86d44cfda0412331?acc_token=0bdaaf3b28034757b172425b74ee20ae
+[08:51:49] Response status: 200 OK
 
-[15:50:36] Item patched:
- - data.id              69457a052fac4dee973f289086861b6a
+[08:51:49] Item patched:
+ - data.id              632fb20cfe83441c86d44cfda0412331
  - data.status          mistaken
 
-[15:50:36] Step 36/188: 2201_tender_bid_create_0.json
+[08:51:49] Step 36/188: 2201_tender_bid_create_0.json
 
-[15:50:36] Creating bid...
+[08:51:49] Creating bid...
 
-[15:50:36] Processing data file: 2201_tender_bid_create_0.json
+[08:51:49] Processing data file: 2201_tender_bid_create_0.json
 
-[15:50:36] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:36] Response status: 200 OK
+[08:51:49] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:49] Response status: 200 OK
 
-[15:50:36] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:37] Response status: 200 OK
+[08:51:49] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:49] Response status: 200 OK
 
-[15:50:37] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:37] Response status: 200 OK
+[08:51:49] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:49] Response status: 200 OK
 
-[15:50:37] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:37] Response status: 200 OK
+[08:51:49] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:50] Response status: 200 OK
 
-[15:50:37] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:37] Response status: 200 OK
+[08:51:50] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:50] Response status: 200 OK
 
-[15:50:37] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/bids
-[15:50:37] Response status: 201 Created
+[08:51:50] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/bids
+[08:51:50] Response status: 201 Created
 
-[15:50:37] Document attached:
- - data.id              fbd79c31711d48d6a37fc8e6d7a4963b
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/e5fc0ad38e7d4d69b4dfba4ed015ced4?Signature=p9pSjQHlSN7vJ%2BFOOFplGf6B4i1p10wAxJsVtk4dDpUVKHg4Fy1Xs8Xg6ApX15TzJWZYpHCHcBh%2BqNnt09HzDA%3D%3D&KeyID=1331dc52
+[08:51:50] Document attached:
+ - data.id              0ff051b8deef4461b800dc64dcfd0045
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/7f05e2a478d74a0382c68cab6e3e3246?Signature=PeyOw%2FLO0YQUtjQcrd8vrdG6NjV1gvS7PsmmT2uLcBGRsuhO%2FbjwrYF5zxEFmVkosJ0zCvoPlY0fSpuIL7GmCw%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:37] Document attached:
- - data.id              6c2dee81031f474cb3923d1d99a9127e
+[08:51:50] Document attached:
+ - data.id              d6cd12ef85884730ac3ee262c0bee757
  - data.confidentiality buyerOnly
 
-[15:50:37] Document attached:
- - data.id              0f819ae3dc494906a53c7550243319ee
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/9aa3c3161ca94829b769d8e6d5641ce8?Signature=Dm1wDUlrjJIDMZyayL%2FkO9FKHTIy3zsZKr9ZvAcBE5VDRD6YTFsOvNu7SH5aNpFRT02C9RcERwwicZdQ2WmPCg%3D%3D&KeyID=1331dc52
+[08:51:50] Document attached:
+ - data.id              65655ded218741b7a8749c9d51200a43
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/cd582e3e9ca6436b88525bc86d4f1ce7?Signature=pRCbpZJEQ1ZQsl0MJvKAJCR2c4ijjwbx4igmIom5b6G2Fz8YCvIgoGMM48adN5%2FTlUxyuQJAJZIR3EsR%2BAzNBg%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:37] Document attached:
- - data.id              25093a9738364a97ab119e936451f055
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/4a63356c18274d988ac3fde413860fe5?Signature=4j7CIZlT8sDCUBTtQu2g9AlleKJfk%2Fq%2Fr5JHFqMwfKh8hhWE7IkxqtBPImpPbRQM%2BvwNqZVbC0PWGMRXJPSYDg%3D%3D&KeyID=1331dc52
+[08:51:50] Document attached:
+ - data.id              c55e855fc4ff4632b4b4aa9a89202e18
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/56195d3fc90b4e3ab882d462cfd8f4c7?Signature=%2FEdY7dV86IB%2BjwlrVYLxhmIA8MhpEjN3%2Blq3gip0jwrB0AOkV87%2B42toGYwdIZuEMrrYYtHT5kY28LPQZpSkBA%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:37] Document attached:
- - data.id              d8d64fcfa5814436954b627a9cbb3832
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/dba79eb50cb845c099f9f9d4c24dd9b0?Signature=0luUUFG06YTtlHgFGEucr9A8JFEGiyov65JXyvc%2BgB83etzNcfzcGnd83XEAuGmFhFDKmZtko9uaDl7rcq4kCw%3D%3D&KeyID=1331dc52
+[08:51:50] Document attached:
+ - data.id              1ebe95a9e3f14bbba0d0c2a00a3b10d2
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/a7738449bcf1474caaa6372e8da91840?Signature=afSv76KUHl%2BrmrtBjVwVThRzhy9gd%2B2gbGbhhraRxxMAF%2B%2FHVFQxQtcSxKrtnNVKFmFDgum4Xj%2BgrdNojYRdBQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:37] Bid created:
- - data.id              813ade5429394565944a073b80fcf73b
- - access.token         7969fd8081db4032accd13e52bcadc45
+[08:51:50] Bid created:
+ - data.id              92a70eb442f44398a84c21e3f66a2df1
+ - access.token         aab56ecd81784162817adbcd75cecea9
  - data.status          draft
 
-[15:50:37] Step 37/188: 2202_tender_bid_create_1.json
+[08:51:50] Step 37/188: 2202_tender_bid_create_1.json
 
-[15:50:37] Creating bid...
+[08:51:50] Creating bid...
 
-[15:50:37] Processing data file: 2202_tender_bid_create_1.json
+[08:51:50] Processing data file: 2202_tender_bid_create_1.json
 
-[15:50:37] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:37] Response status: 200 OK
+[08:51:50] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:50] Response status: 200 OK
 
-[15:50:37] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:38] Response status: 200 OK
+[08:51:50] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:50] Response status: 200 OK
 
-[15:50:38] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:38] Response status: 200 OK
+[08:51:50] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:50] Response status: 200 OK
 
-[15:50:38] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:38] Response status: 200 OK
+[08:51:50] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:50] Response status: 200 OK
 
-[15:50:38] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
-[15:50:38] Response status: 200 OK
+[08:51:50] POST https://upload-docs-sandbox-2.prozorro.gov.ua/upload
+[08:51:51] Response status: 200 OK
 
-[15:50:38] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/78019225fba64309a15f3bccdb1c3ae8/bids
-[15:50:38] Response status: 201 Created
+[08:51:51] POST https://lb-api-sandbox-2.prozorro.gov.ua/api/0/tenders/1cb2fe0ff2134942a0da50629f4eb4c3/bids
+[08:51:51] Response status: 201 Created
 
-[15:50:38] Document attached:
- - data.id              7876634cf42543dbb0e244da12973483
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/63cefaaed621402fbae32fd7f87bdd4c?Signature=wRBk37%2BuwxMJTgQosc0lCNZQdATZfP0PN3N5ZBwY3ROPjGv05tN4H4%2FmBSVSKGeDUJE35PK0QcxgVQt%2FrYrwAw%3D%3D&KeyID=1331dc52
+[08:51:51] Document attached:
+ - data.id              e395354611c74c04932c5669a9ab1bb5
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/ce252d862e0444cbb7569a207a833350?Signature=PxS8E6UeweDeVzO5%2BEHZW4O1Dp40FJxqTWfKWUuVFyxZfdMPthKFeD%2BW7hN%2FUnJP4Z5E96M9uf%2B6CqGC5oowCw%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:38] Document attached:
- - data.id              8a50c1648f4c49b29847c988ffd2fde4
+[08:51:51] Document attached:
+ - data.id              5b7316b4b3af47bdbb76485c226bd363
  - data.confidentiality buyerOnly
 
-[15:50:38] Document attached:
- - data.id              2213f5aaca8d46ac9678aa63593677bb
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/d9a52276bb0b4cc3bd3dba1e457ddd3f?Signature=Ktwom4sDvJztiH1VoMxbn6AOXLKvgfnOZdgszVgQW3AGRgVAxJTTNiCHcgA0kFdCgMreRloGZO9r26L2E%2BuNBA%3D%3D&KeyID=1331dc52
+[08:51:51] Document attached:
+ - data.id              0dd67dcb0e5247c9be48238011fc4e27
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/4eef62841f66419a9d0b36ab802f505f?Signature=zmlL12pVD4DSwm1C6MyiadCJ4l604%2BiuOTSciDhmiC5BvslP5dJ8cMmxlHi%2BjboxRFZzr%2Bn3NK8zF7rP7IY%2BCg%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:38] Document attached:
- - data.id              deb662bcaf0341329c9938ad81cf3697
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/8f4bc38ee46c42f0921703f6983953cd?Signature=4E7nt0JKQ5jrCUs3V36wFUE5TUFbiLlbLbcYxAQ4M9X05bXtZiMSiqQQSBB0EK%2Bh9Sr9T4OgbTn8GDjGav9HAg%3D%3D&KeyID=1331dc52
+[08:51:51] Document attached:
+ - data.id              098fa0a54fdd46478f7622b9a95f457b
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/fc0d5aa224b54811be3bca946ec4e494?Signature=hLxPcRvLYE4fPl7cQ%2FwVerspriGi904o%2FSS6R2YP4GtRwOStA0D6No0upXTaIDgaPIvmYrhOuRd%2BYrUZcj5eCQ%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:38] Document attached:
- - data.id              8ea5f136736d4f96a7d6b11fb98bc16e
- - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/ad514052ffdb4b40a53586b2aed376fc?Signature=3D%2Fr5Q4ri9QQA9D6mfvnP6NMTSO9gO8Rxw8uN8nCVovcd4ITBLOOLIMNxzTlmYBNT1hzT%2FLZpqiU0SKf9rlyAg%3D%3D&KeyID=1331dc52
+[08:51:51] Document attached:
+ - data.id              0693e73232d7487d859f093956a2fe2a
+ - data.url             https://public-docs-sandbox-2.prozorro.gov.ua/get/611a912cdb92491f897ce758c5f9e0b9?Signature=raT14fiOpExD%2BlkXr8k8FuvcczyHjxHVt24qrpE2TGjX%2FZrCqKMe%2Ftw4Fwy%2B7b8f1xp%2BCDLF4o3hlDc0m9hHBg%3D%3D&KeyID=1331dc52
  - data.confidentiality public
 
-[15:50:38] Bid created:
- - data.id              7fb8867833dc4696a1a9d55e40116e14
- - access.token         5c98ab2759fd42eb838b7fed8261c17f
+[08:51:51] Bid created:
+ - data.id              d0d62ecfed8a4c9ab2b17dfd7f6fe9f9
+ - access.token         faf1832cf7b744d78a2b8cb578e65c9b
  - data.status          draft
 
-[15:50:38] Stopping after 2202_tender_bid_create_1.json
+[08:51:51] Stopping after 2202_tender_bid_create_1.json
 
-[15:50:38] Completed.
+[08:51:51] Completed.
 
-[15:50:38] Summary
+[08:51:51] Summary
  - closeFrameworkAgreementUA	success
 
 ```
@@ -919,6 +923,10 @@ Data folders:
  - negotiation
  - negotiation.local
  - negotiation.quick
+ - openTendering.EU
+ - openTendering.EU.econtract
+ - openTendering.UA
+ - openTendering.UA.central
  - priceQuotation
  - reporting
  - reporting.local

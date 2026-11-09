@@ -250,7 +250,7 @@
         "code": "postpayment",
         "duration": {
           "days": 999,
-          "type": "banking"
+          "type": "working"
         },
         "percentage": 30,
         "relatedLot": "dd22c9c085f64e019f943999b5b41fe5",
@@ -310,7 +310,7 @@
         "code": "postpayment",
         "duration": {
           "days": 2,
-          "type": "banking"
+          "type": "working"
         },
         "percentage": 33,
         "relatedLot": "5f58e4e21baf4696bb1cfd67c4f86f73",

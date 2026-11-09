@@ -86,7 +86,7 @@
         "code": "postpayment",
         "duration": {
           "days": 999,
-          "type": "banking"
+          "type": "working"
         },
         "percentage": 30,
         "sequenceNumber": 2,

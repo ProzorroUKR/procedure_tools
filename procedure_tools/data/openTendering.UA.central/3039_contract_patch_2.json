@@ -1,0 +1,10 @@
+{
+  "data": {
+    "amountPaid": {
+      "amount": 200,
+      "amountNet": 200,
+      "valueAddedTaxIncluded": false
+    },
+    "status": "terminated"
+  }
+}
