@@ -34,7 +34,6 @@ test = [
 dev = [
     "mypy",
     "pylint",
-    "pylint-pytest",
     "ruff",
     "types-Pygments",
     "types-python-dateutil",
@@ -114,9 +113,6 @@ ignore_missing_imports = true
 [tool.pylint]
 [tool.pylint.main]
 jobs = 1
-load-plugins = [
-    "pylint_pytest",
-]
 
 [tool.pylint.format]
 max-line-length = 120
