@@ -66,6 +66,7 @@ def build_context(
     context = Context(args, client, ds_client, data_path, steps or [])
     context["acceleration"] = args.acceleration
     context["submission"] = args.submission
+    context["signature_verification_disabled"] = getattr(args, "signature_verification_disabled", False)
     context["client_timedelta"] = client.client_timedelta
     context["constants"] = client.get("constants", auth_token=args.token).json()
     return context

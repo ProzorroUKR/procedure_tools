@@ -329,7 +329,7 @@
       }
     ],
     "mode": "test",
-    "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% endif %}",
+    "procurementMethodDetails": "{% if acceleration %}quick, accelerator={{ acceleration }}{% if signature_verification_disabled %}, signature-verification-disabled{% endif %}{% elif signature_verification_disabled %}signature-verification-disabled{% endif %}",
     "procurementMethodType": "aboveThreshold",
     "procuringEntity": {
       "address": {
