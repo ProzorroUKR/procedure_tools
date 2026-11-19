@@ -16,6 +16,7 @@ ARG_ENV_KEYS = {
     "ds_username": ("DS_USERNAME", "DS_USER"),
     "ds_password": ("DS_PASSWORD", "DS_PASS"),
     "acceleration": ("ACCELERATION",),
+    "signature_verification_disabled": ("SIGNATURE_VERIFICATION_DISABLED",),
     "path": ("API_PATH",),
     "data": ("DATA",),
     "disable_data": ("DISABLE_DATA",),
@@ -37,7 +38,16 @@ ARG_ENV_KEYS = {
 
 LIST_ARGS = frozenset({"data", "disable_data", "pause", "wait"})
 INT_ARGS = frozenset({"acceleration", "seed", "debug_json_level", "parallel"})
-BOOL_ARGS = frozenset({"debug", "debug_request", "disable_complaints", "disable_claims", "disable_questions"})
+BOOL_ARGS = frozenset(
+    {
+        "debug",
+        "debug_request",
+        "disable_complaints",
+        "disable_claims",
+        "disable_questions",
+        "signature_verification_disabled",
+    }
+)
 # Fill after parse so argparse extend actions do not append to env defaults.
 EXTEND_ARGS = LIST_ARGS
 

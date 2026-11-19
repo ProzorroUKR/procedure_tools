@@ -393,6 +393,13 @@ def build_parser(
         default=env_values.get("acceleration"),
     )
     parser.add_argument(
+        "--signature-verification-disabled",
+        dest="signature_verification_disabled",
+        help="Add signature-verification-disabled to procurementMethodDetails (env SIGNATURE_VERIFICATION_DISABLED)",
+        action="store_true",
+        default=bool(env_values.get("signature_verification_disabled")),
+    )
+    parser.add_argument(
         "-p",
         "--path",
         help="api path",
