@@ -240,6 +240,7 @@
           "valueAddedTaxIncluded": false
         },
         "title": "Лот №1: {{ fake.word() }}",
+        "title_en": "Лот №1: {{ fake_en.word() }}",
         "value": {
           "amount": 3000,
           "currency": "UAH",
@@ -259,6 +260,7 @@
           "valueAddedTaxIncluded": false
         },
         "title": "Лот №2: {{ fake.word() }}",
+        "title_en": "Лот №2: {{ fake_en.word() }}",
         "value": {
           "amount": 500,
           "currency": "UAH",
@@ -278,6 +280,7 @@
           "valueAddedTaxIncluded": false
         },
         "title": "Лот №3: {{ fake.word() }}",
+        "title_en": "Лот №3: {{ fake_en.word() }}",
         "value": {
           "amount": 500,
           "currency": "UAH",
@@ -286,10 +289,6 @@
       },
       {
         "description": "{{ fake.sentence(nb_words=6) }}",
-        "guarantee": {
-          "amount": 100,
-          "currency": "UAH"
-        },
         "id": "60441ce87301487c9bf194fbd3a4f7c7",
         "minimalStep": {
           "amount": 10,
@@ -297,6 +296,7 @@
           "valueAddedTaxIncluded": false
         },
         "title": "Лот №4: {{ fake.word() }}",
+        "title_en": "Лот №4: {{ fake_en.word() }}",
         "value": {
           "amount": 500,
           "currency": "UAH",

@@ -321,10 +321,6 @@
       },
       {
         "description": "{{ fake.sentence(nb_words=6) }}",
-        "guarantee": {
-          "amount": 100,
-          "currency": "UAH"
-        },
         "id": "60441ce87301487c9bf194fbd3a4f7c7",
         "minimalStep": {
           "amount": 10,

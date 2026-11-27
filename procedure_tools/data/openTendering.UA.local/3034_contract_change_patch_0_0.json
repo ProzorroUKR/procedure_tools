@@ -1,0 +1,6 @@
+{
+  "data": {
+    "dateSigned": "{{ contracts[0].dateModified }}",
+    "status": "active"
+  }
+}

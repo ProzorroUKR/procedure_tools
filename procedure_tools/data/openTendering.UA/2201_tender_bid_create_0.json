@@ -2,7 +2,12 @@
   "data": {
     "documents": [
       {
-        "title": "tender_bid_document_file.txt"
+        "title": "tender_bid_document_file.txt",
+        "documentType": "qualificationDocuments"
+      },
+      {
+        "title": "tender_bid_document_file.txt",
+        "documentType": "technicalSpecifications"
       },
       {
         "confidentiality": "buyerOnly",
@@ -14,7 +19,8 @@
     "eligibilityDocuments": [
       {
         "title": "tender_bid_eligibility_document_file.txt",
-        "file": "tender_bid_document_file.txt"
+        "file": "tender_bid_document_file.txt",
+        "documentType": "eligibilityDocuments"
       }
     ],
     "financialDocuments": [

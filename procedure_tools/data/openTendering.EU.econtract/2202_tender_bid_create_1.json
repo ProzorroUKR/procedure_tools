@@ -2,7 +2,8 @@
   "data": {
     "documents": [
       {
-        "title": "tender_bid_document_file.txt"
+        "title": "tender_bid_document_file.txt",
+        "documentType": "qualificationDocuments"
       },
       {
         "confidentiality": "buyerOnly",
@@ -118,7 +119,7 @@
           "telephone": "{{ fake.prozorro_phone_number() }}"
         },
         "identifier": {
-          "id": "00137255",
+          "id": "00137256",
           "scheme": "UA-EDR",
           "uri": "{{ fake.url() }}"
         },

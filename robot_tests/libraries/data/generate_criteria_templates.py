@@ -16,7 +16,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-SOURCE = Path("procedure_tools/data/aboveThreshold/2014_tender_criteria_post.json")
+SOURCE = Path("procedure_tools/data/aboveThreshold/2016_tender_criteria_post.json")
 TARGET = Path("robot_tests/libraries/data/criteria_templates.py")
 
 # Assigned per build, never carried over from the catalogue. Only the ids the

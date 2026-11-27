@@ -2,7 +2,8 @@
   "data": {
     "documents": [
       {
-        "title": "tender_bid_document_file.txt"
+        "title": "tender_bid_document_file.txt",
+        "documentType": "qualificationDocuments"
       },
       {
         "confidentiality": "buyerOnly",
