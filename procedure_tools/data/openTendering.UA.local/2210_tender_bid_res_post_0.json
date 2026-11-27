@@ -53,7 +53,7 @@
         "id": "bed94028e8d244c19c4e543b9df9da91"
       },
       "values": [
-        "Українська"
+        "ukr"
       ]
     },
     {
@@ -72,24 +72,6 @@
       "value": 3.0
     },
     {
-      "requirement": {
-        "id": "4312983af6e04b0bbf47c55f9a99ca20"
-      },
-      "value": true
-    },
-    {
-      "requirement": {
-        "id": "cb13780ca68d4cfbb8a8ee09afe57e3b"
-      },
-      "value": 5.0
-    },
-    {
-      "requirement": {
-        "id": "765de856af01413fa7651db186b08a70"
-      },
-      "value": 0
-    },
-    {
       "evidences": [
         {
           "relatedDocument": {
@@ -106,21 +88,17 @@
     },
     {
       "requirement": {
-        "id": "bbfe1e4a371d40718a8367e67af87ff7"
-      },
-      "value": true
-    },
-    {
-      "requirement": {
         "id": "76c30fd4cb2f402fb86889d7f93cdd83"
       },
-      "value": 5.0
+      "values": [
+        "Договір страхування"
+      ]
     },
     {
       "requirement": {
         "id": "39dad7ebae0647dc8c520b3021fe44d7"
       },
-      "value": 0
+      "value": 5
     },
     {
       "evidences": [
@@ -153,36 +131,6 @@
       "value": true
     },
     {
-      "evidences": [
-        {
-          "relatedDocument": {
-            "title": "name.doc"
-          },
-          "title": "Інформаційна довідка або витяг з реєстру",
-          "type": "document"
-        }
-      ],
-      "requirement": {
-        "id": "83c15d8f026342808757a29f25466fb0"
-      },
-      "value": true
-    },
-    {
-      "evidences": [
-        {
-          "relatedDocument": {
-            "title": "name.doc"
-          },
-          "title": "Інформаційна довідка або витяг з реєстру",
-          "type": "document"
-        }
-      ],
-      "requirement": {
-        "id": "b7a9c4ab41dd4d2f97928e6748a6ea7b"
-      },
-      "value": true
-    },
-    {
       "requirement": {
         "id": "e638a1444c3a48d187ad5450f33a9bab"
       },
@@ -190,15 +138,9 @@
     },
     {
       "requirement": {
-        "id": "6d91695aedb54c2c9f46df4b9ad739c8"
-      },
-      "value": true
-    },
-    {
-      "requirement": {
         "id": "55c836b49598491588bf4eac3a867c92"
       },
-      "value": 90
+      "value": 100
     },
     {
       "requirement": {
@@ -208,57 +150,83 @@
     },
     {
       "requirement": {
-        "id": "b0f927eecd364785a947d6f20a77de91"
+        "id": "dd3c44539f404af69a5dc0894f9b4156"
       },
       "value": true
     },
     {
-      "evidences": [
-        {
-          "relatedDocument": {
-            "title": "name.doc"
-          },
-          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
-          "type": "document"
-        }
-      ],
       "requirement": {
-        "id": "a8f6bddfe03e42ab999d583c79399c2a"
-      },
-      "value": 1.0
-    },
-    {
-      "requirement": {
-        "id": "24c2f4add08e4fc1ace3c9f377b3c5ca"
+        "id": "26b53a71623e4dedb5aa7deaf623f40d"
       },
       "value": true
     },
     {
-      "evidences": [
-        {
-          "relatedDocument": {
-            "title": "name.doc"
-          },
-          "title": "Банківська гарантія забезпечення тендерної пропозиції/пропозиції",
-          "type": "document"
-        }
-      ],
       "requirement": {
-        "id": "4048b884e9724525858879b0d9994b34"
+        "id": "96fd24cfa8d14dbb9950c220d17bb473"
       },
-      "value": 2.0
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "224ea026e17e42b8b612a610f20ee1ba"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "85c0e007599b483dada32f8f4aa5fd92"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "8c28438b1a034a939154c320a67dd9fa"
+      },
+      "values": [
+        "UA"
+      ]
+    },
+    {
+      "requirement": {
+        "id": "8ba2bc3a87bc4da5b862f02ef47b5fdf"
+      },
+      "value": 5
+    },
+    {
+      "requirement": {
+        "id": "19fd7d4fed2242a19ebb9d155f1c2be7"
+      },
+      "value": 50
+    },
+    {
+      "requirement": {
+        "id": "17277cc66ffd48b0888d0bb38a65965d"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "4312983af6e04b0bbf47c55f9a99ca20"
+      },
+      "value": true
+    },
+    {
+      "requirement": {
+        "id": "bbfe1e4a371d40718a8367e67af87ff7"
+      },
+      "value": true
     },
     {
       "requirement": {
         "id": "803388fbf5ed4982852efe3ab9e129e7"
       },
-      "value": 34.84
+      "value": 35.84
     },
     {
       "requirement": {
         "id": "ab858cce17054d27867c85a9ed188a8f"
       },
-      "value": 34.84
+      "value": 35.84
     },
     {
       "requirement": {
